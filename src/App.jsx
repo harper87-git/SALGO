@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 // Paste your RapidAPI key here before deploying to Vercel.
 // Free key at rapidapi.com → search "ExerciseDB" → subscribe (500 req/day free).
 // Each exercise fetches once then the service worker caches it — works offline after.
-const RAPIDAPI_KEY = "3450e5e1d2msh393827151c8d865p199049jsne2d939e58fd4";
+const RAPIDAPI_KEY = "3450e5e1d2msh393827151c8d865p199049jsne2d939e58fd4"; 
 
 const injectFonts = () => {
   if (document.getElementById("sos-fonts")) return;
