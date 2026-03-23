@@ -1,10 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 
-// ─── RAPIDAPI KEY ─────────────────────────────────────────────────────────────
-// Paste your RapidAPI key here before deploying to Vercel.
-// Free key at rapidapi.com → search "ExerciseDB" → subscribe (500 req/day free).
-// Each exercise fetches once then the service worker caches it — works offline after.
-const RAPIDAPI_KEY = "3450e5e1d2msh393827151c8d865p199049jsne2d939e58fd4"; 
+// ─── GROQ API KEY ─────────────────────────────────────────────────────────────
+// Get a free key at console.groq.com — no credit card required.
+// Paste it here then commit to GitHub. Vercel redeploys automatically.
+const GROQ_API_KEY = "";
 
 const injectFonts = () => {
   if (document.getElementById("sos-fonts")) return;
@@ -87,83 +86,83 @@ const exInfo = name => {
 // ─── PROGRAM DATA ─────────────────────────────────────────────────────────────
 const PROG = {
   ironblocks: {
-    id:"ironblocks", name:"The Ron Harper", coach:"Block Hypertrophy Method",
+    id:"ironblocks", name:"Body Beast", coach:"Sagi Kalchev · Beachbody",
     rating:4.8, reviews:5200, diff:"Intermediate", freq:"5-6x/week", dur:"13 wks",
     color:T.or, goal:"Muscle", equip:"Dumbbells", tags:["Hypertrophy","Muscle","Dumbbells","3-Phase"],
-    desc:"3-phase muscle-building system. Build foundation, maximize mass, then combine both for elite results.",
-    phil:"Block 1 (Weeks 1-3) uses pyramid singles, supersets and giant sets to build a muscle-growth foundation. Block 2 (Weeks 4-9) introduces force sets, progressive sets and combo sets to shock muscles with new stimuli. Block 3 (Weeks 10-13) merges both phases for maximum adaptation. All exercises use dumbbells — pick a weight you can just complete each set with.",
+    desc:"Sagi Kalchev's dumbbell-only mass program. Three progressive phases — Build, Bulk, and Beast — designed to maximize muscle growth at home with no barbell required.",
+    phil:"Block 1 (Weeks 1-3) uses pyramid sets, supersets, and giant sets to build a hypertrophy foundation. Block 2 (Weeks 4-9) introduces force sets, progressive sets, and combo sets to continuously shock the muscles. Block 3 (Weeks 10-13) merges both phases for maximum size and definition. Pick a weight you can just barely complete each set with.",
     lifts:[],
     struct:[{d:"Mon",l:"Chest & Tris"},{d:"Tue",l:"Legs"},{d:"Wed",l:"Back & Bis"},{d:"Thu",l:"Shoulders"},{d:"Fri",l:"Cardio/Abs"},{d:"Sat",l:"REST"},{d:"Sun",l:"Chest & Tris"}],
   },
   wendler531: {
-    id:"wendler531", name:"Triple Wave Method", coach:"Classic Powerlifting Protocol",
+    id:"wendler531", name:"5/3/1", coach:"Jim Wendler",
     rating:4.9, reviews:12400, diff:"Intermediate", freq:"4x/week", dur:"12 wks",
     color:T.ac, goal:"Strength", equip:"Barbell", tags:["Powerlifting","Strength"],
-    desc:"Four main barbell lifts, sub-maximal loading, and relentless monthly progress.",
-    phil:"Train with a Training Max at 90% of your 1RM. Cycle through three working weeks then deload. The final set of every main lift is AMRAP. Add 5 lbs to pressing TMs and 10 lbs to lower body TMs each cycle.",
+    desc:"Jim Wendler's legendary powerlifting program. Built on sub-maximal loading and monthly progression, it has produced more strong people than almost any program in history.",
+    phil:"Train with a Training Max set at 90% of your true 1RM. Cycle through three working weeks then a deload. The final set of every main lift is AMRAP — your performance tells you when to add weight. Add 5 lbs to pressing TMs and 10 lbs to lower body TMs each cycle.",
     lifts:["squat","bench","deadlift","ohp"],
     struct:[{d:"Mon",l:"OHP"},{d:"Tue",l:"Deadlift"},{d:"Wed",l:"REST"},{d:"Thu",l:"Bench"},{d:"Fri",l:"Squat"},{d:"Sat",l:"REST"},{d:"Sun",l:"REST"}],
   },
   startingStrength: {
-    id:"startingStrength", name:"Linear Progression LP", coach:"Linear Progression Method",
+    id:"startingStrength", name:"Starting Strength", coach:"Mark Rippetoe",
     rating:4.8, reviews:8900, diff:"Beginner", freq:"3x/week", dur:"12 wks",
     color:T.yw, goal:"Strength", equip:"Barbell", tags:["Beginner","Linear"],
-    desc:"The definitive beginner barbell program. Add weight to every single session.",
-    phil:"Exploits the beginner ability to recover in 24-48 hrs. Squat every session. Workout A: squat, bench, deadlift. Workout B: squat, OHP, deadlift. Add 5 lbs upper body, 10 lbs lower body.",
+    desc:"Mark Rippetoe's definitive beginner barbell program. The fastest way to build a strength base from scratch — add weight every single session.",
+    phil:"Exploits the beginner's ability to recover and adapt in 24-48 hours. Squat every session. Workout A: squat, bench, deadlift. Workout B: squat, press, deadlift. Add 5 lbs to upper body lifts and 10 lbs to lower body lifts after every successful session.",
     lifts:["squat","bench","deadlift","ohp"],
     struct:[{d:"Mon",l:"Workout A"},{d:"Tue",l:"REST"},{d:"Wed",l:"Workout B"},{d:"Thu",l:"REST"},{d:"Fri",l:"Workout A"},{d:"Sat",l:"REST"},{d:"Sun",l:"REST"}],
   },
   texasMethod: {
-    id:"texasMethod", name:"Volume-Intensity Split", coach:"Volume-Intensity Method",
+    id:"texasMethod", name:"Texas Method", coach:"Mark Rippetoe & Glenn Pendlay",
     rating:4.7, reviews:5200, diff:"Intermediate", freq:"3x/week", dur:"12 wks",
     color:T.rd, goal:"Strength", equip:"Barbell", tags:["Intermediate","Volume"],
-    desc:"Volume Monday, Recovery Wednesday, Intensity Friday. Classic weekly periodization.",
-    phil:"Monday is high-volume stimulus at 80%. Wednesday is light recovery. Friday is a new 5-rep max attempt. Bench and OHP alternate weekly.",
+    desc:"The classic intermediate bridge. Volume Monday breaks you down, Recovery Wednesday lets you heal, Intensity Friday lets you set a new 5-rep max.",
+    phil:"Monday is high-volume stimulus at 80% — 5 sets of 5. Wednesday is a light recovery session at 70%. Friday is a new 5-rep max attempt. Bench and overhead press alternate weekly. One of the most proven intermediate programs ever written.",
     lifts:["squat","bench","deadlift","ohp"],
     struct:[{d:"Mon",l:"Volume"},{d:"Tue",l:"REST"},{d:"Wed",l:"Recovery"},{d:"Thu",l:"REST"},{d:"Fri",l:"Intensity"},{d:"Sat",l:"REST"},{d:"Sun",l:"REST"}],
   },
   arnoldSplit: {
-    id:"arnoldSplit", name:"Golden Era 6-Day", coach:"Golden Era Methodology",
+    id:"arnoldSplit", name:"Arnold Split", coach:"Arnold Schwarzenegger",
     rating:4.8, reviews:9100, diff:"Advanced", freq:"6x/week", dur:"12 wks",
     color:T.pu, goal:"Muscle", equip:"Full Gym", tags:["Hypertrophy","Bodybuilding"],
-    desc:"Chest/Back, Shoulders/Arms, Legs twice a week. High volume bodybuilding split.",
-    phil:"Three pairings — chest+back, shoulders+arms, legs — each trained twice weekly. The chest/back antagonist pairing allows supersets with incredible volume density. Advanced trainees only.",
+    desc:"The training split Arnold used to win 7 Mr. Olympia titles. Chest and back, shoulders and arms, legs — each pair trained twice per week with brutal volume.",
+    phil:"Three antagonist pairings trained twice weekly. The chest and back combination allows massive volume through supersets — each muscle rests while its opposite works. Shoulders and arms follow, then legs. Six days of training, only the most dedicated need apply.",
     lifts:["bench","squat","ohp"],
     struct:[{d:"Mon",l:"Chest & Back"},{d:"Tue",l:"Shoulders & Arms"},{d:"Wed",l:"Legs"},{d:"Thu",l:"Chest & Back"},{d:"Fri",l:"Shoulders & Arms"},{d:"Sat",l:"Legs"},{d:"Sun",l:"REST"}],
   },
   juggernaut: {
-    id:"juggernaut", name:"Wave Autoregulation", coach:"Auto-Regulation Method",
+    id:"juggernaut", name:"Juggernaut Method", coach:"Chad Wesley Smith",
     rating:4.7, reviews:4800, diff:"Intermediate", freq:"4x/week", dur:"16 wks",
     color:T.gr, goal:"Strength", equip:"Barbell", tags:["Auto-Regulate","Powerlifting"],
-    desc:"Four waves of 10s, 8s, 5s, and 3s. AMRAP sets auto-regulate your progress.",
-    phil:"Four 4-week waves targeting different rep ranges. Each wave has accumulation, intensification, and realization phases. The realization AMRAP tells you where you stand.",
+    desc:"Chad Wesley Smith's auto-regulated powerlifting system. Four waves of progressively heavier rep ranges with AMRAP sets that tell you exactly when to advance.",
+    phil:"Four 4-week waves targeting 10s, 8s, 5s, and 3s. Each wave has accumulation, intensification, and realization phases. The realization AMRAP determines your training max for the next wave — your performance drives your progress.",
     lifts:["squat","bench","deadlift","ohp"],
     struct:[{d:"Mon",l:"Squat"},{d:"Tue",l:"Bench"},{d:"Wed",l:"REST"},{d:"Thu",l:"Deadlift"},{d:"Fri",l:"OHP"},{d:"Sat",l:"REST"},{d:"Sun",l:"REST"}],
   },
   westside: {
-    id:"westside", name:"Conjugate Method", coach:"Conjugate System",
+    id:"westside", name:"Westside Barbell", coach:"Louie Simmons",
     rating:4.6, reviews:3200, diff:"Advanced", freq:"4x/week", dur:"12 wks",
     color:T.or, goal:"Strength", equip:"Powerlifting Gym", tags:["Conjugate","Powerlifting"],
-    desc:"Conjugate periodization. Max effort and dynamic effort trained simultaneously.",
-    phil:"Train maximal strength AND explosive strength simultaneously. Max Effort days work to a 1-3RM on a rotating exercise. Dynamic Effort days use 50-60% loads moved as explosively as possible.",
+    desc:"Louie Simmons' conjugate method from the most accomplished powerlifting gym in history. Train maximal strength and explosive speed simultaneously, every week.",
+    phil:"Two Max Effort days work up to a 1-3RM on a rotating exercise. Two Dynamic Effort days use 50-60% of max moved with absolute maximum bar speed. This concurrent training of multiple strength qualities is why Westside has produced more world record holders than any other system.",
     lifts:["squat","bench","deadlift"],
     struct:[{d:"Mon",l:"ME Lower"},{d:"Tue",l:"ME Upper"},{d:"Wed",l:"REST"},{d:"Thu",l:"DE Lower"},{d:"Fri",l:"DE Upper"},{d:"Sat",l:"REST"},{d:"Sun",l:"REST"}],
   },
   fullbody: {
-    id:"fullbody", name:"Full Body Compound", coach:"Classical Barbell Method",
+    id:"fullbody", name:"Full Body Compound", coach:"Classic Barbell Method",
     rating:4.6, reviews:5100, diff:"Beginner", freq:"3x/week", dur:"12 wks",
     color:T.gr, goal:"Strength", equip:"Barbell", tags:["Full Body","Compound"],
-    desc:"Hit every major muscle every session with a squat, press, hinge, and pull.",
-    phil:"Training the whole body each session maximizes frequency per muscle group. Every workout includes a squat, horizontal press, hinge, and pull. Simple structure, brutally effective.",
+    desc:"Hit every major muscle group every session. A squat, a press, a hinge, and a pull — the four movements that build real strength.",
+    phil:"Training the whole body each session maximizes frequency per muscle group to 3x per week. Every workout includes a squat pattern, horizontal press, hinge, and vertical pull. Simple structure, brutally effective for anyone in their first 1-2 years of serious training.",
     lifts:["squat","bench","deadlift","ohp"],
     struct:[{d:"Mon",l:"Full Body A"},{d:"Tue",l:"REST"},{d:"Wed",l:"Full Body B"},{d:"Thu",l:"REST"},{d:"Fri",l:"Full Body A"},{d:"Sat",l:"REST"},{d:"Sun",l:"REST"}],
   },
   fivex5: {
-    id:"fivex5", name:"5x5 Strength", coach:"Classic Strength Method",
+    id:"fivex5", name:"StrongLifts 5x5", coach:"Mehdi Hadim",
     rating:4.8, reviews:9200, diff:"Beginner", freq:"3x/week", dur:"12 wks",
     color:T.yw, goal:"Strength", equip:"Barbell", tags:["5x5","Strength","Beginner"],
-    desc:"Five sets of five reps on foundational barbell lifts. Simple and proven.",
-    phil:"Five sets of five sits at the sweet spot between strength and size. Two alternating workouts hit every lift twice weekly. When all 25 reps are complete, add weight.",
+    desc:"Mehdi's massively popular beginner program. Five sets of five on the big barbell lifts — the sweet spot between strength and size for anyone starting out.",
+    phil:"Five sets of five sits at the intersection of strength and hypertrophy rep ranges. Two alternating workouts hit every lift twice weekly. When all 25 reps are completed with good form, add 5 lbs next session. Straightforward, proven, and free.",
     lifts:["squat","bench","deadlift","ohp"],
     struct:[{d:"Mon",l:"Workout A"},{d:"Tue",l:"REST"},{d:"Wed",l:"Workout B"},{d:"Thu",l:"REST"},{d:"Fri",l:"Workout A"},{d:"Sat",l:"REST"},{d:"Sun",l:"REST"}],
   },
@@ -171,8 +170,8 @@ const PROG = {
     id:"ppl", name:"Push Pull Legs", coach:"Classic Split Method",
     rating:4.7, reviews:7400, diff:"Intermediate", freq:"3x/week", dur:"12 wks",
     color:T.pu, goal:"Muscle", equip:"Full Gym", tags:["PPL","Hypertrophy","Split"],
-    desc:"Chest and shoulders, back and biceps, legs. Each pattern trained with full focus.",
-    phil:"Organizes training by movement pattern. Run it 3 days for once-weekly frequency or 6 days for twice-weekly. The 6-day version maximizes muscle growth for intermediate lifters.",
+    desc:"The most popular hypertrophy split on the internet. Push days, pull days, and leg days — each movement pattern trained with complete focus and full volume.",
+    phil:"Organizes training by movement pattern rather than body part. Run it 3 days a week for once-weekly frequency, or 6 days for twice-weekly. The 6-day version is one of the most effective mass-building programs available for intermediate lifters.",
     lifts:["squat","bench","ohp"],
     struct:[{d:"Mon",l:"Push"},{d:"Tue",l:"Pull"},{d:"Wed",l:"Legs"},{d:"Thu",l:"REST"},{d:"Fri",l:"REST"},{d:"Sat",l:"REST"},{d:"Sun",l:"REST"}],
   },
@@ -180,35 +179,35 @@ const PROG = {
     id:"upperlower", name:"Upper Lower Split", coach:"Classic Split Method",
     rating:4.7, reviews:6100, diff:"Intermediate", freq:"4x/week", dur:"12 wks",
     color:T.ac, goal:"Strength", equip:"Barbell", tags:["Upper Lower","4-Day","Strength"],
-    desc:"Alternate upper and lower body days with power and volume sessions each week.",
-    phil:"Hits each muscle group twice weekly. Power days are heavy compound work. Volume days shift to moderate loads and more sets. Full recovery between sessions.",
+    desc:"Four days, two upper and two lower. Power sessions for heavy compound work, volume sessions for accumulation. One of the most balanced programs for building strength and size together.",
+    phil:"Hits each muscle group twice weekly. Power days use heavy compound movements at low reps. Volume days shift to moderate loads with more total sets. Full recovery between similar sessions. Adaptable for strength, size, or both.",
     lifts:["squat","bench","deadlift","ohp"],
     struct:[{d:"Mon",l:"Upper Power"},{d:"Tue",l:"Lower Power"},{d:"Wed",l:"REST"},{d:"Thu",l:"Upper Volume"},{d:"Fri",l:"Lower Volume"},{d:"Sat",l:"REST"},{d:"Sun",l:"REST"}],
   },
   linprog: {
-    id:"linprog", name:"Linear Progression Strength", coach:"Progressive Overload Method",
+    id:"linprog", name:"Linear Progression", coach:"Progressive Overload Method",
     rating:4.5, reviews:4200, diff:"Beginner", freq:"3x/week", dur:"12 wks",
     color:T.rd, goal:"Strength", equip:"Barbell", tags:["Linear","Strength","Beginner"],
-    desc:"Add weight to every single session. The most direct path to strength.",
-    phil:"Add 5 lbs to pressing lifts and 10 lbs to squat and deadlift after every successful session. When progress stalls consistently, you are ready for an intermediate program.",
+    desc:"The simplest program that works. Add weight every session and get stronger faster than you thought possible. The foundation all other programs are built on.",
+    phil:"Add 5 lbs to pressing lifts and 10 lbs to squat and deadlift after every successful session. The beginner's ability to recover and adapt in 48 hours means this rate of progress is genuinely achievable. When it stalls consistently, you are ready to move on.",
     lifts:["squat","bench","deadlift","ohp"],
     struct:[{d:"Mon",l:"Session A"},{d:"Tue",l:"REST"},{d:"Wed",l:"Session B"},{d:"Thu",l:"REST"},{d:"Fri",l:"Session A"},{d:"Sat",l:"REST"},{d:"Sun",l:"REST"}],
   },
   gvt: {
-    id:"gvt", name:"German Volume Training", coach:"High Volume Method",
+    id:"gvt", name:"German Volume Training", coach:"Charles Poliquin",
     rating:4.5, reviews:3800, diff:"Intermediate", freq:"4x/week", dur:"12 wks",
     color:T.or, goal:"Muscle", equip:"Barbell", tags:["GVT","Volume","Hypertrophy"],
-    desc:"10 sets of 10 reps at 60%. Brutal volume that forces muscle growth.",
-    phil:"Hammers a single movement with ten sets of ten at 60% of 1RM. Volume forces hypertrophic adaptation. Rest 90 seconds between sets. Add weight only when every set of ten is completed cleanly.",
+    desc:"Charles Poliquin's legendary high-volume method. Ten sets of ten at 60% — more total volume than almost any other program, which forces the body to grow.",
+    phil:"Hammers a single movement with ten sets of ten at 60% of 1RM. Rest exactly 90 seconds between sets. The cumulative fatigue is what drives hypertrophy. Add weight only when all ten sets of ten are completed cleanly — that bar will feel heavier than you expect by set seven.",
     lifts:["squat","bench","deadlift","ohp"],
     struct:[{d:"Mon",l:"Chest & Back"},{d:"Tue",l:"Squat"},{d:"Wed",l:"REST"},{d:"Thu",l:"Shoulders & Arms"},{d:"Fri",l:"Deadlift"},{d:"Sat",l:"REST"},{d:"Sun",l:"REST"}],
   },
   pyramid: {
-    id:"pyramid", name:"Pyramid Strength & Size", coach:"Classic Pyramid Method",
+    id:"pyramid", name:"Pyramid Training", coach:"Classic Pyramid Method",
     rating:4.4, reviews:3200, diff:"Beginner", freq:"3x/week", dur:"12 wks",
     color:T.pk, goal:"Muscle", equip:"Barbell", tags:["Pyramid","Hypertrophy","Strength"],
-    desc:"Start light at 12 reps, work up to heavy at 6 reps. Size and strength together.",
-    phil:"Starts with higher reps at lighter loads and increases weight while decreasing reps. Builds in a natural warm-up, recruits all fiber types, and provides simultaneous hypertrophy and strength stimulus.",
+    desc:"Start light, build heavy, come back down. The pyramid builds in its own warm-up, recruits every muscle fiber type, and delivers both size and strength in a single session.",
+    phil:"Begin with higher reps at lighter loads and increase weight while decreasing reps each set. The ascending pyramid recruits progressively more fast-twitch fibers. The descending phase accumulates volume on already-fatigued muscles — a potent hypertrophy signal.",
     lifts:["squat","bench","deadlift","ohp"],
     struct:[{d:"Mon",l:"Lower"},{d:"Tue",l:"REST"},{d:"Wed",l:"Upper Push"},{d:"Thu",l:"REST"},{d:"Fri",l:"Upper Pull"},{d:"Sat",l:"REST"},{d:"Sun",l:"REST"}],
   },
@@ -216,37 +215,28 @@ const PROG = {
     id:"circuit", name:"Circuit Conditioning", coach:"Functional Training Method",
     rating:4.3, reviews:2900, diff:"Beginner", freq:"3x/week", dur:"12 wks",
     color:T.tl, goal:"Fat Loss", equip:"Full Gym", tags:["Circuit","Conditioning","Fat Loss"],
-    desc:"Multiple exercises back-to-back with minimal rest. Burns fat, builds endurance.",
-    phil:"Combines strength work with metabolic conditioning by minimizing rest. Keeps heart rate elevated while compound movements preserve muscle mass. Ideal for fat loss with limited time.",
+    desc:"Back-to-back exercises with minimal rest. Keeps the heart rate elevated while compound movements preserve muscle — the most time-efficient way to lose fat and build endurance simultaneously.",
+    phil:"Combines strength work with metabolic conditioning by eliminating rest between exercises. Three different circuits across the week hit every major muscle group and energy system. Ideal for fat loss when you have limited time and need results.",
     lifts:[],
     struct:[{d:"Mon",l:"Circuit A"},{d:"Tue",l:"REST"},{d:"Wed",l:"Circuit B"},{d:"Thu",l:"REST"},{d:"Fri",l:"Circuit C"},{d:"Sat",l:"REST"},{d:"Sun",l:"REST"}],
   },
   hiit: {
-    id:"hiit", name:"HIIT Conditioning", coach:"Interval Training Method",
+    id:"hiit", name:"HIIT Training", coach:"Interval Training Method",
     rating:4.4, reviews:4100, diff:"Beginner", freq:"3x/week", dur:"12 wks",
     color:T.rd, goal:"Fat Loss", equip:"No Equipment", tags:["HIIT","Conditioning","Fat Loss"],
-    desc:"20s max effort, 10s rest. Maximum calorie burn in minimum time.",
-    phil:"Alternates near-maximal effort with brief recovery. Creates an afterburn effect where calories continue burning for hours post-session. Three sessions weekly is sufficient.",
+    desc:"20 seconds of max effort, 10 seconds of rest. Tabata-style intervals that burn more calories in 20 minutes than an hour of steady-state cardio.",
+    phil:"Near-maximal effort intervals create an afterburn effect — elevated metabolism for hours after training. No equipment needed. Three sessions per week is enough to see dramatic conditioning improvements. The hardest part is going all out for every interval.",
     lifts:[],
     struct:[{d:"Mon",l:"Lower HIIT"},{d:"Tue",l:"REST"},{d:"Wed",l:"Upper HIIT"},{d:"Thu",l:"REST"},{d:"Fri",l:"Full Body HIIT"},{d:"Sat",l:"REST"},{d:"Sun",l:"REST"}],
   },
   periodized: {
-    id:"periodized", name:"Periodized Strength", coach:"Block Periodization Method",
+    id:"periodized", name:"Block Periodization", coach:"Vladimir Issurin",
     rating:4.6, reviews:3500, diff:"Intermediate", freq:"4x/week", dur:"12 wks",
     color:T.lb, goal:"Strength", equip:"Barbell", tags:["Periodization","Strength"],
-    desc:"Hypertrophy, strength, and power phases rotating every 4 weeks.",
-    phil:"Weeks 1-4 build muscle with moderate loads and higher reps. Weeks 5-8 convert that muscle to strength with heavier loads. Weeks 9-12 peak strength with heavy low-rep work.",
+    desc:"The Soviet sports science system adapted for the gym. Three distinct training blocks — hypertrophy, strength, and power — each building on the last for a peak at week 12.",
+    phil:"Weeks 1-4 build muscle with moderate loads and higher reps. Weeks 5-8 convert that new muscle to strength with heavier loads and fewer reps. Weeks 9-12 peak strength with heavy low-rep work. Each block builds the foundation for the next — the sequence is what makes it work.",
     lifts:["squat","bench","deadlift","ohp"],
     struct:[{d:"Mon",l:"Lower"},{d:"Tue",l:"Upper"},{d:"Wed",l:"REST"},{d:"Thu",l:"Lower B"},{d:"Fri",l:"Upper B"},{d:"Sat",l:"REST"},{d:"Sun",l:"REST"}],
-  },
-  ironblocks: {
-    id:"ironblocks", name:"The Ron Harper", coach:"Block Hypertrophy Method",
-    rating:4.8, reviews:5200, diff:"Intermediate", freq:"5-6x/week", dur:"13 wks",
-    color:T.or, goal:"Muscle", equip:"Dumbbells", tags:["Hypertrophy","Muscle","Dumbbells","3-Phase"],
-    desc:"3-phase muscle-building system. Build foundation, maximize mass, then combine both for elite results.",
-    phil:"Block 1 (Weeks 1-3) uses pyramid singles, supersets and giant sets to build a muscle-growth foundation. Block 2 (Weeks 4-9) introduces force sets, progressive sets and combo sets to shock muscles with new stimuli. Block 3 (Weeks 10-13) merges both phases for maximum adaptation. All exercises use dumbbells — pick a weight you can just complete each set with.",
-    lifts:[],
-    struct:[{d:"Mon",l:"Chest & Tris"},{d:"Tue",l:"Legs"},{d:"Wed",l:"Back & Bis"},{d:"Thu",l:"Shoulders"},{d:"Fri",l:"Cardio/Abs"},{d:"Sat",l:"REST"},{d:"Sun",l:"Chest & Tris"}],
   },
 };
 
@@ -524,10 +514,10 @@ function buildWorkout(pid, mx, wk, dow, sc) {
       7:  {1:"BSH",2:null,3:"BCH",4:"BL",5:"BBA",6:"BAR",0:"BAR"},
       8:  {1:null,2:"BCH",3:"BL",4:"BBA",5:"BAR",6:"BSH",0:"BSH"},
       9:  {1:"BCH",2:"BL",3:"BBA",4:"BAR",5:"BSH",6:null,0:null},
-      10: {1:"BL",2:"BB",3:"CA",4:null,5:"BAR",6:"S",0:"CT"},
-      11: {1:"L",2:"CA",3:null,4:"BBA",5:"BAR",6:"CA",0:"BCH"},
-      12: {1:"BL",2:"CA",3:null,4:"BB",5:"BSH",6:"CA",0:"CT"},
-      13: {1:"L",2:"CT",3:"BB",4:"CA",5:null,6:null,0:"S"},
+      10: {1:"BL",2:"TCT",3:"CA",4:"L7",5:"BAR",6:"TBB",0:"CT"},
+      11: {1:"L",2:"CA",3:"BT",4:"BBA",5:"L7",6:"TCT",0:"BCH"},
+      12: {1:"BL",2:"TBB",3:"BT",4:"TCT",5:"BSH",6:"CA",0:"CT"},
+      13: {1:"L",2:"CT",3:"TCT",4:"TBB",5:"BT",6:null,0:"L7"},
     };
     const code = (SCH[wk] || {})[dow];
     if (!code) return null;
@@ -692,6 +682,84 @@ function buildWorkout(pid, mx, wk, dow, sc) {
         exo("Reverse Fly",false,pn,prg(0)),
         exo("Superman Stretch",false,"super set — 2 rounds",s(2,15,0),"C"),
         exo("Plank Twist-Twist",false,"super set — 2 rounds",s(2,15,0),"C"),
+      ]};
+
+    // ── BEAST BLOCK additional workouts ──────────────────────────────────────
+    if (code === "L7") return { name:"Lucky 7", tag:"L7", tagColor:T.lb,
+      weekLabel:"Week "+wk+" — Lucky 7",
+      exercises:[
+        exo("EZ Push-Up",true,"combo 1 — flow into Clean then Squat, 7 reps each",s(3,7,0),"A"),
+        exo("Clean",false,"combo 1 — 7 reps each",s(3,7,0),"A"),
+        exo("Squat",false,"combo 1 — 7 reps each",s(3,7,0),"A"),
+        exo("Deadlift",false,"combo 2 — flow into Bent Over Row, 7 reps each",s(3,7,0),"B"),
+        exo("Bent Over Row",false,"combo 2 — 7 reps each",s(3,7,0),"B"),
+        exo("Skull Crusher",false,"combo 3 — Press then Crunch, 7 reps each",s(3,7,0),"C"),
+        exo("Press",false,"combo 3 — 7 reps each",s(3,7,0),"C"),
+        exo("Crunch",false,"combo 3 — 7 reps each",s(3,7,0),"C"),
+        exo("Bicep Curl",false,"combo 4 — Military Press then EZ Squat, 7 reps each",s(3,7,0),"D"),
+        exo("Military Press",false,"combo 4 — 7 reps each",s(3,7,0),"D"),
+        exo("EZ Squat",false,"combo 4 — 7 reps each",s(3,7,0),"D"),
+        exo("Delt Raise",false,"combo 5 — Reverse Lunge, 7 reps each",s(3,7,0),"E"),
+        exo("Reverse Lunge",false,"combo 5 — 7 reps each",s(3,7,0),"E"),
+        exo("Lat Oblique Twist R",false,"combo 6 — then L side, 7 reps each",s(3,7,0),"F"),
+        exo("Lat Oblique Twist L",false,"combo 6 — 7 reps each",s(3,7,0),"F"),
+        exo("Upright Row",false,"combo 7 — Calf Raise, 7 reps each",s(3,7,0),"G"),
+        exo("Calf Raise",false,"combo 7 — 7 reps each",s(3,7,0),"G"),
+      ]};
+
+    if (code === "TCT") return { name:"Tempo: Chest & Tris", tag:"TCT", tagColor:T.or,
+      weekLabel:"Week "+wk+" — Tempo: Chest & Tris",
+      exercises:[
+        exo("Chest Press",true,"tempo — 3×8, 4 sec down each rep",pyr3(0)),
+        exo("Figure 4 Crunch",false,"3×15 — core finisher",s(3,15,0)),
+        exo("Incline Press",false,"tempo — 3×8, 4 sec down",pyr3(0)),
+        exo("Cricket Crunch",false,"3×15 — core finisher",s(3,15,0)),
+        exo("Incline Fly",false,"tempo — 3×8, controlled stretch",pyr3(0)),
+        exo("Tempo Plank",false,"3×30s hold",s(3,"30s",0)),
+        exo("Skull Crusher",false,"tempo — 3×8, 4 sec down",pyr3(0)),
+        exo("EZ Bar Crunch",false,"3×15 — core finisher",s(3,15,0)),
+        exo("Tricep Kickback",false,"tempo super set — 3 rounds",pyr3(0),"A"),
+        exo("Dips",false,"tempo super set — 3 rounds",pyr3(0),"A"),
+        exo("Plank Twist-Twist",false,"finisher — 3×15",s(3,15,0)),
+      ]};
+
+    if (code === "TBB") return { name:"Tempo: Back & Bis", tag:"TBB", tagColor:T.ac,
+      weekLabel:"Week "+wk+" — Tempo: Back & Bis",
+      exercises:[
+        exo("Pull-Over",true,"tempo — 3×8, 4 sec down each rep",pyr3(0)),
+        exo("Wide Plank In & Out",false,"3×15 — core finisher",s(3,15,0)),
+        exo("Pull-Up",false,"tempo — 3 sets max, slow descent",pyr3(0)),
+        exo("Hanging Circle",false,"3×10 — active hang",s(3,10,0)),
+        exo("Reverse Bent-Over Row",false,"tempo — 3×8, pause at top",pyr3(0)),
+        exo("Lat Oblique Twist",false,"3×15 — core finisher",s(3,15,0)),
+        exo("Preacher Curl",false,"tempo — 3×8, 4 sec down",pyr3(0)),
+        exo("Hanging Curl",false,"3×10 — hang & curl",s(3,10,0)),
+        exo("All-Angle Bicep",false,"tempo — 3×8, full arc",pyr3(0)),
+        exo("Speed Mountain Climber",false,"3×30s — conditioning finisher",s(3,"30s",0)),
+      ]};
+
+    if (code === "BT") return { name:"Beast: Total Body", tag:"BT", tagColor:T.gr,
+      weekLabel:"Week "+wk+" — Beast: Total Body",
+      exercises:[
+        exo("Pull-Up",true,"circuit 1 — 2 rounds A→B→C→D, 15 reps each",s(2,15,0),"A"),
+        exo("Push-Up",false,"circuit 1",s(2,15,0),"A"),
+        exo("Squat",false,"circuit 1",s(2,15,0),"A"),
+        exo("Crunch",false,"circuit 1",s(2,15,0),"A"),
+        exo("Incline Press",false,"circuit 2 — 2 rounds A→B→C→D",s(2,15,0),"B"),
+        exo("Bent-Over Row",false,"circuit 2",s(2,15,0),"B"),
+        exo("Reverse Alternating Lunge",false,"circuit 2",s(2,15,0),"B"),
+        exo("Plank Twist-Twist",false,"circuit 2",s(2,15,0),"B"),
+        exo("1,1,2 Military Press",false,"circuit 3 — 2 rounds A→B→C→D→E",s(2,15,0),"C"),
+        exo("Post Delt Raise R",false,"circuit 3",s(2,15,0),"C"),
+        exo("Post Delt Raise L",false,"circuit 3",s(2,15,0),"C"),
+        exo("Stiff Leg Deadlift",false,"circuit 3",s(2,15,0),"C"),
+        exo("Russian Twist",false,"circuit 3",s(2,15,0),"C"),
+        exo("Bicep Curl Up-Hammer Down",false,"circuit 4 — 2 rounds A→B→C→D→E→F",s(2,15,0),"D"),
+        exo("Tricep Extension-Kickback R",false,"circuit 4",s(2,15,0),"D"),
+        exo("Tricep Extension-Kickback L",false,"circuit 4",s(2,15,0),"D"),
+        exo("Calf Raise",false,"circuit 4",s(2,15,0),"D"),
+        exo("Side Forearm Plank R",false,"circuit 4 — 30s hold",s(2,"30s",0),"D"),
+        exo("Side Forearm Plank L",false,"circuit 4 — 30s hold",s(2,"30s",0),"D"),
       ]};
 
     return null;
@@ -924,79 +992,6 @@ const NumInput = ({ label, value, onChange, hint }) => {
   );
 };
 
-// ─── EXERCISE PHOTO ───────────────────────────────────────────────────────────
-// Fetches animated GIFs from ExerciseDB (RapidAPI free tier).
-// Module-level cache: each exercise name fetches once per session, then
-// the service worker caches the image URL permanently — works offline after first view.
-// Set VITE_RAPIDAPI_KEY in Vercel environment variables to enable.
-const _photoCache = new Map(); // name → gifUrl string
-
-// Normalize exercise names to maximize API match rate
-const _normalizeName = (name) => {
-  return name
-    .toLowerCase()
-    .replace(/\bdb\b/g, "dumbbell")
-    .replace(/\bkb\b/g, "kettlebell")
-    .replace(/\brdl\b/g, "romanian deadlift")
-    .replace(/\bohp\b/g, "overhead press")
-    .replace(/\balt\.?\b/g, "")
-    .replace(/\b([-–])?\s*(r|l)\b/g, "")     // strip -R / -L suffixes
-    .replace(/1,1,2/g, "")
-    .replace(/[^a-z0-9 ]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-};
-
-const ExercisePhoto = ({ name, size = "full" }) => {
-  const [url, setUrl]       = useState(() => _photoCache.get(name) || null);
-  const [status, setStatus] = useState(_photoCache.has(name) ? "done" : "loading");
-
-  useEffect(() => {
-    if (_photoCache.has(name)) { setUrl(_photoCache.get(name)); setStatus("done"); return; }
-    const apiKey = RAPIDAPI_KEY;
-    if (!apiKey) { setStatus("none"); return; }
-    const q = encodeURIComponent(_normalizeName(name));
-    fetch(`https://exercisedb.p.rapidapi.com/exercises/name/${q}?limit=1&offset=0`, {
-      headers: {
-        "X-RapidAPI-Key": apiKey,
-        "X-RapidAPI-Host": "exercisedb.p.rapidapi.com",
-      },
-    })
-      .then(r => r.ok ? r.json() : Promise.reject(r.status))
-      .then(data => {
-        const gifUrl = Array.isArray(data) && data[0]?.gifUrl;
-        if (gifUrl) { _photoCache.set(name, gifUrl); setUrl(gifUrl); }
-        setStatus("done");
-      })
-      .catch(() => setStatus("none"));
-  }, [name]);
-
-  if (size === "thumb") {
-    if (!url) return null;
-    return (
-      <img src={url} alt={name}
-        style={{ width:44, height:44, borderRadius:8, objectFit:"cover",
-          flexShrink:0, border:"1px solid "+T.bo, background:T.hi }} />
-    );
-  }
-
-  // Full size — used in ExDrawer
-  if (status === "loading") return (
-    <div style={{ height:160, background:T.hi, borderRadius:12, marginBottom:20,
-      display:"flex", alignItems:"center", justifyContent:"center" }}>
-      <div style={{ width:24, height:24, borderRadius:"50%", border:"2px solid "+T.bo,
-        borderTopColor:T.ac, animation:"spin 1s linear infinite" }} />
-    </div>
-  );
-  if (!url) return null;
-  return (
-    <div style={{ marginBottom:20, borderRadius:12, overflow:"hidden", background:"#fff" }}>
-      <img src={url} alt={name}
-        style={{ width:"100%", display:"block", maxHeight:220, objectFit:"contain" }} />
-    </div>
-  );
-};
-
 // ─── EXERCISE DRAWER ──────────────────────────────────────────────────────────
 const ExDrawer = ({ ex, color, onClose }) => {
   const info = exInfo(ex.name);
@@ -1021,7 +1016,7 @@ const ExDrawer = ({ ex, color, onClose }) => {
                 color: T.mu, cursor: "pointer", fontFamily: T.fn, fontSize: 14 }}>X</button>
           </div>
           <div style={{ color: T.mu, fontSize: 13, fontFamily: T.fn, marginBottom: 16 }}>{info.m}</div>
-          <ExercisePhoto name={ex.name} size="full" />
+          
           <div style={{ display: "flex", gap: 8, marginBottom: 18 }}>
             <div style={{ flex: 1, background: color+"12", border: "1px solid "+color+"28", borderRadius: 12, padding: "13px 14px" }}>
               <div style={{ color: T.di, fontSize: 9, fontWeight: 700, letterSpacing: 1.5, fontFamily: T.fn, marginBottom: 5 }}>REST TIME</div>
@@ -1579,8 +1574,8 @@ const Generating = ({ answers, onDone }) => {
 // ─── PROGRAM LIST ─────────────────────────────────────────────────────────────
 // ─── WORKOUT LIBRARY ──────────────────────────────────────────────────────────
 // Generates all unique workout types for a program for single-session use
-const getLibraryWorkouts = (pid) => {
-  const defaultMx = { squat:185, bench:135, deadlift:225, ohp:95 };
+const getLibraryWorkouts = (pid, mx) => {
+  const useMx = (mx && Object.values(mx).some(v => v > 0)) ? mx : { squat:185, bench:135, deadlift:225, ohp:95 };
   const workouts = [];
   if (pid === "ironblocks") {
     const codes = [
@@ -1590,7 +1585,7 @@ const getLibraryWorkouts = (pid) => {
       {code:"BAR",wk:4,dow:4},{code:"BSH",wk:4,dow:5},
     ];
     codes.forEach(({wk,dow}) => {
-      const wo = buildWorkout(pid, defaultMx, wk, dow, 0);
+      const wo = buildWorkout(pid, useMx, wk, dow, 0);
       if (wo) workouts.push(wo);
     });
   } else {
@@ -1598,7 +1593,7 @@ const getLibraryWorkouts = (pid) => {
     const seen = new Set();
     for (let sc = 0; sc < 6; sc++) {
       for (let dow = 0; dow <= 6; dow++) {
-        const wo = buildWorkout(pid, defaultMx, 1, dow, sc);
+        const wo = buildWorkout(pid, useMx, 1, dow, sc);
         if (wo && !seen.has(wo.name)) {
           seen.add(wo.name);
           workouts.push(wo);
@@ -1609,10 +1604,90 @@ const getLibraryWorkouts = (pid) => {
   return workouts;
 };
 
+// ─── LIFT ENTRY MODAL ─────────────────────────────────────────────────────────
+// Shows before launching any weighted library workout when maxes aren't set.
+// Detects which lifts are needed from the program, shows only those fields.
+const LIFT_NAMES = { squat:"Back Squat", bench:"Bench Press", deadlift:"Deadlift", ohp:"Overhead Press" };
+const LIFT_HINTS = { squat:"e.g. 225", bench:"e.g. 185", deadlift:"e.g. 315", ohp:"e.g. 135" };
+
+const LiftEntryModal = ({ pid, onConfirm, onSkip }) => {
+  const prog = PROG[pid];
+  const lifts = prog?.lifts || ["squat","bench","deadlift","ohp"];
+  const [mx, setMx] = useState({});
+  const setM = (k, v) => setMx(m => ({ ...m, [k]: v }));
+  const anyEntered = lifts.some(k => mx[k] && Number(mx[k]) > 0);
+
+  return (
+    <>
+      <div onClick={onSkip}
+        style={{ position:"fixed", inset:0, background:"rgba(0,0,0,.85)", zIndex:300 }} />
+      <div style={{ position:"fixed", bottom:0, left:"50%", transform:"translateX(-50%)",
+        width:"100%", maxWidth:440, background:T.su, borderRadius:"22px 22px 0 0",
+        zIndex:301, maxHeight:"90vh", overflowY:"auto" }}>
+        <div style={{ display:"flex", justifyContent:"center", padding:"12px 0 4px" }}>
+          <div style={{ width:40, height:4, borderRadius:2, background:T.bo }} />
+        </div>
+        <div style={{ padding:"12px 24px 48px" }}>
+          <h3 style={{ fontFamily:T.fn, fontWeight:800, fontSize:20, color:T.tx, margin:"0 0 6px" }}>
+            Enter Your Lifts
+          </h3>
+          <p style={{ color:T.mu, fontSize:13, fontFamily:T.fn, lineHeight:1.6, margin:"0 0 20px" }}>
+            Weights are calculated from your 1-rep max. Enter what you can — skip any you don't know.
+          </p>
+          {lifts.map(k => (
+            <NumInput key={k} label={LIFT_NAMES[k] + " 1RM"} value={mx[k] || ""}
+              onChange={v => setM(k, v)} hint={LIFT_HINTS[k]} />
+          ))}
+          <div style={{ display:"flex", gap:10, marginTop:20 }}>
+            <button onClick={onSkip}
+              style={{ flex:1, padding:14, borderRadius:12, background:T.hi,
+                border:"1px solid "+T.bo, fontFamily:T.fn, fontWeight:700,
+                fontSize:14, color:T.mu, cursor:"pointer" }}>
+              Use Defaults
+            </button>
+            <button onClick={() => onConfirm(Object.fromEntries(lifts.map(k => [k, Number(mx[k]) || 0])))}
+              style={{ flex:2, padding:14, borderRadius:12, background:T.ac,
+                border:"none", fontFamily:T.fn, fontWeight:700,
+                fontSize:14, color:"#fff", cursor:"pointer" }}>
+              {anyEntered ? "Start Workout" : "Start with Defaults"}
+            </button>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
 const WorkoutLibrary = ({ onDoWorkout, onBack, existMx }) => {
   const [openPid, setOpenPid] = useState(null);
   const [search, setSearch] = useState("");
-  const mx = existMx && Object.values(existMx).some(v => v > 0) ? existMx : { squat:185, bench:135, deadlift:225, ohp:95 };
+  const [pendingLaunch, setPendingLaunch] = useState(null); // {pid, day, color}
+  const mx = existMx && Object.values(existMx).some(v => v > 0) ? existMx : {};
+
+  // Needs-lift check: program has barbell lifts AND user hasn't entered maxes
+  const needsLifts = (pid) => {
+    const prog = PROG[pid];
+    if (!prog || !prog.lifts || prog.lifts.length === 0) return false;
+    return !existMx || !Object.values(existMx).some(v => v > 0);
+  };
+
+  const launch = (pid, wo, color, userMx) => {
+    const usedMx = userMx && Object.values(userMx).some(v => v > 0) ? userMx : mx;
+    // Rebuild workout with user's actual maxes
+    const rebuiltWo = usedMx && Object.values(usedMx).some(v => v > 0)
+      ? (getLibraryWorkouts(pid, usedMx).find(w => w.name === wo.name) || wo)
+      : wo;
+    onDoWorkout({
+      id: "lib_"+pid+"_"+Date.now(),
+      date: new Date(),
+      dow: new Date().getDay(),
+      dayLabel: ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][new Date().getDay()],
+      dayFull: ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][new Date().getDay()],
+      weekNum: 1,
+      isRest: false,
+      workout: rebuiltWo,
+    }, color);
+  };
 
   const filtered = Object.values(PROG).filter(p =>
     search === "" || p.name.toLowerCase().includes(search.toLowerCase())
@@ -1620,6 +1695,13 @@ const WorkoutLibrary = ({ onDoWorkout, onBack, existMx }) => {
 
   return (
     <div style={{ minHeight:"100vh", paddingBottom:40 }}>
+      {pendingLaunch && (
+        <LiftEntryModal
+          pid={pendingLaunch.pid}
+          onConfirm={userMx => { launch(pendingLaunch.pid, pendingLaunch.wo, pendingLaunch.color, userMx); setPendingLaunch(null); }}
+          onSkip={() => { launch(pendingLaunch.pid, pendingLaunch.wo, pendingLaunch.color, {}); setPendingLaunch(null); }}
+        />
+      )}
       <div style={{ padding:"52px 20px 16px" }}>
         <BackBtn onClick={onBack} />
         <h1 style={{ fontFamily:T.fn, fontWeight:800, fontSize:26, color:T.tx, margin:"0 0 4px" }}>Workout Library</h1>
@@ -1633,7 +1715,7 @@ const WorkoutLibrary = ({ onDoWorkout, onBack, existMx }) => {
       <div style={{ padding:"0 20px", display:"flex", flexDirection:"column", gap:8 }}>
         {filtered.map(p => {
           const isOpen = openPid === p.id;
-          const workouts = isOpen ? getLibraryWorkouts(p.id) : [];
+          const workouts = isOpen ? getLibraryWorkouts(p.id, mx) : [];
           return (
             <div key={p.id} style={{ background:T.su, border:"1px solid "+(isOpen ? p.color+"50" : T.bo),
               borderRadius:14, overflow:"hidden" }}>
@@ -1641,13 +1723,18 @@ const WorkoutLibrary = ({ onDoWorkout, onBack, existMx }) => {
               <div onClick={() => setOpenPid(isOpen ? null : p.id)}
                 style={{ padding:"16px 18px", cursor:"pointer", display:"flex",
                   justifyContent:"space-between", alignItems:"center" }}>
-                <div>
+                <div style={{ flex:1, paddingRight:12 }}>
                   <div style={{ fontFamily:T.fn, fontWeight:800, fontSize:16, color:T.tx }}>{p.name}</div>
                   <div style={{ color:T.mu, fontSize:11, fontFamily:T.fn, marginTop:2 }}>
-                    {p.freq} · {p.equip}
+                    {p.coach} · {p.freq} · {p.equip}
                   </div>
+                  {isOpen && (
+                    <div style={{ color:"#A8A6BE", fontSize:12, fontFamily:T.fn, marginTop:8, lineHeight:1.6 }}>
+                      {p.desc}
+                    </div>
+                  )}
                 </div>
-                <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-end", gap:6, flexShrink:0 }}>
                   <Badge ch={p.diff} color={p.color} />
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
                     stroke={T.mu} strokeWidth="2.5" strokeLinecap="round"
@@ -1673,16 +1760,13 @@ const WorkoutLibrary = ({ onDoWorkout, onBack, existMx }) => {
                           <div style={{ width:8, height:8, borderRadius:"50%", background:wo.tagColor || p.color, flexShrink:0 }} />
                           <div style={{ fontFamily:T.fn, fontWeight:700, fontSize:14, color:T.tx }}>{wo.name}</div>
                         </div>
-                        <button onClick={() => onDoWorkout({
-                            id: "lib_"+p.id+"_"+i,
-                            date: new Date(),
-                            dow: new Date().getDay(),
-                            dayLabel: ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][new Date().getDay()],
-                            dayFull: ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][new Date().getDay()],
-                            weekNum: 1,
-                            isRest: false,
-                            workout: wo,
-                          }, p.color)}
+                        <button onClick={() => {
+                            if (needsLifts(p.id)) {
+                              setPendingLaunch({ pid:p.id, wo, color:p.color });
+                            } else {
+                              launch(p.id, wo, p.color, mx);
+                            }
+                          }}
                           style={{ background:p.color+"18", border:"1px solid "+p.color+"40",
                             borderRadius:8, padding:"7px 14px", cursor:"pointer",
                             fontFamily:T.fn, fontWeight:700, fontSize:12, color:p.color,
@@ -1690,14 +1774,21 @@ const WorkoutLibrary = ({ onDoWorkout, onBack, existMx }) => {
                           Do It
                         </button>
                       </div>
-                      {/* Main exercises with thumbnails */}
-                      <div style={{ display:"flex", gap:5, flexWrap:"wrap", paddingLeft:16, alignItems:"center" }}>
-                        {(wo.exercises||[]).filter(e=>e.isMain).slice(0,4).map((ex,j) => (
-                          <div key={j} style={{ display:"flex", alignItems:"center", gap:5 }}>
-                            <ExercisePhoto name={ex.name} size="thumb" />
-                            <span style={{ color:T.mu, fontSize:11, fontFamily:T.fn }}>{ex.name}</span>
-                          </div>
-                        ))}
+                      {/* Main exercises with photos and muscle descriptions */}
+                      <div style={{ display:"flex", flexDirection:"column", gap:14, paddingLeft:0, marginTop:10 }}>
+                        {(wo.exercises||[]).filter(e=>e.isMain).slice(0,3).map((ex,j) => {
+                          const info = exInfo(ex.name);
+                          return (
+                            <div key={j}>
+                              <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:6 }}>
+                                <div style={{ width:6, height:6, borderRadius:"50%", background:p.color, flexShrink:0 }} />
+                                <span style={{ fontFamily:T.fn, fontWeight:700, fontSize:12, color:T.tx }}>{ex.name}</span>
+                                <span style={{ fontFamily:T.fn, fontSize:11, color:T.mu }}>· {info.m}</span>
+                              </div>
+                              
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   ))}
@@ -1977,8 +2068,256 @@ const ProgramDetail = ({ pid, onBack, onActivate, existMx, isCustom, cdata }) =>
   );
 };
 
+// ─── SMART RECOMMENDATION ENGINE ─────────────────────────────────────────────
+// Maps exercise names to muscle groups for recovery tracking
+const MUSCLE_MAP = {
+  chest:    ["bench","incline","chest press","push-up","pushup","dip","fly","close grip press","decline"],
+  tris:     ["tricep","skull","pushdown","kickback","close grip","dips","tris"],
+  back:     ["deadlift","row","pull-up","pullup","chin-up","chinup","pull-over","pullover","lat","rdl","romanian","stiff leg","reverse fly","reverse bent"],
+  bis:      ["curl","bicep","hammer curl","preacher"],
+  legs:     ["squat","lunge","leg press","leg curl","hip thrust","calf","split squat","bulgarian","sumo","front to back","step-up"],
+  shoulders:["shoulder press","overhead press","ohp","lateral raise","front raise","upright row","shrug","rear delt","arnold press","military"],
+  core:     ["plank","crunch","sit-up","situp","mountain climber","russian twist","ab","ins and out","v-up","toes-to-bar","hanging circle"],
+  fullbody: ["burpee","thruster","clean","snatch","circuit","total body","lucky 7","beast"],
+};
+
+// Recovery hours before a group is considered "fresh"
+const RECOVERY_HRS = { chest:48, tris:48, back:48, bis:48, legs:72, shoulders:48, core:24, fullbody:72 };
+
+// Friendly display names and colors for each group
+const GROUP_META = {
+  chest:    { label:"Chest",     color:T.or },
+  tris:     { label:"Triceps",   color:T.or },
+  back:     { label:"Back",      color:T.ac },
+  bis:      { label:"Biceps",    color:T.ac },
+  legs:     { label:"Legs",      color:T.gr },
+  shoulders:{ label:"Shoulders", color:T.pu },
+  core:     { label:"Core",      color:T.tl },
+  fullbody: { label:"Full Body", color:T.yw },
+};
+
+// Merged display groups — chest+tris, back+bis show together
+const DISPLAY_GROUPS = [
+  { key:"push",  label:"Chest & Tris",  groups:["chest","tris"],   color:T.or },
+  { key:"pull",  label:"Back & Bis",    groups:["back","bis"],     color:T.ac },
+  { key:"legs",  label:"Legs",          groups:["legs"],           color:T.gr },
+  { key:"sh",    label:"Shoulders",     groups:["shoulders"],      color:T.pu },
+  { key:"core",  label:"Core",          groups:["core"],           color:T.tl },
+  { key:"fb",    label:"Full Body",     groups:["fullbody"],       color:T.yw },
+];
+
+const getRecoveryStatus = (logs, cal) => {
+  // Build a map of {muscleGroup: lastTrainedDate}
+  const lastTrained = {};
+  const now = Date.now();
+
+  // Collect all completed workout days sorted newest first
+  const completed = (cal || [])
+    .filter(d => logs[d.id] && d.workout && d.workout.exercises)
+    .sort((a, b) => b.date - a.date);
+
+  // Also check lib_ workouts stored in logs by scanning log keys
+  // Logs keyed by day id — completed cal days give us exercise data
+  completed.forEach(day => {
+    const logEntry = logs[day.id];
+    const logDate = logEntry?.date ? new Date(logEntry.date).getTime() : day.date?.getTime();
+    if (!logDate) return;
+
+    const exercises = day.workout.exercises || [];
+    exercises.forEach(ex => {
+      const name = (ex.name || "").toLowerCase();
+      Object.entries(MUSCLE_MAP).forEach(([group, keywords]) => {
+        if (keywords.some(k => name.includes(k))) {
+          if (!lastTrained[group] || logDate > lastTrained[group]) {
+            lastTrained[group] = logDate;
+          }
+        }
+      });
+    });
+  });
+
+  // Calculate hours since last trained for each display group
+  return DISPLAY_GROUPS.map(dg => {
+    const hoursArr = dg.groups.map(g => {
+      if (!lastTrained[g]) return null; // never trained
+      return (now - lastTrained[g]) / 3_600_000;
+    });
+    const minHours = hoursArr.every(h => h === null) ? null : Math.min(...hoursArr.filter(h => h !== null));
+    const recoveryNeeded = Math.max(...dg.groups.map(g => RECOVERY_HRS[g]));
+    const pct = minHours === null ? 100 : Math.min(100, (minHours / recoveryNeeded) * 100);
+    const status = minHours === null ? "fresh" : minHours >= recoveryNeeded ? "fresh" : minHours >= recoveryNeeded * 0.5 ? "partial" : "sore";
+    return { ...dg, hoursAgo: minHours, pct, status };
+  });
+};
+
+// Pick 2-3 library workouts that target the freshest muscle groups
+const getRecommendations = (recoveryStatus, existMx) => {
+  const mx = existMx && Object.values(existMx).some(v => v > 0) ? existMx : { squat:185, bench:135, deadlift:225, ohp:95 };
+
+  // Sort by freshest first
+  const fresh = recoveryStatus
+    .filter(g => g.status !== "sore")
+    .sort((a, b) => (b.pct) - (a.pct));
+
+  const recs = [];
+  const seen = new Set();
+
+  // For each fresh group, find a matching workout from all programs
+  fresh.forEach(group => {
+    if (recs.length >= 3) return;
+
+    // Search all programs for workouts targeting this group
+    Object.keys(PROG).forEach(pid => {
+      if (recs.length >= 3) return;
+      const workouts = getLibraryWorkouts(pid);
+      workouts.forEach(wo => {
+        if (recs.length >= 3 || seen.has(wo.name)) return;
+        // Check if this workout targets the fresh group
+        const exNames = (wo.exercises || []).filter(e => e.isMain).map(e => (e.name||"").toLowerCase()).join(" ");
+        const matches = group.groups.some(g =>
+          MUSCLE_MAP[g].some(k => exNames.includes(k))
+        );
+        if (matches) {
+          seen.add(wo.name);
+          recs.push({ wo, pid, color: PROG[pid].color, groupLabel: group.label, pcolor: group.color });
+        }
+      });
+    });
+  });
+
+  // If we have fewer than 2, fill with any library workout not seen
+  if (recs.length < 2) {
+    Object.keys(PROG).some(pid => {
+      const workouts = getLibraryWorkouts(pid);
+      workouts.some(wo => {
+        if (recs.length >= 2 || seen.has(wo.name)) return false;
+        seen.add(wo.name);
+        recs.push({ wo, pid, color: PROG[pid].color, groupLabel: "Full Body", pcolor: T.yw });
+        return false;
+      });
+      return recs.length >= 2;
+    });
+  }
+
+  return recs;
+};
+
+const SmartRecommendation = ({ logs, cal, existMx, onStart }) => {
+  const recovery = getRecoveryStatus(logs, cal);
+  const recs = getRecommendations(recovery, existMx);
+  const [pendingRec, setPendingRec] = useState(null);
+
+  const needsLifts = (pid) => {
+    const prog = PROG[pid];
+    if (!prog || !prog.lifts || prog.lifts.length === 0) return false;
+    return !existMx || !Object.values(existMx).some(v => v > 0);
+  };
+
+  const launchRec = (rec, userMx) => {
+    const mx = userMx && Object.values(userMx).some(v => v > 0) ? userMx : existMx;
+    const wo = (mx && Object.values(mx).some(v => v > 0))
+      ? (getLibraryWorkouts(rec.pid, mx).find(w => w.name === rec.wo.name) || rec.wo)
+      : rec.wo;
+    onStart({
+      id: "rec_"+rec.pid+"_"+Date.now(),
+      date: new Date(),
+      dow: new Date().getDay(),
+      dayLabel: ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][new Date().getDay()],
+      dayFull: ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][new Date().getDay()],
+      weekNum: 1,
+      isRest: false,
+      workout: wo,
+    }, rec.color);
+  };
+
+  const statusColor = s => s === "fresh" ? T.gr : s === "partial" ? T.yw : T.rd;
+  const statusLabel = (s, h) => {
+    if (s === "fresh" && h === null) return "Never trained";
+    if (s === "fresh") return `${Math.round(h)}h ago — ready`;
+    if (s === "partial") return `${Math.round(h)}h ago — almost`;
+    return `${Math.round(h)}h ago — rest`;
+  };
+
+  return (
+    <div style={{ marginBottom: 24 }}>
+      {pendingRec && (
+        <LiftEntryModal
+          pid={pendingRec.pid}
+          onConfirm={userMx => { launchRec(pendingRec, userMx); setPendingRec(null); }}
+          onSkip={() => { launchRec(pendingRec, {}); setPendingRec(null); }}
+        />
+      )}
+      {/* Header */}
+      <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:14 }}>
+        <div style={{ width:8, height:8, borderRadius:"50%", background:T.ac }} />
+        <span style={{ color:T.mu, fontSize:10, fontWeight:700, letterSpacing:1.5, fontFamily:T.fn }}>WHAT SHOULD I DO TODAY?</span>
+      </div>
+
+      {/* Recovery grid */}
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:6, marginBottom:18 }}>
+        {recovery.map(g => (
+          <div key={g.key} style={{ background:T.su, border:"1px solid "+T.bo, borderRadius:10, padding:"10px 10px 8px" }}>
+            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:5 }}>
+              <span style={{ fontFamily:T.fn, fontWeight:700, fontSize:11, color:T.tx }}>{g.label}</span>
+              <div style={{ width:7, height:7, borderRadius:"50%", background:statusColor(g.status), flexShrink:0 }} />
+            </div>
+            {/* Recovery bar */}
+            <div style={{ height:3, background:T.bo, borderRadius:2, marginBottom:5, overflow:"hidden" }}>
+              <div style={{ height:"100%", width:g.pct+"%", background:statusColor(g.status),
+                borderRadius:2, transition:"width 0.6s" }} />
+            </div>
+            <div style={{ fontFamily:T.fn, fontSize:9, color:T.mu, lineHeight:1.3 }}>
+              {statusLabel(g.status, g.hoursAgo)}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Recommendations */}
+      {recs.length > 0 && (
+        <>
+          <div style={{ color:T.mu, fontSize:10, fontWeight:700, letterSpacing:1.5, fontFamily:T.fn, marginBottom:10 }}>
+            RECOMMENDED FOR YOU
+          </div>
+          <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+            {recs.map((rec, i) => (
+              <div key={i} style={{ background:T.su, border:"1px solid "+rec.color+"40",
+                borderRadius:12, padding:"14px 16px", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+                <div style={{ flex:1 }}>
+                  <div style={{ display:"flex", alignItems:"center", gap:7, marginBottom:3 }}>
+                    <div style={{ width:6, height:6, borderRadius:"50%", background:rec.pcolor, flexShrink:0 }} />
+                    <span style={{ fontFamily:T.fn, fontWeight:700, fontSize:14, color:T.tx }}>{rec.wo.name}</span>
+                  </div>
+                  <div style={{ display:"flex", gap:6, alignItems:"center" }}>
+                    <span style={{ fontFamily:T.fn, fontSize:11, color:T.mu }}>{PROG[rec.pid]?.name}</span>
+                    <span style={{ color:T.di, fontSize:11 }}>·</span>
+                    <span style={{ fontFamily:T.fn, fontSize:11, color:rec.pcolor, fontWeight:700 }}>{rec.groupLabel}</span>
+                  </div>
+                </div>
+                <button onClick={() => {
+                    if (needsLifts(rec.pid)) {
+                      setPendingRec(rec);
+                    } else {
+                      launchRec(rec, {});
+                    }
+                  }}
+                  style={{ background:rec.color+"20", border:"1px solid "+rec.color+"50",
+                    borderRadius:8, padding:"8px 16px", cursor:"pointer",
+                    fontFamily:T.fn, fontWeight:700, fontSize:12, color:rec.color,
+                    flexShrink:0, marginLeft:12 }}>
+                  Do It
+                </button>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
 // ─── TODAY SCREEN ─────────────────────────────────────────────────────────────
-const Today = ({ cal, pname, pcolor, logs, onStart }) => {
+const Today = ({ cal, pname, pcolor, logs, onStart, existMx }) => {
   const color = pcolor || T.ac;
   const name = pname || "My Program";
   const ts = todayStr();
@@ -2034,7 +2373,7 @@ const Today = ({ cal, pname, pcolor, logs, onStart }) => {
                 <div key={i} style={{ marginBottom: 10 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4, alignItems:"center" }}>
                     <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-                      <ExercisePhoto name={ex.name} size="thumb" />
+                      
                       <span style={{ fontFamily: T.fn, fontWeight: 700, fontSize: 13, color: T.tx }}>{ex.name}</span>
                     </div>
                     <span style={{ color: T.mu, fontSize: 11, fontFamily: T.fn }}>{ex.sets.length} sets</span>
@@ -2127,6 +2466,8 @@ const Today = ({ cal, pname, pcolor, logs, onStart }) => {
             </div>
           </div>
         )}
+
+        <SmartRecommendation logs={logs} cal={cal} existMx={existMx} onStart={(day, color) => onStart(day)} />
 
         <Sep />
         <div style={{ color: T.mu, fontSize: 10, fontWeight: 700, letterSpacing: 1.5, fontFamily: T.fn, marginBottom: 8 }}>THIS WEEK</div>
@@ -2240,6 +2581,7 @@ const Workout = ({ day, pcolor, onComplete, onBack }) => {
   const [notes, setNotes] = useState("");
   const [drawer, setDrawer] = useState(null);
   const [rest, setRest] = useState(null);
+  useWakeLock(true); // keep screen on for entire workout
   const total = day.workout.exercises.reduce((s, e) => s + e.sets.length, 0);
   const done = Object.values(completedSets).filter(Boolean).length;
 
@@ -2322,9 +2664,8 @@ const Workout = ({ day, pcolor, onComplete, onBack }) => {
               const { ex, idx: ei } = block;
               return (
                 <div key={bi} style={{ marginBottom: 22 }}>
-                  <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom: 10 }}>
+                  <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom: 8 }}>
                     <div style={{ display:"flex", alignItems:"flex-start", gap:10, flex:1, cursor:"pointer" }} onClick={() => setDrawer(ex)}>
-                      <ExercisePhoto name={ex.name} size="thumb" />
                       <div>
                         <div style={{ display:"flex", alignItems:"center", gap:7 }}>
                           <span style={{ fontFamily:T.fn, fontWeight:700, fontSize:15, color:T.tx }}>{ex.name}</span>
@@ -2338,6 +2679,7 @@ const Workout = ({ day, pcolor, onComplete, onBack }) => {
                       <span onClick={() => setDrawer(ex)} style={{ color:T.di, fontSize:10, fontFamily:T.fn, cursor:"pointer", background:T.hi, border:"1px solid "+T.bo, borderRadius:5, padding:"2px 8px", whiteSpace:"nowrap" }}>Rest {fmt(exInfo(ex.name).r)}</span>
                     </div>
                   </div>
+                  
                   {ex.sets.map((s, si) => {
                     const key = ei+"_"+si;
                     const isDone = !!completedSets[key];
@@ -2385,7 +2727,7 @@ const Workout = ({ day, pcolor, onComplete, onBack }) => {
                           <div style={{ flex:1, cursor:"pointer" }} onClick={() => setDrawer(ex)}>
                             <div style={{ display:"flex", alignItems:"center", gap:6 }}>
                               <div style={{ width:20, height:20, borderRadius:6, background:ssColor+"20", border:"1px solid "+ssColor+"40", display:"flex", alignItems:"center", justifyContent:"center", fontFamily:T.mo, fontSize:11, fontWeight:800, color:ssColor, flexShrink:0 }}>{GRP_LABELS[xi]}</div>
-                              <ExercisePhoto name={ex.name} size="thumb" />
+                              
                               <span style={{ fontFamily:T.fn, fontWeight:700, fontSize:14, color:T.tx }}>{ex.name}</span>
                               <span style={{ color:T.ac, fontSize:12, opacity:0.7 }}>&#9432;</span>
                             </div>
@@ -2608,6 +2950,26 @@ const Progress = ({ logs, cal, pname, pcolor, maxes, onUpdateMaxes }) => {
 };
 
 // ─── SHARED SOUND HOOK ────────────────────────────────────────────────────────
+// ─── WAKE LOCK ────────────────────────────────────────────────────────────────
+// Prevents screen from sleeping during workouts and timers.
+// Automatically released when component unmounts or workout ends.
+const useWakeLock = (active) => {
+  const lockRef = useRef(null);
+  useEffect(() => {
+    if (!navigator.wakeLock) return; // not supported — fail silently
+    if (active) {
+      navigator.wakeLock.request("screen")
+        .then(lock => { lockRef.current = lock; })
+        .catch(() => {}); // denied — fail silently
+    } else {
+      if (lockRef.current) { lockRef.current.release().catch(() => {}); lockRef.current = null; }
+    }
+    return () => {
+      if (lockRef.current) { lockRef.current.release().catch(() => {}); lockRef.current = null; }
+    };
+  }, [active]);
+};
+
 const useSound = () => {
   const [soundOn, setSoundOn] = useState(true);
   const ctxRef = useRef(null);
@@ -2666,6 +3028,7 @@ const Timers = () => {
   const [done, setDone] = useState(false);
   const ivRef = useRef(null);
   const { soundOn, setSoundOn, beepBell, beepGo, beepRest, beepTick, beepDone } = useSound();
+  useWakeLock(running); // keep screen on while timer is running
 
   const [cfg, setCfg] = useState({
     tabata:    { work:20, rest:10, rounds:8 },
@@ -3062,15 +3425,6 @@ const WOD_STRUCTURES = [
     tip:"If you have less than 10 seconds rest per minute, scale the reps down immediately.",
   },
   {
-    id:"death_by", fmt:"EMOM", label:"Death By", exCounts:[1,1],
-    timeRange:[10,20],
-    repFn:(exes,t)=>`Death By ${exes[0]}\n\nMinute 1: 1 rep\nMinute 2: 2 reps\nMinute 3: 3 reps\n...\nAdd 1 rep each minute.\nTime cap: ${t} minutes`,
-    howItWorks:"Start with 1 rep in minute 1. Add 1 rep per minute. When you can't complete the required reps before the minute ends, your workout ends.",
-    goal:"Survive as many minutes as possible.",
-    scoreFn:(exes)=>`Last completed minute. (E.g. Completed minute 12 = 78 total ${exes[0]}.)`,
-    tip:"The first 5 minutes feel like nothing. Use every second of rest — you'll need it in the final minutes.",
-  },
-  {
     id:"max_reps", fmt:"MAX REPS", label:"Max Effort Sets", exCounts:[1,2],
     timeRange:[5,20],
     repFn:(exes,t,lvl)=>{
@@ -3152,6 +3506,7 @@ const getExPool = (form) => {
   if (focus === "Upper body") return [...byPat("push"), ...byPat("pull"), ...byPat("olympic"), ...byPat("core")];
   if (focus === "Lower body") return [...byPat("squat"), ...byPat("hinge"), ...byPat("olympic"), ...byPat("core")];
   if (focus === "Core")       return [...byPat("core"), ...byPat("pull"), ...byPat("full"), ...byPat("mono")];
+  if (focus === "Warm-up / Mobility") return [...byPat("core"), ...byPat("full")]; // fallback if needed
   // Full body — smart ordering: compound first
   return [...byPat("olympic"), ...byPat("full"), ...byPat("squat"), ...byPat("push"), ...byPat("pull"), ...byPat("hinge"), ...byPat("core"), ...byPat("mono")];
 };
@@ -3184,8 +3539,6 @@ const selectExercises = (pool, count, primary) => {
 const WOD_ADJ  = ["Iron","Steel","Dark","Raw","Heavy","Cold","Grit","Stone","Forge","Sharp","Deep","Bare","Blunt","Stark"];
 const WOD_NOUN = ["Gauntlet","Standard","Engine","Grind","Test","Edge","Cut","Drive","Trial","Circuit","Session","Block","Push","Burn"];
 const genWodName = (structure, exes) => {
-  if (structure.id === "death_by") return `Death By ${exes[0]}`;
-  if (structure.id === "tabata")   return `${exes[0]} Tabata`;
   if (structure.fmt === "AMRAP")   return `The ${WOD_NOUN[Math.floor(Math.random()*WOD_NOUN.length)]}`;
   if (structure.fmt === "EMOM")    return `The ${WOD_ADJ[Math.floor(Math.random()*WOD_ADJ.length)]} ${WOD_NOUN[Math.floor(Math.random()*WOD_NOUN.length)]}`;
   const adj  = WOD_ADJ[Math.floor(Math.random() * WOD_ADJ.length)];
@@ -3193,8 +3546,662 @@ const genWodName = (structure, exes) => {
   return `The ${adj} ${noun}`;
 };
 
+// ─── CURATED WOD DATABASE ─────────────────────────────────────────────────────
+// 80 real benchmark workouts. Filtered by equipment and time, randomly selected.
+const CURATED_WODS = [
+  { name:"Cindy", format:"AMRAP", displayFormat:"AMRAP", timeCap:20,
+    workout:"20-Minute AMRAP\n5 Pull-Ups\n10 Push-Ups\n15 Air Squats",
+    howItWorks:"Complete as many rounds as possible in 20 minutes.",
+    goal:"Classic gymnastic benchmark — score is total rounds + reps",
+    score:"Count total rounds completed + extra reps",
+    tip:"Elite athletes hit 30+ rounds. 20 rounds is excellent. Go unbroken as long as possible.",
+    rx:{label:"Rx",standards:["Pull-Ups: strict hang to chin over bar","Push-Ups: chest to deck","Air Squats: below parallel"]},
+    scaled:{label:"Scaled",standards:["Pull-Ups: ring rows or jumping pull-ups","Push-Ups: knee push-ups","Air Squats: to box"]},
+    exercises:["Pull-Ups","Push-Ups","Air Squats"], eq:["Pull-up bar"], minTime:18, maxTime:22 },
+
+  { name:"Chelsea", format:"EMOM", displayFormat:"Alternating EMOM", timeCap:30,
+    workout:"Every Minute On The Minute for 30 Minutes\n5 Pull-Ups\n10 Push-Ups\n15 Air Squats",
+    howItWorks:"Complete all reps within each minute, rest the remainder. Same movements as Cindy but EMOM format.",
+    goal:"Gymnastic capacity and pacing under fatigue",
+    score:"Complete all 30 rounds = Rx",
+    tip:"If you can't finish in the minute, rest the next minute and continue.",
+    rx:{label:"Rx",standards:["All reps completed each minute for 30 minutes"]},
+    scaled:{label:"Scaled",standards:["Reduce to 3 pull-ups / 7 push-ups / 10 squats"]},
+    exercises:["Pull-Ups","Push-Ups","Air Squats"], eq:["Pull-up bar"], minTime:28, maxTime:32 },
+
+  { name:"Mary", format:"AMRAP", displayFormat:"AMRAP", timeCap:20,
+    workout:"20-Minute AMRAP\n5 Handstand Push-Ups\n10 Pistol Squats (alternating)\n15 Pull-Ups",
+    howItWorks:"Complete as many rounds as possible in 20 minutes.",
+    goal:"Advanced benchmark — upper body pressing + single-leg strength",
+    score:"Count total rounds + extra reps",
+    tip:"Mary is the advanced version of Cindy. Break handstand push-ups early to preserve shoulders.",
+    rx:{label:"Rx",standards:["HSPU: nose and toes to wall, lockout","Pistols: full depth single leg","Pull-Ups: full hang"]},
+    scaled:{label:"Scaled",standards:["HSPU: pike push-ups","Pistols: assisted or box step-up","Pull-Ups: ring rows"]},
+    exercises:["Handstand Push-Ups","Air Squats","Pull-Ups"], eq:["Pull-up bar"], minTime:18, maxTime:22 },
+
+  { name:"Fran", format:"AMRAP", displayFormat:"21-15-9 For Time", timeCap:10,
+    workout:"21-15-9 For Time\nThrusters (95/65 lbs)\nPull-Ups",
+    howItWorks:"21 thrusters then 21 pull-ups. 15 thrusters then 15 pull-ups. 9 thrusters then 9 pull-ups. For time.",
+    goal:"Classic speed and intensity benchmark",
+    score:"Time to complete all reps",
+    tip:"Sub-3 minutes is elite. Sub-5 is excellent. Unbroken on the 9s.",
+    rx:{label:"Rx",standards:["Thrusters: 95 lbs men / 65 lbs women","Pull-Ups: chin over bar"]},
+    scaled:{label:"Scaled",standards:["Thrusters: 45-65 lbs or DBs","Pull-Ups: jumping pull-ups or ring rows"]},
+    exercises:["DB Thrusters","Pull-Ups"], eq:["Pull-up bar","Dumbbells"], minTime:5, maxTime:12 },
+
+  { name:"Annie", format:"AMRAP", displayFormat:"50-40-30-20-10 For Time", timeCap:15,
+    workout:"50-40-30-20-10 For Time\nDouble-Unders\nSit-Ups",
+    howItWorks:"50 double-unders then 50 sit-ups, descend to 10. For time.",
+    goal:"Jump rope conditioning + core",
+    score:"Total time",
+    tip:"Sub-10 minutes is excellent. Keep the rope moving and breathe.",
+    rx:{label:"Rx",standards:["Double-Unders: rope passes twice per jump","Sit-Ups: AbMat, shoulders to mat"]},
+    scaled:{label:"Scaled",standards:["3x single-unders","Sit-Ups: feet anchored"]},
+    exercises:["Double-Unders","Sit-Ups"], eq:[], minTime:10, maxTime:20 },
+
+  { name:"Barbara", format:"AMRAP", displayFormat:"5 Rounds For Time", timeCap:35,
+    workout:"5 Rounds For Time\n20 Pull-Ups\n30 Push-Ups\n40 Sit-Ups\n50 Air Squats\nRest 3 minutes between rounds",
+    howItWorks:"Complete all reps, rest exactly 3 minutes between rounds.",
+    goal:"High-volume gymnastics benchmark",
+    score:"Total time including rest",
+    tip:"Pace the first round — you have four more to go. Don't go unbroken on pull-ups.",
+    rx:{label:"Rx",standards:["Pull-Ups: chin over bar","All other movements: full ROM"]},
+    scaled:{label:"Scaled",standards:["Pull-Ups: ring rows","Push-Ups: knee push-ups"]},
+    exercises:["Pull-Ups","Push-Ups","Sit-Ups","Air Squats"], eq:["Pull-up bar"], minTime:30, maxTime:50 },
+
+  { name:"Angie", format:"AMRAP", displayFormat:"For Time", timeCap:30,
+    workout:"For Time\n100 Pull-Ups\n100 Push-Ups\n100 Sit-Ups\n100 Air Squats\nComplete all of one before moving to the next.",
+    howItWorks:"100 reps of each in order. Don't move to the next until all 100 are done.",
+    goal:"Volume gymnastics — mental and physical endurance",
+    score:"Total time",
+    tip:"Sets of 10 pull-ups with short rest beats going to failure. Break everything early.",
+    rx:{label:"Rx",standards:["100 reps of each","Pull-Ups: chin clears bar"]},
+    scaled:{label:"Scaled",standards:["50 reps of each","Ring rows for pull-ups"]},
+    exercises:["Pull-Ups","Push-Ups","Sit-Ups","Air Squats"], eq:["Pull-up bar"], minTime:20, maxTime:45 },
+
+  { name:"JT", format:"AMRAP", displayFormat:"21-15-9 For Time", timeCap:20,
+    workout:"21-15-9 For Time\nHandstand Push-Ups\nRing Dips\nPush-Ups",
+    howItWorks:"21 of each, then 15, then 9. Pure pressing.",
+    goal:"Upper body pressing volume benchmark",
+    score:"Total time",
+    tip:"Your triceps will give out early. Break from rep 1.",
+    rx:{label:"Rx",standards:["HSPU: nose to floor","Ring Dips: locked out at top","Push-Ups: chest to deck"]},
+    scaled:{label:"Scaled",standards:["Pike push-ups","Box dips","Knee push-ups"]},
+    exercises:["Handstand Push-Ups","Dips","Push-Ups"], eq:[], minTime:12, maxTime:30 },
+
+  { name:"Fight Gone Bad", format:"AMRAP", displayFormat:"3 Rounds For Max Reps", timeCap:20,
+    workout:"3 Rounds — 1 Minute at Each Station\nWall Balls\nSumo DL High Pull\nBox Jumps\nPush Press\nRest 1 Minute between rounds",
+    howItWorks:"1 minute at each station for max reps. 1 minute rest between rounds.",
+    goal:"Classic benchmark — max total reps",
+    score:"Total reps across all stations and rounds",
+    tip:"Push hardest on wall balls and box jumps where you can accumulate reps fastest.",
+    rx:{label:"Rx",standards:["Wall Balls: 20 lbs to 10 ft","SDHP: 75 lbs","Box Jumps: 20 in"]},
+    scaled:{label:"Scaled",standards:["Wall Balls: 10-14 lbs","KB swings instead of SDHP","Step-ups"]},
+    exercises:["Wall Balls","KB Sumo DL High Pull","Box Jumps","DB Shoulder Press"], eq:["Kettlebells","Wall Ball","Box"], minTime:18, maxTime:25 },
+
+  { name:"DT", format:"AMRAP", displayFormat:"5 Rounds For Time", timeCap:20,
+    workout:"5 Rounds For Time\n12 Deadlifts (155/105 lbs)\n9 Hang Power Cleans (155/105 lbs)\n6 Push Jerks (155/105 lbs)",
+    howItWorks:"Same barbell the whole time. Never put it down within a round.",
+    goal:"Barbell cycling benchmark",
+    score:"Total time",
+    tip:"Touch and go deadlifts. The bar should never leave your hands within a round.",
+    rx:{label:"Rx",standards:["All movements: 155 lbs men / 105 lbs women"]},
+    scaled:{label:"Scaled",standards:["95 lbs / 65 lbs or dumbbell equivalent"]},
+    exercises:["Romanian DL","DB Hang Power Clean","DB Shoulder Press"], eq:["Dumbbells"], minTime:12, maxTime:25 },
+
+  { name:"Tabata This", format:"AMRAP", displayFormat:"Tabata Protocol", timeCap:16,
+    workout:"Tabata (8 rounds: 20s work / 10s rest) of each — 1 min rest between movements:\nPull-Ups\nPush-Ups\nSit-Ups\nAir Squats",
+    howItWorks:"8 intervals of each movement. Score is the lowest rep round of each movement summed.",
+    goal:"Classic tabata benchmark — max intensity",
+    score:"Sum of lowest rep round across all four movements",
+    tip:"Go max effort every interval. The score is your worst round, so consistency matters.",
+    rx:{label:"Rx",standards:["Max reps each 20s interval","Full ROM every rep"]},
+    scaled:{label:"Scaled",standards:["Ring rows for pull-ups","Knee push-ups"]},
+    exercises:["Pull-Ups","Push-Ups","Sit-Ups","Air Squats"], eq:["Pull-up bar"], minTime:14, maxTime:20 },
+
+  { name:"Heavy Karen", format:"AMRAP", displayFormat:"For Time", timeCap:15,
+    workout:"For Time\n150 Wall Balls (20/14 lbs to 10 ft target)",
+    howItWorks:"150 wall balls. Don't put the ball down if you can help it.",
+    goal:"Leg endurance and mental toughness",
+    score:"Total time",
+    tip:"Sets of 25 unbroken. Sub-7 minutes is excellent.",
+    rx:{label:"Rx",standards:["20 lbs men / 14 lbs women","10 ft target every rep"]},
+    scaled:{label:"Scaled",standards:["Lighter ball or 9 ft target","Air squats if no ball"]},
+    exercises:["Wall Balls","Air Squats"], eq:["Wall Ball"], minTime:8, maxTime:20 },
+
+  { name:"The Engine", format:"EMOM", displayFormat:"Alternating EMOM", timeCap:15,
+    workout:"15-Minute EMOM (5 rounds of 3 movements):\nMinute 1: 15 KB Swings\nMinute 2: 12 Push-Ups\nMinute 3: 9 KB Goblet Squats",
+    howItWorks:"Rotate through all three movements for 5 complete rounds.",
+    goal:"Conditioning triplet — full body",
+    score:"Rounds completed without breaking",
+    tip:"Pick a KB weight you can do 15 unbroken when fresh. You'll earn it by round 4.",
+    rx:{label:"Rx",standards:["KB Swings: American overhead","Push-Ups: chest to deck","Goblet Squat: below parallel"]},
+    scaled:{label:"Scaled",standards:["Russian swing to eye level","Knee push-ups","Box squat"]},
+    exercises:["KB Swings","Push-Ups","KB Goblet Squat"], eq:["Kettlebells"], minTime:12, maxTime:20 },
+
+  { name:"The Russian", format:"AMRAP", displayFormat:"AMRAP", timeCap:15,
+    workout:"15-Minute AMRAP\n10 KB Swings\n10 KB Goblet Squats\n10 KB Clean & Press (5 each side)",
+    howItWorks:"One kettlebell. Three movements. As many rounds as possible.",
+    goal:"Full-body KB conditioning",
+    score:"Total rounds + reps",
+    tip:"Use a KB you can swing 20+ unbroken when fresh. It gets heavy fast.",
+    rx:{label:"Rx",standards:["KB Swings: American overhead","All movements: full ROM"]},
+    scaled:{label:"Scaled",standards:["Russian swing to eye level","Lighter KB throughout"]},
+    exercises:["KB Swings","KB Goblet Squat","KB Thrusters"], eq:["Kettlebells"], minTime:12, maxTime:20 },
+
+  { name:"Kettlebell Karen", format:"AMRAP", displayFormat:"For Time", timeCap:15,
+    workout:"For Time\n150 KB Swings (53/35 lbs)",
+    howItWorks:"150 KB swings. American or Russian. Go.",
+    goal:"KB endurance test",
+    score:"Total time",
+    tip:"Sets of 25-30 with 10-15 seconds rest. Don't go to failure on early sets.",
+    rx:{label:"Rx",standards:["53 lbs men / 35 lbs women","American swing overhead"]},
+    scaled:{label:"Scaled",standards:["Lighter KB","Russian swing to eye level is fine"]},
+    exercises:["KB Swings"], eq:["Kettlebells"], minTime:8, maxTime:20 },
+
+  { name:"Holbrook", format:"AMRAP", displayFormat:"AMRAP", timeCap:20,
+    workout:"20-Minute AMRAP\n10 DB Snatches (right arm)\n10 DB Snatches (left arm)\n10 Burpee Box Jumps",
+    howItWorks:"10 snatches each arm, then 10 burpee box jumps. Repeat for 20 minutes.",
+    goal:"Single-arm power + conditioning",
+    score:"Total rounds + reps",
+    tip:"Keep snatches fluid and efficient. Breathe during box jumps.",
+    rx:{label:"Rx",standards:["DB Snatch: 50 lbs men / 35 lbs women","Box: 24/20 in"]},
+    scaled:{label:"Scaled",standards:["Lighter DB","Step-up instead of jump"]},
+    exercises:["DB Snatch","Burpees","Box Jumps"], eq:["Dumbbells","Box"], minTime:15, maxTime:25 },
+
+  { name:"Grace", format:"AMRAP", displayFormat:"For Time", timeCap:10,
+    workout:"For Time\n30 Clean & Jerks (135/95 lbs)",
+    howItWorks:"30 reps of clean & jerk. Go as fast as possible.",
+    goal:"Pure barbell cycling speed",
+    score:"Total time",
+    tip:"Sub-2 minutes is elite. Singles are fine — just keep moving.",
+    rx:{label:"Rx",standards:["Clean & Jerk: 135 lbs men / 95 lbs women","Full squat clean + jerk"]},
+    scaled:{label:"Scaled",standards:["DB Hang Power Clean + Press: lighter weight","30 reps total"]},
+    exercises:["DB Hang Power Clean","DB Shoulder Press"], eq:["Dumbbells"], minTime:5, maxTime:12 },
+
+  { name:"Isabel", format:"AMRAP", displayFormat:"For Time", timeCap:10,
+    workout:"For Time\n30 Snatches (135/95 lbs)",
+    howItWorks:"30 reps of snatch. For time. Power snatch is fine.",
+    goal:"Barbell cycling — snatch version of Grace",
+    score:"Total time",
+    tip:"Reset each rep if needed. Sub-2 minutes is elite.",
+    rx:{label:"Rx",standards:["Snatch: 135 lbs men / 95 lbs women"]},
+    scaled:{label:"Scaled",standards:["DB Snatch: 50 lbs men / 35 lbs women, alternating arms"]},
+    exercises:["DB Snatch"], eq:["Dumbbells"], minTime:5, maxTime:12 },
+
+  { name:"Randy", format:"AMRAP", displayFormat:"For Time", timeCap:12,
+    workout:"For Time\n75 Power Snatches (75/55 lbs)",
+    howItWorks:"75 snatches. Go.",
+    goal:"Barbell cycling endurance",
+    score:"Total time",
+    tip:"Singles are completely fine. Sub-7 minutes is excellent.",
+    rx:{label:"Rx",standards:["Power Snatch: 75 lbs men / 55 lbs women"]},
+    scaled:{label:"Scaled",standards:["DB Snatch: 35 lbs alternating arms"]},
+    exercises:["DB Snatch"], eq:["Dumbbells"], minTime:5, maxTime:15 },
+
+  { name:"Nasty Girls", format:"AMRAP", displayFormat:"3 Rounds For Time", timeCap:12,
+    workout:"3 Rounds For Time\n50 Air Squats\n7 Muscle-Ups\n10 Hang Power Cleans (135/95 lbs)",
+    howItWorks:"3 rounds. For time.",
+    goal:"Gymnastics + barbell — classic benchmark",
+    score:"Total time",
+    tip:"Sub-7 is elite. Break muscle-ups from the start.",
+    rx:{label:"Rx",standards:["Muscle-Ups: strict","Cleans: 135/95 lbs"]},
+    scaled:{label:"Scaled",standards:["Air squats","Pull-up + dip instead of muscle-up","DB cleans"]},
+    exercises:["Air Squats","Pull-Ups","DB Hang Power Clean"], eq:["Pull-up bar","Dumbbells"], minTime:8, maxTime:18 },
+
+  { name:"Jackie", format:"AMRAP", displayFormat:"For Time", timeCap:15,
+    workout:"For Time\n1000m Row (sub: 800m Run)\n50 Thrusters (45 lbs)\n30 Pull-Ups",
+    howItWorks:"Complete in order. For time.",
+    goal:"Monostructural + thruster + gymnastics chipper",
+    score:"Total time",
+    tip:"Sub-7 minutes is elite. Go hard on the thrusters — only 30 pull-ups left.",
+    rx:{label:"Rx",standards:["Row: 1000m or run 800m","Thrusters: 45 lbs barbell","Pull-Ups: unassisted"]},
+    scaled:{label:"Scaled",standards:["Run 400m","DB thrusters lighter","Jumping pull-ups"]},
+    exercises:["DB Thrusters","Pull-Ups"], eq:["Pull-up bar","Dumbbells"], minTime:8, maxTime:20 },
+
+  { name:"Michael", format:"AMRAP", displayFormat:"3 Rounds For Time", timeCap:30,
+    workout:"3 Rounds For Time\n800m Run\n50 Back Extensions (or Good Mornings)\n50 Sit-Ups",
+    howItWorks:"3 rounds. For time.",
+    goal:"Posterior chain + core endurance",
+    score:"Total time",
+    tip:"Pace the runs. Break back extensions into manageable sets.",
+    rx:{label:"Rx",standards:["Run: 800m","Back extensions: full ROM"]},
+    scaled:{label:"Scaled",standards:["400m run","Good mornings or RDL","Sit-Ups: feet anchored"]},
+    exercises:["Sprint (100m)","Romanian DL","Sit-Ups"], eq:[], minTime:20, maxTime:40 },
+
+  { name:"Kelly", format:"AMRAP", displayFormat:"5 Rounds For Time", timeCap:35,
+    workout:"5 Rounds For Time\n400m Run\n30 Box Jumps (24/20 in)\n30 Wall Balls (20/14 lbs)",
+    howItWorks:"5 full rounds. For time.",
+    goal:"Mono + power endurance",
+    score:"Total time",
+    tip:"Pace the run. Unbroken box jumps early. Break wall balls into 3 sets of 10.",
+    rx:{label:"Rx",standards:["Run: 400m","Box: 24 in men / 20 in women","Wall Balls: 20/14 lbs"]},
+    scaled:{label:"Scaled",standards:["200m run","Box step-ups","Lighter wall ball or air squats"]},
+    exercises:["Sprint (100m)","Box Jumps","Wall Balls"], eq:["Box","Wall Ball"], minTime:25, maxTime:50 },
+
+  { name:"Elizabeth", format:"AMRAP", displayFormat:"21-15-9 For Time", timeCap:15,
+    workout:"21-15-9 For Time\nSquat Cleans (135/95 lbs)\nRing Dips",
+    howItWorks:"21-15-9 For time.",
+    goal:"Lower body power + pressing benchmark",
+    score:"Total time",
+    tip:"Break ring dips into small sets early. Don't go to failure.",
+    rx:{label:"Rx",standards:["Squat Cleans: 135/95 lbs","Ring Dips: lockout at top"]},
+    scaled:{label:"Scaled",standards:["DB Hang Power Clean","Box dips or push-ups"]},
+    exercises:["DB Hang Power Clean","Dips"], eq:["Dumbbells"], minTime:10, maxTime:20 },
+
+  { name:"Murph", format:"AMRAP", displayFormat:"For Time", timeCap:60,
+    workout:"For Time (with 20 lb vest if available)\n1 Mile Run\n100 Pull-Ups\n200 Push-Ups\n300 Air Squats\n1 Mile Run\n*Partition the pull-ups, push-ups, and squats as needed",
+    howItWorks:"Classic partition: 20 rounds of Cindy (5 pull-ups / 10 push-ups / 15 squats) between the two runs.",
+    goal:"Memorial benchmark — total body endurance",
+    score:"Total time",
+    tip:"20 rounds of Cindy between the runs is the standard partition. Walk the second mile if you have to.",
+    rx:{label:"Rx",standards:["20 lb vest","Pull-Ups: chin over bar","1 mile runs"]},
+    scaled:{label:"Scaled",standards:["No vest","Ring rows","Knee push-ups"]},
+    exercises:["Pull-Ups","Push-Ups","Air Squats"], eq:["Pull-up bar"], minTime:45, maxTime:70 },
+
+  { name:"The Iron Mile", format:"EMOM", displayFormat:"Alternating EMOM", timeCap:20,
+    workout:"20-Minute Alternating EMOM\nOdd minutes: 10 DB Thrusters\nEven minutes: 10 Pull-Ups",
+    howItWorks:"Alternate between thrusters and pull-ups every minute for 20 minutes.",
+    goal:"Upper body pressing and pulling capacity",
+    score:"Rounds completed without breaking",
+    tip:"Drop to 7 reps if you can't finish in the minute. Keep moving.",
+    rx:{label:"Rx",standards:["Thrusters: full squat depth, lock out overhead","Pull-Ups: chin over bar"]},
+    scaled:{label:"Scaled",standards:["Lighter DBs","Ring rows"]},
+    exercises:["DB Thrusters","Pull-Ups"], eq:["Pull-up bar","Dumbbells"], minTime:18, maxTime:25 },
+
+  { name:"Filthy Fifty", format:"AMRAP", displayFormat:"Chipper For Time", timeCap:45,
+    workout:"For Time — Chipper\n50 Box Jumps\n50 Jumping Pull-Ups\n50 KB Swings\n50 Walking Lunges\n50 Knees-to-Elbows\n50 Push Press\n50 Back Extensions\n50 Wall Balls\n50 Burpees\n50 Double-Unders",
+    howItWorks:"50 reps of each movement in order. For time.",
+    goal:"Epic chipper benchmark",
+    score:"Total time",
+    tip:"Pace the first three movements. Most athletes blow up on the burpees.",
+    rx:{label:"Rx",standards:["All movements at standard weight","50 reps of each"]},
+    scaled:{label:"Scaled",standards:["35 reps of each","Reduce weights"]},
+    exercises:["Box Jumps","Pull-Ups","KB Swings","Walking Lunges","Burpees"], eq:["Pull-up bar","Kettlebells","Box"], minTime:35, maxTime:65 },
+
+  { name:"Air Force WOD", format:"AMRAP", displayFormat:"For Time", timeCap:20,
+    workout:"For Time — 4 Burpees at the start of every minute:\n20 Thrusters\n20 Sumo DL High Pull\n20 Push Jerks\n20 Overhead Squats\n20 Front Squats",
+    howItWorks:"Work through 5 movements of 20 reps each. Do 4 burpees at the top of every minute starting at 0:00.",
+    goal:"Conditioning + mental toughness",
+    score:"Total time",
+    tip:"The burpees accumulate fast. Don't fall behind on the minutes.",
+    rx:{label:"Rx",standards:["95 lbs / 65 lbs barbell throughout"]},
+    scaled:{label:"Scaled",standards:["Light DB version","2 burpees per minute"]},
+    exercises:["DB Thrusters","KB Sumo DL High Pull","Burpees"], eq:["Dumbbells","Kettlebells"], minTime:15, maxTime:30 },
+
+  // ── BARBELL CHALLENGES ────────────────────────────────────────────────────
+  { name:"135 Bench Press AMRAP", format:"AMRAP", displayFormat:"Max Reps In Time", timeCap:10,
+    workout:"10-Minute AMRAP\nBench Press — 135 lbs\n\nHow many reps can you do in 10 minutes?\nRack the bar to rest. Clock doesn't stop.",
+    howItWorks:"Load 135 lbs. Start the clock. Do as many reps as possible in 10 minutes, resting the bar on the rack when needed. Pick up where you left off every time you re-grip.",
+    goal:"Max bench press reps in 10 minutes — a pure test of upper body endurance and mental toughness",
+    score:"Total reps completed",
+    tip:"Don't go to failure on your first set. Sets of 10-15 with 15-20 second rests will beat grinding singles every time.",
+    rx:{label:"Rx",standards:["135 lbs barbell","Full lockout each rep","Touch chest each rep"]},
+    scaled:{label:"Scaled",standards:["Use a weight you can rep 20+ times fresh","95 lbs or 115 lbs are common sub-135 targets"]},
+    exercises:["Bench Press"], eq:["Barbell"], minTime:8, maxTime:12 },
+
+  { name:"100 Rep Bench Press", format:"AMRAP", displayFormat:"For Time", timeCap:20,
+    workout:"For Time\n100 Reps — Bench Press\n\nUse a weight you can rep 15-20 times fresh.\nBreak it however you need. Clock doesn't stop.",
+    howItWorks:"Load the bar and complete 100 total reps as fast as possible. Rest between sets as needed — the clock keeps running.",
+    goal:"A classic hypertrophy and mental toughness challenge — 100 reps straight is rarer than it sounds",
+    score:"Total time to complete 100 reps",
+    tip:"Suggested opening sets: 20, 15, 15, 12, 10, then singles if needed. The last 20 reps are where most people fall apart.",
+    rx:{label:"Rx",standards:["Weight you can do 15-20 reps fresh","Full ROM — touch chest, full lockout"]},
+    scaled:{label:"Scaled",standards:["Reduce to 50 reps","Drop weight if needed mid-set"]},
+    exercises:["Bench Press"], eq:["Barbell"], minTime:10, maxTime:25 },
+
+  { name:"10 Minute Deadlift AMRAP", format:"AMRAP", displayFormat:"Max Reps In Time", timeCap:10,
+    workout:"10-Minute AMRAP\nDeadlift — Pick your weight\n\nHow many reps can you pull in 10 minutes?\nSuggested: 225 lbs men / 135 lbs women\nSet the bar down to rest. Clock doesn't stop.",
+    howItWorks:"Load the bar and pull as many deadlifts as possible in 10 minutes. The bar resets on the floor each rep. Rest as needed.",
+    goal:"Deadlift endurance — one of the most viral barbell challenges on social media",
+    score:"Total reps completed",
+    tip:"Sets of 5-8 with 20-30 second rests will beat grinding. Keep your back flat — fatigue makes people sloppy fast.",
+    rx:{label:"Rx",standards:["225 lbs men / 135 lbs women","Full lockout at top","Controlled descent"]},
+    scaled:{label:"Scaled",standards:["Use 60-70% of your 1RM","Prioritize form over reps"]},
+    exercises:["Deadlift"], eq:["Barbell"], minTime:8, maxTime:12 },
+
+  { name:"10 Minute Overhead Press AMRAP", format:"AMRAP", displayFormat:"Max Reps In Time", timeCap:10,
+    workout:"10-Minute AMRAP\nOverhead Press — Pick your weight\n\nSuggested: 95 lbs men / 65 lbs women\nRack the bar to rest. Clock doesn't stop.",
+    howItWorks:"Strict press only — no leg drive. Max reps in 10 minutes. Rack the bar to rest when needed.",
+    goal:"Strict pressing endurance — underrated test of shoulder and tricep capacity",
+    score:"Total reps completed",
+    tip:"Strict press fatigues faster than you expect. Start with sets of 8-10, rest 20 seconds, repeat. No push press.",
+    rx:{label:"Rx",standards:["Strict press — no leg drive","95 lbs men / 65 lbs women","Full lockout overhead"]},
+    scaled:{label:"Scaled",standards:["Use 50-60% of your strict press 1RM","Seated DB press if needed"]},
+    exercises:["Overhead Press"], eq:["Barbell"], minTime:8, maxTime:12 },
+
+  { name:"20 Rep Squat", format:"AMRAP", displayFormat:"For Time", timeCap:20,
+    workout:"1 Set of 20 Reps — Back Squat\n\nUse your 10-rep max weight.\nBreath between reps at the top.\nDo not re-rack until all 20 are done.",
+    howItWorks:"Load your 10RM on the bar. Complete 20 consecutive reps without re-racking. You breathe at the top — not on the rack.",
+    goal:"One of the most legendary barbell challenges ever written. Called the breathing squat — it will change you.",
+    score:"Complete all 20 reps without re-racking = success",
+    tip:"Reps 1-10 feel fine. Reps 11-15 get hard. Reps 16-20 are a negotiation with yourself. Take 3-5 deep breaths at the top between reps.",
+    rx:{label:"Rx",standards:["Your 10RM weight on the bar","No re-racking","20 consecutive reps"]},
+    scaled:{label:"Scaled",standards:["Use your 8RM weight","Re-rack once if you must — then finish"]},
+    exercises:["Squat"], eq:["Barbell"], minTime:10, maxTime:25 },
+
+  { name:"The Barbell Complex", format:"AMRAP", displayFormat:"For Time", timeCap:20,
+    workout:"5 Rounds For Time — Never drop the bar within a round:\n6 Deadlifts\n6 Hang Power Cleans\n6 Front Squats\n6 Overhead Press\n6 Back Squats\n\nRest as needed between rounds.",
+    howItWorks:"Complete all 30 reps of one round without putting the bar down. Rest between rounds. Bar stays loaded — one weight for everything.",
+    goal:"Full-body barbell conditioning — builds grip, lung capacity, and total-body strength simultaneously",
+    score:"Total time for 5 rounds",
+    tip:"The weight is limited by your weakest lift — usually the overhead press. Start light. 65-75 lbs is harder than it looks for 5 rounds.",
+    rx:{label:"Rx",standards:["One weight for all movements","Bar never touches floor mid-round","Full ROM every rep"]},
+    scaled:{label:"Scaled",standards:["3 rounds","Reduce to 4 reps per movement","Lighter bar"]},
+    exercises:["Deadlift","Barbell Row","Squat","Overhead Press"], eq:["Barbell"], minTime:12, maxTime:30 },
+
+  { name:"100 Rep Deadlift", format:"AMRAP", displayFormat:"For Time", timeCap:20,
+    workout:"For Time\n100 Reps — Deadlift\n\nSuggested: 135 lbs men / 95 lbs women\nBreak it however you need.",
+    howItWorks:"100 deadlifts as fast as possible. Set the bar down to rest. Clock keeps running.",
+    goal:"Posterior chain endurance — grip, hamstrings, lower back all tested",
+    score:"Total time to complete 100 reps",
+    tip:"Sets of 10 with 15-second rests early. The grip usually fails before the legs. Use mixed grip if needed.",
+    rx:{label:"Rx",standards:["135 lbs men / 95 lbs women","Touch and go or deadstop — your choice","Full lockout each rep"]},
+    scaled:{label:"Scaled",standards:["50 reps","Use 60% of bodyweight on the bar"]},
+    exercises:["Deadlift"], eq:["Barbell"], minTime:10, maxTime:25 },
+
+  { name:"Squat Every Minute", format:"EMOM", displayFormat:"EMOM", timeCap:20,
+    workout:"20-Minute EMOM\nBack Squat — 5 reps every minute\n\nUse 70-75% of your 1RM.\nComplete 5 reps, rest the remainder of the minute.",
+    howItWorks:"Every minute on the minute, do 5 back squats. Rest the remainder. 20 rounds = 100 total reps.",
+    goal:"Volume squatting for strength and hypertrophy — 100 heavy reps in 20 minutes",
+    score:"All 20 rounds completed = success",
+    tip:"If 70% feels easy through round 10, it will not feel easy in round 18. Trust the percentage.",
+    rx:{label:"Rx",standards:["70-75% of 1RM","5 reps every minute","Full depth — below parallel"]},
+    scaled:{label:"Scaled",standards:["60% of 1RM","4 reps per minute","Box squat to control depth"]},
+    exercises:["Squat"], eq:["Barbell"], minTime:18, maxTime:22 },
+
+  { name:"Bench Every Minute", format:"EMOM", displayFormat:"EMOM", timeCap:20,
+    workout:"20-Minute EMOM\nBench Press — 5 reps every minute\n\nUse 70% of your 1RM.\nComplete 5 reps, rest the remainder.",
+    howItWorks:"Every minute on the minute, bench press 5 reps. 20 sets = 100 total reps of heavy bench.",
+    goal:"High-volume bench press for chest strength and size — 100 reps at 70% is genuinely hard",
+    score:"All 20 rounds completed without missing reps = success",
+    tip:"Have a spotter present. By round 15 the bar will feel much heavier than it did in round 1.",
+    rx:{label:"Rx",standards:["70% of 1RM","5 reps per minute","Spotter present"]},
+    scaled:{label:"Scaled",standards:["60% of 1RM","4 reps per minute"]},
+    exercises:["Bench Press"], eq:["Barbell"], minTime:18, maxTime:22 },
+
+  { name:"The Big Three", format:"AMRAP", displayFormat:"For Time", timeCap:30,
+    workout:"For Time:\n10 Deadlifts (bodyweight on bar)\n10 Bench Press (bodyweight on bar)\n10 Back Squats (bodyweight on bar)\n\nRepeat — 10 rounds total.\n\nExample: 185 lb person loads 185 lbs.",
+    howItWorks:"Load bodyweight on the bar for all three lifts. 10 reps each, 10 rounds. For time.",
+    goal:"Classic strength challenge — bodyweight on the bar for all three lifts is a real benchmark",
+    score:"Total time for 10 rounds",
+    tip:"Bodyweight bench for 10 reps is the great equalizer. Most people underestimate it.",
+    rx:{label:"Rx",standards:["Bodyweight on bar for all three lifts","10 reps each movement","10 rounds"]},
+    scaled:{label:"Scaled",standards:["75% bodyweight on bar","5 rounds","Rest as needed"]},
+    exercises:["Deadlift","Bench Press","Squat"], eq:["Barbell"], minTime:20, maxTime:45 },
+
+  { name:"Powerlifting Total", format:"AMRAP", displayFormat:"For Time", timeCap:45,
+    workout:"Work to a 1-Rep Max in order:\n1. Back Squat\n2. Bench Press\n3. Deadlift\n\nTake 3-5 attempts per lift.\nYour total = squat + bench + deadlift.",
+    howItWorks:"Classic powerlifting total. Work up to a max single on each lift in order. 3 attempts recommended — opener at 90%, second at 97%, third is your max.",
+    goal:"Establish your true one-rep maxes on the three competition lifts — the foundation of all barbell programming",
+    score:"Total lbs lifted (squat + bench + deadlift)",
+    tip:"Opener should feel like a guaranteed triple. Second should be a tough single. Third is your max attempt. Don't bomb your opener.",
+    rx:{label:"Rx",standards:["True 1RM attempt each lift","3 attempts per movement","Competition order: squat → bench → deadlift"]},
+    scaled:{label:"Scaled",standards:["Work to a 3RM instead of 1RM","Rest 5+ minutes between max attempts"]},
+    exercises:["Squat","Bench Press","Deadlift"], eq:["Barbell"], minTime:30, maxTime:60 },
+
+  { name:"OHP Every Minute", format:"EMOM", displayFormat:"EMOM", timeCap:15,
+    workout:"15-Minute EMOM\nOverhead Press — 5 reps every minute\n\nUse 65-70% of your 1RM.\nStrict press only — no leg drive.",
+    howItWorks:"Every minute on the minute, strict press 5 reps. 15 rounds = 75 total overhead reps.",
+    goal:"Overhead strength volume — the most undertrained lift in most programs",
+    score:"All 15 rounds completed = success",
+    tip:"The press is brutally honest. If you miss reps, the weight is too heavy. Drop 10 lbs and start again.",
+    rx:{label:"Rx",standards:["65-70% of strict press 1RM","Strict — no leg drive","5 reps per minute"]},
+    scaled:{label:"Scaled",standards:["60% of 1RM","3 reps per minute","Seated DB press as sub"]},
+    exercises:["Overhead Press"], eq:["Barbell"], minTime:13, maxTime:18 },
+
+  // ── TRACK & RUNNING WORKOUTS ──────────────────────────────────────────────
+  { name:"Classic 400s", format:"AMRAP", displayFormat:"Interval For Time", timeCap:30,
+    workout:"8 x 400m\nRest equal time between reps\n\nRun each 400m hard. Rest the same amount of time it took to run it.\nExample: 2:00 per 400m = 2:00 rest.",
+    howItWorks:"8 x 400m with equal work:rest ratio. The goal is consistent splits — every rep within 5 seconds of each other.",
+    goal:"The most proven speed and aerobic capacity workout in track history — used at every level from high school to Olympic athletes",
+    score:"Average 400m split time",
+    tip:"Go out controlled on rep 1. Most people run rep 1 too fast and fall apart by rep 5. Consistent effort beats a heroic opener.",
+    rx:{label:"Rx",standards:["8 reps of 400m","Equal work:rest ratio","Splits within 5 seconds of each other"]},
+    scaled:{label:"Scaled",standards:["4-6 reps","200m if 400m is too hard","2:1 rest ratio"]},
+    exercises:["Sprint (100m)"], eq:[], minTime:25, maxTime:45 },
+
+  { name:"Mile Repeats", format:"AMRAP", displayFormat:"Interval For Time", timeCap:45,
+    workout:"4 x 1 Mile\n90 seconds rest between miles\n\nTarget: 10-15 seconds faster than your easy run pace.",
+    howItWorks:"4 miles at comfortably hard pace with 90 seconds rest between each. The cornerstone of distance running fitness.",
+    goal:"Build lactate threshold and aerobic base — the workout that separates casual runners from competitive ones",
+    score:"Average mile split time",
+    tip:"If you can hold a full conversation, too slow. If you can't say three words, too fast. Aim for controlled discomfort.",
+    rx:{label:"Rx",standards:["4 x 1 mile","90 second rest","10-15s faster than easy run pace"]},
+    scaled:{label:"Scaled",standards:["2-3 miles","2-3 minute rest","Run/walk the miles"]},
+    exercises:["Sprint (100m)"], eq:[], minTime:35, maxTime:60 },
+
+  { name:"Track Pyramid", format:"AMRAP", displayFormat:"Track Pyramid", timeCap:30,
+    workout:"200m → 400m → 800m → 1200m → 800m → 400m → 200m\n\n90 seconds rest between each rep.",
+    howItWorks:"Start short, build to the longest rep, then come back down. Total about 4 miles including rest.",
+    goal:"Classic track workout — builds speed and endurance simultaneously, distances change so it never gets monotonous",
+    score:"Total time including rest",
+    tip:"The 1200m is where most people fall apart. Save something going into it. Remember — reps get shorter after the peak.",
+    rx:{label:"Rx",standards:["All 7 reps","90 second rest","Faster on the way back down"]},
+    scaled:{label:"Scaled",standards:["Drop the 1200m","Walk the rest periods"]},
+    exercises:["Sprint (100m)"], eq:[], minTime:25, maxTime:45 },
+
+  { name:"Fartlek 20", format:"AMRAP", displayFormat:"Fartlek Run", timeCap:20,
+    workout:"20-Minute Fartlek Run:\n5 min easy warm-up\nThen alternate every minute:\nOdd minutes: Hard effort (8/10)\nEven minutes: Easy effort (4/10)\nLast 2 min easy cool-down",
+    howItWorks:"Fartlek means 'speed play' in Swedish. Alternate between hard and easy effort every minute. No stopping — easy minutes are your recovery.",
+    goal:"Build aerobic capacity and speed without rigid intervals — one of the most popular running workouts worldwide",
+    score:"Total distance covered",
+    tip:"On hard minutes push until breathing is labored. On easy minutes actually recover. The temptation is to run easy minutes too fast.",
+    rx:{label:"Rx",standards:["20 continuous minutes","True contrast between hard and easy efforts"]},
+    scaled:{label:"Scaled",standards:["10-15 minutes","30s hard / 90s easy ratio"]},
+    exercises:["Sprint (100m)"], eq:[], minTime:18, maxTime:25 },
+
+  { name:"Cooper 12-Minute Run", format:"AMRAP", displayFormat:"For Distance", timeCap:12,
+    workout:"Run as far as possible in 12 minutes.\n\nDeveloped by Dr. Kenneth Cooper for the US Air Force in 1968.\nStill used by militaries and sports teams worldwide.",
+    howItWorks:"Start the clock. Run 12 minutes. See how far you get. One of the most widely used fitness tests ever created.",
+    goal:"Measure your VO2 max and aerobic base — the definitive 12-minute running benchmark",
+    score:"Total distance in 12 minutes",
+    tip:"Elite men cover 3000m+. Elite women 2700m+. Most recreational runners hit 2000-2500m. Pick a sustainable pace — don't sprint the first 400m.",
+    rx:{label:"Rx",standards:["12 minutes continuous","Max distance — no walking"]},
+    scaled:{label:"Scaled",standards:["Run/walk is fine","Track your honest distance"]},
+    exercises:["Sprint (100m)"], eq:[], minTime:10, maxTime:14 },
+
+  { name:"30-20-10 Sprints", format:"AMRAP", displayFormat:"Interval Run", timeCap:20,
+    workout:"5 Rounds:\n30 sec easy jog → 20 sec moderate → 10 sec all-out sprint\nRest 2 minutes between rounds\n\nNo rest within the 60-second round.",
+    howItWorks:"Within each round: 30s easy into 20s moderate into 10s sprint continuously. 2 full minutes rest between rounds.",
+    goal:"Danish research showed this protocol improved 5K time 4% and VO2 max significantly in 7 weeks — highly time-efficient",
+    score:"Rounds completed",
+    tip:"The 10-second sprint must be genuinely all-out. If round 8 feels like round 1, you went too easy.",
+    rx:{label:"Rx",standards:["5 rounds","True max effort on 10s sprint","Full 2 min rest between rounds"]},
+    scaled:{label:"Scaled",standards:["3 rounds","Walk the 30s easy portion"]},
+    exercises:["Sprint (100m)"], eq:[], minTime:18, maxTime:25 },
+
+  { name:"800m Descending Ladder", format:"AMRAP", displayFormat:"Track Ladder", timeCap:30,
+    workout:"800m → 600m → 400m → 200m\n\n2 minutes rest between each.\nRun each rep faster than the last.",
+    howItWorks:"Descending distances with 2 minute rest. Each rep should be faster — the 200m is an all-out sprint.",
+    goal:"Speed development — the descending ladder forces progressive acceleration as fatigue builds",
+    score:"Time for each rep — goal is to get faster every rep",
+    tip:"If your 200m isn't faster per 200m than your 800m pace, you went out too hard. Start controlled.",
+    rx:{label:"Rx",standards:["Negative split — each rep faster","2 min rest between reps"]},
+    scaled:{label:"Scaled",standards:["400m / 300m / 200m / 100m","3 min rest between reps"]},
+    exercises:["Sprint (100m)"], eq:[], minTime:20, maxTime:35 },
+
+  { name:"Tempo Run", format:"AMRAP", displayFormat:"Steady State Run", timeCap:30,
+    workout:"5 min easy warm-up\n20 min tempo pace (comfortably hard — 7/10 effort)\n5 min easy cool-down\n\nTotal: 30 minutes",
+    howItWorks:"Tempo pace is the fastest pace you can hold while still feeling in control. Should feel 'comfortably hard' — short sentences only.",
+    goal:"The single most effective workout for improving race pace and lactate threshold — every serious runner does these weekly",
+    score:"Total distance at tempo pace",
+    tip:"If you can have a normal conversation, go faster. If you can't say 4 words, slow down. That middle ground is the training zone.",
+    rx:{label:"Rx",standards:["20 continuous minutes at tempo","No walking during tempo portion"]},
+    scaled:{label:"Scaled",standards:["10-15 min tempo","2 x 8 min with 2 min rest"]},
+    exercises:["Sprint (100m)"], eq:[], minTime:28, maxTime:35 },
+
+  { name:"Sprint Tabata", format:"AMRAP", displayFormat:"Tabata Sprints", timeCap:16,
+    workout:"8 Rounds:\n20 seconds all-out sprint\n10 seconds walk/complete rest\n\n4 minutes of total work. Leave nothing behind.",
+    howItWorks:"Tabata protocol applied to sprinting. 20s max effort, 10s complete rest, 8 rounds. Simple, brutal, proven.",
+    goal:"The original Tabata research showed massive VO2 max improvement in 6 weeks — equally effective running",
+    score:"Distance covered during work intervals or just completion",
+    tip:"All-out means all-out. By round 5 you should be seriously hurting. If round 8 feels like round 1, you went too easy.",
+    rx:{label:"Rx",standards:["Max effort each 20s interval","Complete stop or slow walk during 10s rest"]},
+    scaled:{label:"Scaled",standards:["4-6 rounds","30s rest instead of 10s"]},
+    exercises:["Sprint (100m)"], eq:[], minTime:14, maxTime:18 },
+
+  { name:"5K Time Trial", format:"AMRAP", displayFormat:"For Time", timeCap:45,
+    workout:"Run 5 kilometers (3.1 miles) as fast as possible.\n\n5K = 12.5 laps on a standard 400m track.\n\nRun this every 4-6 weeks to track your progress.",
+    howItWorks:"A timed 5K. No intervals, no structure — cover 3.1 miles as fast as you can. One of the most common fitness benchmarks in the world.",
+    goal:"The universal running benchmark — used by beginners and Olympians alike to track fitness",
+    score:"Total time to complete 5K",
+    tip:"Most people go out too fast. Pick a pace you can hold through mile 3 — not just mile 1. Even splits beat a fast start and a death march.",
+    rx:{label:"Rx",standards:["5K / 3.1 miles","Full effort — not a training run"]},
+    scaled:{label:"Scaled",standards:["1 mile or 2K time trial","Run/walk and track your time"]},
+    exercises:["Sprint (100m)"], eq:[], minTime:20, maxTime:60 },
+
+  // ── WARM-UP / MOBILITY / STRETCHING ───────────────────────────────────────
+  { name:"10-Minute Full Body Warm-Up", format:"AMRAP", displayFormat:"Movement Prep", timeCap:10, category:"mobility",
+    workout:"2 minutes — Easy jog in place or jumping jacks\n\n30 seconds each, 2 rounds:\n• Leg swings (forward/back)\n• Arm circles (big, both directions)\n• Hip circles\n• World's Greatest Stretch (each side)\n• Inch worm with push-up\n• Squat to stand\n• Lateral lunges",
+    howItWorks:"Move continuously through all movements. This is prep, not exercise — keep intensity low and focus on feel.",
+    goal:"Prime every major joint and muscle for training — reduces injury risk and improves workout performance",
+    score:"Completion — all movements done with control",
+    tip:"The World's Greatest Stretch is called that for a reason — don't skip it. One rep each side takes 20 seconds and opens your hips, thoracic spine, and hamstrings simultaneously.",
+    rx:{label:"Rx",standards:["Control every movement","Feel the stretch — don't rush","Dynamic, not static"]},
+    scaled:{label:"Scaled",standards:["Do what feels good","Skip anything painful"]},
+    exercises:["Lunges","Air Squats"], eq:[], minTime:8, maxTime:15 },
+
+  { name:"Limber 11", format:"AMRAP", displayFormat:"Mobility Routine", timeCap:15, category:"mobility",
+    workout:"Joe DeFranco's Limber 11 — do each for 10 reps or 30 seconds:\n1. IT Band Foam Roll\n2. Adductor Foam Roll\n3. SMR Glutes\n4. Bent-Knee Iron Cross\n5. Roll-Overs into V-Sits\n6. Rocking Frog Stretch\n7. Fire Hydrant Circles (10 each direction)\n8. Mountain Climbers (slow)\n9. Cossack Squat\n10. Seated Piriformis Stretch\n11. Rear Foot Elevated Hip Flexor Stretch",
+    howItWorks:"Work through all 11 movements in order. Popularized by strength coach Joe DeFranco — one of the most shared mobility routines on the internet.",
+    goal:"Restore hip mobility, open the thoracic spine, and fix the pattern restrictions that sitting creates — do this daily",
+    score:"Completion",
+    tip:"The Cossack squat will expose your weakest side immediately. Go slow, hold the bottom, and breathe. Most people are dramatically tighter on one side.",
+    rx:{label:"Rx",standards:["All 11 movements","Slow and controlled","Breathe into the stretch"]},
+    scaled:{label:"Scaled",standards:["Skip any painful movements","Use a wall or chair for balance"]},
+    exercises:["Lunges","Mountain Climbers"], eq:[], minTime:12, maxTime:20 },
+
+  { name:"Yoga Flow — Sun Salutation", format:"AMRAP", displayFormat:"Yoga Flow", timeCap:15, category:"mobility",
+    workout:"5 Rounds of Sun Salutation A:\nMountain Pose → Forward Fold → Half Lift → Plank → Chaturanga → Upward Dog → Downward Dog (5 breaths) → Forward Fold → Mountain Pose\n\nThen 5 Rounds of Sun Salutation B:\nAdd Chair Pose and Warrior 1 each side",
+    howItWorks:"Classic yoga sequence used by millions worldwide. Move with your breath — inhale to lengthen, exhale to fold.",
+    goal:"Full-body mobility, posterior chain opening, and breath control — the foundation of yoga practice",
+    score:"Completion with controlled breathing",
+    tip:"The transition from plank to chaturanga (low push-up) is where most beginners collapse. Keep elbows in, lower slowly. Drop your knees if needed.",
+    rx:{label:"Rx",standards:["All transitions linked to breath","Downward dog held for 5 breaths"]},
+    scaled:{label:"Scaled",standards:["Knees down in chaturanga","Hold each pose longer — no rush"]},
+    exercises:["Push-Ups","Plank Hold"], eq:[], minTime:12, maxTime:20 },
+
+  { name:"Hip Flexor & Hamstring Reset", format:"AMRAP", displayFormat:"Mobility Routine", timeCap:10, category:"mobility",
+    workout:"Hold each 60 seconds per side:\n1. Kneeling hip flexor stretch (90-90)\n2. Pigeon pose\n3. Standing hamstring stretch (bent over)\n4. Supine figure-4 glute stretch\n5. Seated forward fold\n\nRepeat the full sequence twice.",
+    howItWorks:"The 5 stretches that address the tightest areas in most gym athletes — hips and hamstrings shortened by sitting and heavy squatting.",
+    goal:"Restore hip mobility and hamstring length — the two most common restrictions that limit squat depth and cause lower back pain",
+    score:"Completion — all stretches held full duration",
+    tip:"60 seconds feels like forever. Stay in it. Research shows stretches held under 30 seconds provide minimal lasting benefit.",
+    rx:{label:"Rx",standards:["60 seconds per position per side","2 full rounds"]},
+    scaled:{label:"Scaled",standards:["30 seconds per position","Skip any painful positions"]},
+    exercises:["Plank Hold"], eq:[], minTime:8, maxTime:15 },
+
+  { name:"Upper Body Activation", format:"AMRAP", displayFormat:"Movement Prep", timeCap:10, category:"mobility",
+    workout:"2 rounds of 10 reps each:\n• Band pull-aparts (or arms in doorway)\n• Wall slides\n• Shoulder circles (big)\n• Thoracic rotations (seated)\n• Cat-cow (10 breaths)\n• Prone Y-T-W raises\n• Neck half-circles (slow)\n\nFinish: 30 seconds dead hang from pull-up bar",
+    howItWorks:"Activates the rotator cuff, opens the thoracic spine, and primes the scapular stabilizers before any pressing or pulling session.",
+    goal:"Prep the shoulder complex for pressing and pulling — skipping this before bench or overhead press is how shoulders get hurt",
+    score:"Completion",
+    tip:"Wall slides look easy and are humbling. Keep your lower back flat against the wall and arms in contact the entire movement. Most people can't do it.",
+    rx:{label:"Rx",standards:["Full range on every movement","30-second dead hang at end"]},
+    scaled:{label:"Scaled",standards:["Skip the hang if shoulder issues","Reduce range on any painful movement"]},
+    exercises:["Pull-Ups"], eq:["Pull-up bar"], minTime:8, maxTime:14 },
+
+  { name:"Squat Mobility Routine", format:"AMRAP", displayFormat:"Mobility Routine", timeCap:10, category:"mobility",
+    workout:"2 rounds of 45 seconds each:\n• Ankle circles (each direction)\n• Ankle rocks (seated)\n• Goblet squat hold with elbows on knees (no weight)\n• Hip airplanes\n• Deep squat breathing (breathe in the bottom)\n• Cossack squats (slow, each side)\n• Hip 90-90 stretch\n\nFinish: 10 slow bodyweight squats focusing on depth",
+    howItWorks:"Addresses every restriction that limits squat depth — ankles, hips, and thoracic spine. Do this before any squat session.",
+    goal:"Unlock your squat pattern — most depth limitations come from ankles or hips, not flexibility",
+    score:"Completion",
+    tip:"The deep squat hold is diagnostic. If you can't hold the bottom with a flat back and heels down, your ankles need work. Elevate heels with plates temporarily while you fix it.",
+    rx:{label:"Rx",standards:["Hold each position fully","Deep squat hold heels flat on floor"]},
+    scaled:{label:"Scaled",standards:["Heels elevated if needed","Hold a rack or door for balance"]},
+    exercises:["Air Squats"], eq:[], minTime:8, maxTime:14 },
+
+  { name:"Full Body Stretch — Post Workout", format:"AMRAP", displayFormat:"Cool-Down Stretch", timeCap:15, category:"mobility",
+    workout:"Hold each stretch 45-60 seconds:\n1. Standing quad stretch\n2. Standing calf stretch\n3. Seated hamstring stretch\n4. Pigeon pose (each side)\n5. Doorway chest stretch\n6. Cross-body shoulder stretch\n7. Tricep overhead stretch\n8. Child's pose\n9. Supine twist (each side)\n10. Savasana — lie still for 2 minutes",
+    howItWorks:"A complete cool-down sequence targeting every major muscle used in a typical training session. Rated the most shared post-workout routine on fitness apps.",
+    goal:"Accelerate recovery, reduce next-day soreness, and restore resting muscle length after training",
+    score:"Completion — especially the 2-minute Savasana most people skip",
+    tip:"Savasana at the end isn't optional. Two minutes of complete stillness after training significantly improves parasympathetic recovery. Put the phone down.",
+    rx:{label:"Rx",standards:["45-60 seconds per stretch","2 full minutes of stillness at end"]},
+    scaled:{label:"Scaled",standards:["30 seconds per stretch","Skip any painful positions"]},
+    exercises:["Plank Hold","Sit-Ups"], eq:[], minTime:12, maxTime:20 },
+
+  { name:"Morning Mobility Routine", format:"AMRAP", displayFormat:"Morning Routine", timeCap:10, category:"mobility",
+    workout:"Do each for 45 seconds — no equipment needed:\n• Neck rolls (slow)\n• Thoracic extension over bed or floor\n• Cat-cow\n• Hip circles (standing)\n• Leg swings\n• Inchworm\n• Downward dog to upward dog\n• Deep squat hold\n• Arm circles\n• World's Greatest Stretch each side",
+    howItWorks:"A 10-minute wake-up routine that undoes the stiffness from sleep and gets every joint moving. Popular on YouTube with millions of views.",
+    goal:"Start the day with full range of motion restored — people who do morning mobility consistently report less chronic stiffness and better performance",
+    score:"Completion — ideally done before coffee",
+    tip:"Thoracic extension over a foam roller or the edge of your bed sounds weird and feels incredible. The thoracic spine is the most restricted area for most desk workers.",
+    rx:{label:"Rx",standards:["All movements done before any caffeine","Focus on feel, not reps"]},
+    scaled:{label:"Scaled",standards:["5 movements is enough to start","Add more over time"]},
+    exercises:["Mountain Climbers","Plank Hold"], eq:[], minTime:8, maxTime:14 },
+
+  { name:"Foam Roll & Release", format:"AMRAP", displayFormat:"Recovery Session", timeCap:15, category:"mobility",
+    workout:"Spend 90 seconds on each area — pause on tender spots:\n1. IT band (each side)\n2. Quads (each side)\n3. Hamstrings (each side)\n4. Glutes / piriformis\n5. Upper back / thoracic spine\n6. Lats (each side)\n7. Calves (each side)\n\nFollow with 5 minutes of light stretching on the tightest areas.",
+    howItWorks:"Self-myofascial release — a method used by physical therapists, athletes, and trainers worldwide. Breaks up adhesions and improves blood flow to recovering muscle.",
+    goal:"Active recovery — reduces DOMS, restores range of motion, and accelerates the repair process between sessions",
+    score:"Completion — all areas addressed",
+    tip:"When you find a tender spot, pause there and breathe for 20-30 seconds instead of rolling through it. The pause is where the release happens.",
+    rx:{label:"Rx",standards:["90 seconds per area","Pause on tender spots","Foam roller needed"]},
+    scaled:{label:"Scaled",standards:["A lacrosse ball works for glutes and IT band","Even without a roller, the stretches work"]},
+    exercises:["Plank Hold"], eq:[], minTime:12, maxTime:20 },
+
+  { name:"The 5-Minute Warm-Up", format:"AMRAP", displayFormat:"Quick Warm-Up", timeCap:5, category:"mobility",
+    workout:"30 seconds each, no rest:\n1. Jumping jacks\n2. Arm circles (forward)\n3. Arm circles (backward)\n4. Hip circles\n5. Leg swings (forward/back, each leg)\n6. High knees\n7. Butt kicks\n8. Inchworm\n9. World's Greatest Stretch (one side each)\n10. Squat to stand",
+    howItWorks:"The absolute minimum effective warm-up for any training session. 5 minutes, zero equipment, full body preparation.",
+    goal:"Raise core temperature and prime every major joint pattern before training — non-negotiable even on the busiest days",
+    score:"Completion",
+    tip:"This is the floor, not the ceiling. If you have more time, use it. But 5 minutes of this is infinitely better than zero.",
+    rx:{label:"Rx",standards:["Move continuously","Every movement done"]},
+    scaled:{label:"Scaled",standards:["Any movement counts","Do what you can in 5 minutes"]},
+    exercises:["Air Squats","Mountain Climbers"], eq:[], minTime:4, maxTime:8 },
+];
+
+// Pick a curated WOD matching the user's equipment and time
+const pickCuratedWod = (form) => {
+  const t = Number(form.time);
+  const eq = form.equipment || ["None"];
+  const hasPullBar  = eq.includes("Pull-up bar") || eq.includes("Full Gym");
+  const hasKB       = eq.includes("Kettlebells")  || eq.includes("Full Gym");
+  const hasDB       = eq.includes("Dumbbells")    || eq.includes("Full Gym") || eq.includes("Barbell");
+  const hasBarbell  = eq.includes("Barbell")      || eq.includes("Full Gym");
+  const hasBox      = eq.includes("Box")          || eq.includes("Full Gym");
+  const hasWallBall = eq.includes("Wall Ball")    || eq.includes("Full Gym");
+
+  const matches = CURATED_WODS.filter(w => {
+    if (t < w.minTime || t > w.maxTime) return false;
+    if (w.eq.includes("Pull-up bar") && !hasPullBar) return false;
+    if (w.eq.includes("Kettlebells") && !hasKB)      return false;
+    if (w.eq.includes("Dumbbells")   && !hasDB)      return false;
+    if (w.eq.includes("Barbell")     && !hasBarbell) return false;
+    if (w.eq.includes("Box")         && !hasBox)     return false;
+    if (w.eq.includes("Wall Ball")   && !hasWallBall) return false;
+    return true;
+  });
+
+  if (!matches.length) return null;
+  return matches[Math.floor(Math.random() * matches.length)];
+};
+
 // ─── CHALLENGE GENERATOR ─────────────────────────────────────────────────────
 const buildChallenge = (form) => {
+  // Mobility/warm-up focus — always pull from dedicated pool, ignore time window
+  if (form.focus === "Warm-up / Mobility") {
+    const mobilityWods = CURATED_WODS.filter(w => w.category === "mobility");
+    if (mobilityWods.length) return mobilityWods[Math.floor(Math.random() * mobilityWods.length)];
+  }
+
+  // Always try curated database first — quality guaranteed
+  // Only skip curated if user specified a specific exercise preference
+  const hasPrimaryEx = form.exercise && form.exercise.trim().length > 0;
+  if (!hasPrimaryEx) {
+    // First pass: strict equipment + time match
+    const curated = pickCuratedWod(form);
+    if (curated) return curated;
+    // Second pass: relax time window by ±5 minutes
+    const relaxed = pickCuratedWod({ ...form, time: String(Number(form.time) + 5) })
+      || pickCuratedWod({ ...form, time: String(Math.max(5, Number(form.time) - 5)) });
+    if (relaxed) return relaxed;
+    // Third pass: bodyweight only (always available)
+    const bw = CURATED_WODS.filter(w => w.eq.length === 0);
+    if (bw.length) return bw[Math.floor(Math.random() * bw.length)];
+  }
   const { time, focus, level, equipment } = form;
   const t = Number(time);
   const exCount = Number(form.exerciseCount) || 2;
@@ -3265,8 +4272,10 @@ const ChallengeRunner = ({ result, form, onBack }) => {
   const [phase,    setPhase]    = useState("work");
   const [minute,   setMinute]   = useState(1);
   const [intNum,   setIntNum]   = useState(1);
+  useWakeLock(timerOn); // keep screen on while challenge timer is running
   const [done,     setDone]     = useState(false);
   const [reps,     setReps]     = useState(0);
+  const [exReps,   setExReps]   = useState({}); // {exName: count} for multi-exercise tracking
   const [setLog,   setSetLog]   = useState([]);
   const [rounds,   setRounds]   = useState(0);
   const [restOn,   setRestOn]   = useState(false);
@@ -3286,7 +4295,16 @@ const ChallengeRunner = ({ result, form, onBack }) => {
   const totalSetsMatch  = result.workout.match(/(\d+)\s*sets/);
   const totalSets       = totalSetsMatch ? Number(totalSetsMatch[1]) : 3;
   const restBetweenSets = result.workout.match(/(\d+)\s*seconds/) ? Number(result.workout.match(/(\d+)\s*seconds/)[1]) : 90;
-  const exLines = result.workout.split("\n").filter(l => l.trim() && !l.includes("Target") && !l.includes("Repeat") && !l.includes("→")).slice(0,3);
+  const exLines = result.workout.split("\n").filter(l => {
+    const t = l.trim();
+    if (!t) return false;                          // blank
+    if (t.startsWith("—") || t === "—") return false; // dividers
+    if (/^(for time|amrap|emom|tabata|rounds|block|min|time cap|repeat|target|rest|complete all)/i.test(t)) return false; // headers
+    if (/^\d+[\-–]\d+\s+min/i.test(t)) return false; // "10-min AMRAP:" style
+    if (t.endsWith(":") && !t.match(/^\d/)) return false; // "For Time:" labels
+    if (/^(round|minute|interval|cycle|then|beat)/i.test(t)) return false; // round labels
+    return true;
+  }).slice(0, 5);
   const currentMinuteEx = isEMOM ? exLines[(minute - 1) % Math.max(exLines.length, 2)] : null;
 
   // Main timer tick
@@ -3351,7 +4369,7 @@ const ChallengeRunner = ({ result, form, onBack }) => {
     setTimerOn(false); setDone(false);
     setTime(isEMOM ? 60 : isInterval ? workSec : timeSec);
     setPhase("work"); setMinute(1); setIntNum(1);
-    setReps(0); setSetLog([]); setRounds(0);
+    setReps(0); setExReps({}); setSetLog([]); setRounds(0);
     setRestOn(false); setCountdown(null);
   };
 
@@ -3454,26 +4472,59 @@ const ChallengeRunner = ({ result, form, onBack }) => {
           </div>
         )}
 
-        {/* Rep counter */}
+        {/* Rep counter — per exercise when multiple exist, single counter otherwise */}
         {showRepCounter && !restOn && !done && (
           <Card style={{ padding:"16px 20px", marginBottom:14 }}>
             <div style={{ color:T.mu, fontSize:10, fontWeight:700, letterSpacing:1.2, fontFamily:T.fn, marginBottom:12 }}>
               {isMaxReps ? `SET ${setLog.length + 1} OF ${totalSets} — REP COUNT` : "REP COUNT"}
             </div>
-            <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:12 }}>
-              <button onClick={() => setReps(r => Math.max(0, r-1))}
-                style={{ width:56, height:56, borderRadius:14, background:T.hi, border:"1px solid "+T.bo,
-                  fontSize:28, color:T.mu, cursor:"pointer", fontWeight:700,
-                  display:"flex", alignItems:"center", justifyContent:"center" }}>−</button>
-              <div style={{ flex:1, textAlign:"center" }}>
-                <div style={{ fontFamily:T.mo, fontSize:64, fontWeight:700, color, lineHeight:1 }}>{reps}</div>
-                <div style={{ color:T.mu, fontSize:11, fontFamily:T.fn, marginTop:2 }}>reps</div>
+            {exLines.length > 1 ? (
+              // Multi-exercise: show a counter per exercise
+              <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
+                {exLines.map((ex, xi) => {
+                  const key = xi + "_" + ex.slice(0, 20);
+                  const val = exReps[key] || 0;
+                  const exName = ex.replace(/^\d+\s+/, "").trim();
+                  return (
+                    <div key={xi} style={{ display:"flex", alignItems:"center", gap:10 }}>
+                      <div style={{ flex:1, fontFamily:T.fn, fontSize:12, color:T.mu, overflow:"hidden",
+                        textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{exName}</div>
+                      <button onClick={() => setExReps(r => ({ ...r, [key]: Math.max(0, (r[key]||0)-1) }))}
+                        style={{ width:36, height:36, borderRadius:10, background:T.hi, border:"1px solid "+T.bo,
+                          fontSize:20, color:T.mu, cursor:"pointer", fontWeight:700, display:"flex",
+                          alignItems:"center", justifyContent:"center", flexShrink:0 }}>−</button>
+                      <div style={{ fontFamily:T.mo, fontSize:22, fontWeight:700, color, width:40, textAlign:"center" }}>{val}</div>
+                      <button onClick={() => setExReps(r => ({ ...r, [key]: (r[key]||0)+1 }))}
+                        style={{ width:36, height:36, borderRadius:10, background:color+"20", border:"1px solid "+color+"50",
+                          fontSize:20, color, cursor:"pointer", fontWeight:700, display:"flex",
+                          alignItems:"center", justifyContent:"center", flexShrink:0 }}>+</button>
+                    </div>
+                  );
+                })}
+                <div style={{ borderTop:"1px solid "+T.bo, paddingTop:10, display:"flex", justifyContent:"space-between" }}>
+                  <span style={{ color:T.mu, fontSize:11, fontFamily:T.fn }}>Total reps this round</span>
+                  <span style={{ color, fontFamily:T.mo, fontWeight:700, fontSize:14 }}>
+                    {Object.values(exReps).reduce((a,b) => a+b, 0)}
+                  </span>
+                </div>
               </div>
-              <button onClick={() => setReps(r => r+1)}
-                style={{ width:56, height:56, borderRadius:14, background:color+"20", border:"1px solid "+color+"50",
-                  fontSize:28, color, cursor:"pointer", fontWeight:700,
-                  display:"flex", alignItems:"center", justifyContent:"center" }}>+</button>
-            </div>
+            ) : (
+              // Single exercise: big counter
+              <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:12 }}>
+                <button onClick={() => setReps(r => Math.max(0, r-1))}
+                  style={{ width:56, height:56, borderRadius:14, background:T.hi, border:"1px solid "+T.bo,
+                    fontSize:28, color:T.mu, cursor:"pointer", fontWeight:700,
+                    display:"flex", alignItems:"center", justifyContent:"center" }}>−</button>
+                <div style={{ flex:1, textAlign:"center" }}>
+                  <div style={{ fontFamily:T.mo, fontSize:64, fontWeight:700, color, lineHeight:1 }}>{reps}</div>
+                  <div style={{ color:T.mu, fontSize:11, fontFamily:T.fn, marginTop:2 }}>reps</div>
+                </div>
+                <button onClick={() => setReps(r => r+1)}
+                  style={{ width:56, height:56, borderRadius:14, background:color+"20", border:"1px solid "+color+"50",
+                    fontSize:28, color, cursor:"pointer", fontWeight:700,
+                    display:"flex", alignItems:"center", justifyContent:"center" }}>+</button>
+              </div>
+            )}
           </Card>
         )}
 
@@ -3582,6 +4633,8 @@ const Challenge = () => {
   const [history, setHistory] = useState([]);   // last 10 generated
   const [favorites, setFavorites] = useState([]); // starred workouts
   const [histTab, setHistTab] = useState("history"); // "history" | "favorites"
+  const [refineText, setRefineText] = useState("");
+  const [refining, setRefining] = useState(false);
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
   const toggleEquip = (opt) => {
@@ -3605,10 +4658,145 @@ const Challenge = () => {
       const r = buildChallenge(form);
       setResult(r);
       setLoading(false);
-      // Add to history (deduplicate by name, cap at 10)
       const entry = { ...r, form: { ...form }, ts: Date.now(), id: Date.now() };
       setHistory(h => [entry, ...h.filter(x => x.name !== r.name)].slice(0, 10));
     }, 900);
+  };
+
+  const refine = async () => {
+    if (!refineText.trim() || !result) return;
+    setRefining(true);
+
+    try {
+      if (!GROQ_API_KEY) throw new Error("no key");
+
+      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + GROQ_API_KEY,
+        },
+        body: JSON.stringify({
+          model: "llama-3.3-70b-versatile",
+          max_tokens: 1200,
+          temperature: 0.4,
+          messages: [
+            {
+              role: "system",
+              content: `You are an expert CrossFit and strength coach editing a generated workout. 
+The user will give you the current workout details and a refinement request.
+Return ONLY a valid JSON object — no markdown, no code fences, no explanation.
+Keep the same format, time cap, and structure. Only change what the user asks for.
+Required fields:
+{
+  "name": string,
+  "workout": string,
+  "exercises": string[],
+  "howItWorks": string,
+  "goal": string,
+  "score": string,
+  "tip": string,
+  "rx": {"label": "Rx", "standards": string[]},
+  "scaled": {"label": "Scaled", "standards": string[]},
+  "timeCap": string,
+  "displayFormat": string,
+  "format": string
+}`
+            },
+            {
+              role: "user",
+              content: `Current workout:\n${JSON.stringify(result, null, 2)}\n\nRefinement request: ${refineText}`
+            }
+          ]
+        })
+      });
+
+      if (!response.ok) throw new Error("HTTP " + response.status);
+      const data = await response.json();
+      const text = data.choices?.[0]?.message?.content || "";
+      const clean = text.replace(/^```(?:json)?\n?/i, "").replace(/\n?```$/i, "").trim();
+      const updated = JSON.parse(clean);
+      const newResult = { ...result, ...updated };
+      setResult(newResult);
+      setRefineText("");
+      const entry = { ...newResult, form: { ...form }, ts: Date.now(), id: Date.now() };
+      setHistory(h => [entry, ...h.filter(x => x.name !== newResult.name)].slice(0, 10));
+
+    } catch (e) {
+      // Groq unavailable or no key — use exclusion-based local logic
+      const req = refineText.toLowerCase();
+
+      // Extract what the user wants to AVOID
+      // Handles: "swap X", "no X", "remove X", "swap out X", "replace X", "without X", "instead of X"
+      const avoidTerms = [];
+      const avoidPatterns = [
+        /(?:swap out?|replace|change|remove|drop|no|without|instead of|hate|don't want|dont want)\s+(?:the\s+)?([a-z][a-z\s\-]*?)(?:\s+(?:for|with|to|and)|$)/gi,
+        /([a-z][a-z\s\-]+?)\s+(?:is too hard|are too hard|hurt|hurts|kills)/gi,
+      ];
+      for (const pat of avoidPatterns) {
+        let m;
+        while ((m = pat.exec(req)) !== null) {
+          avoidTerms.push(m[1].trim());
+        }
+      }
+
+      // Extract what the user wants to ADD / swap IN
+      const wantTerms = [];
+      const wantPatterns = [
+        /(?:swap.*?for|replace.*?with|change.*?to|add|include|use|want)\s+(?:some\s+)?([a-z][a-z\s\-]+?)(?:\s+instead|\s+instead of|$)/gi,
+      ];
+      for (const pat of wantPatterns) {
+        let m;
+        while ((m = pat.exec(req)) !== null) {
+          wantTerms.push(m[1].trim());
+        }
+      }
+
+      // Build filtered curated pool — exclude current workout and any WOD containing avoided exercises
+      const currentName = result?.name || "";
+      const filtered = CURATED_WODS.filter(w => {
+        if (w.name === currentName) return false; // always give something new
+        // Check equipment constraints
+        const eq = form.equipment || ["None"];
+        const hasPullBar = eq.includes("Pull-up bar") || eq.includes("Full Gym");
+        const hasKB      = eq.includes("Kettlebells")  || eq.includes("Full Gym");
+        const hasDB      = eq.includes("Dumbbells")    || eq.includes("Full Gym") || eq.includes("Barbell");
+        const hasBox     = eq.includes("Box")          || eq.includes("Full Gym");
+        const hasWallBall= eq.includes("Wall Ball")    || eq.includes("Full Gym");
+        if (w.eq.includes("Pull-up bar") && !hasPullBar) return false;
+        if (w.eq.includes("Kettlebells") && !hasKB)      return false;
+        if (w.eq.includes("Dumbbells")   && !hasDB)      return false;
+        if (w.eq.includes("Box")         && !hasBox)     return false;
+        if (w.eq.includes("Wall Ball")   && !hasWallBall) return false;
+        // Filter out WODs containing exercises the user wants to avoid
+        if (avoidTerms.length > 0) {
+          const exText = (w.workout + " " + w.exercises.join(" ")).toLowerCase();
+          const avoided = avoidTerms.some(term =>
+            term.length >= 3 && exText.includes(term.split(" ")[0])
+          );
+          if (avoided) return false;
+        }
+        return true;
+      });
+
+      let newResult;
+      if (filtered.length > 0) {
+        newResult = filtered[Math.floor(Math.random() * filtered.length)];
+      } else {
+        // Nothing matched — pick anything different from current
+        const different = CURATED_WODS.filter(w => w.name !== currentName && w.eq.length === 0);
+        newResult = different.length > 0
+          ? different[Math.floor(Math.random() * different.length)]
+          : buildChallenge(form);
+      }
+
+      setResult(newResult);
+      setRefineText("");
+      const entry = { ...newResult, form: { ...form }, ts: Date.now(), id: Date.now() };
+      setHistory(h => [entry, ...h.filter(x => x.name !== newResult.name)].slice(0, 10));
+    }
+
+    setRefining(false);
   };
 
   const isFav = result ? favorites.some(f => f.name === result.name) : false;
@@ -3677,15 +4865,15 @@ const Challenge = () => {
 
         {!result && !loading && (
           <div style={{ marginTop: 24 }}>
-            <OptRow label="TIME AVAILABLE" field="time" options={["5","10","15","20","30"]} />
+            <OptRow label="TIME AVAILABLE" field="time" options={["5","10","15","20","30","45","60"]} />
             <OptRow label="EXERCISES" field="exerciseCount" options={["1","2","3"]} />
-            <OptRow label="BODY PART FOCUS" field="focus" options={["Upper body","Lower body","Core","Full body"]} />
+            <OptRow label="BODY PART FOCUS" field="focus" options={["Upper body","Lower body","Core","Full body","Warm-up / Mobility"]} />
             <div style={{ marginBottom: 14 }}>
               <div style={{ color: T.mu, fontSize: 10, fontWeight: 700, letterSpacing: 1.2, fontFamily: T.fn, marginBottom: 8 }}>
                 EQUIPMENT <span style={{ color: T.di, fontWeight: 400, textTransform: "none", letterSpacing: 0 }}>(select all that apply)</span>
               </div>
               <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                {["None","Pull-up bar","Dumbbells","Kettlebells","Barbell"].map(o => {
+                {["None","Pull-up bar","Dumbbells","Kettlebells","Barbell","Box","Wall Ball"].map(o => {
                   const sel = form.equipment.includes(o);
                   return (
                     <div key={o} onClick={() => toggleEquip(o)}
@@ -3815,12 +5003,35 @@ const Challenge = () => {
 
             <Btn ch="Start Now" onClick={() => setActiveRun(true)} color={fmtColor}
               style={{ width:"100%", padding:16, borderRadius:12, fontSize:16, marginBottom:10 }} />
-            <div style={{ display:"flex", gap:10 }}>
+            <div style={{ display:"flex", gap:10, marginBottom:14 }}>
               <Btn ch="&#8635; New" onClick={() => setResult(null)} ghost
                 style={{ flex:1, padding:14, borderRadius:12 }} />
               <Btn ch="Regenerate" onClick={generate} color={fmtColor}
                 style={{ flex:1, padding:14, borderRadius:12 }} />
             </div>
+
+            {/* Refinement panel */}
+            <Card style={{ padding:"16px 18px" }}>
+              <div style={{ color:T.di, fontSize:9, fontWeight:700, letterSpacing:1.5, fontFamily:T.fn, marginBottom:8 }}>TWEAK THIS WORKOUT</div>
+              <div style={{ color:T.mu, fontSize:12, fontFamily:T.fn, marginBottom:10, lineHeight:1.5 }}>
+                Don't like something? Tell me what to change.
+              </div>
+              <textarea
+                value={refineText}
+                onChange={e => setRefineText(e.target.value)}
+                placeholder={`e.g. "swap push-ups for squats" or "make it shorter" or "replace pull-ups with ring rows"`}
+                style={{ width:"100%", background:T.hi, border:"1px solid "+T.bo, borderRadius:10,
+                  padding:"11px 13px", fontFamily:T.fn, fontSize:13, color:T.tx, resize:"none",
+                  outline:"none", minHeight:70, lineHeight:1.6, marginBottom:10 }}
+              />
+              <Btn
+                ch={refining ? "Updating..." : "Apply Changes"}
+                onClick={refine}
+                color={fmtColor}
+                disabled={!refineText.trim() || refining}
+                style={{ width:"100%", padding:13, borderRadius:10, fontSize:13 }}
+              />
+            </Card>
           </div>
         )}
 
@@ -3907,9 +5118,16 @@ const NAV_ICONS = {
       <rect x="13" y="13" width="8" height="8" rx="2" fill={active ? color : "#6A6880"}/>
     </svg>
   ),
+  home: (_active, _color) => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+      <path d="M3 12L12 3l9 9" stroke="#6A6880" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M9 21V12h6v9" stroke="#6A6880" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M5 10v11h14V10" stroke="#6A6880" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  ),
 };
 
-const Nav = ({ tab, setTab, hasProg }) => {
+const Nav = ({ tab, setTab, hasProg, onHome }) => {
   const tabs = hasProg
     ? [{id:"today",l:"Today"},{id:"cal",l:"Calendar"},{id:"prog",l:"Progress"},{id:"timers",l:"Timers"},{id:"progs",l:"Programs"}]
     : [{id:"timers",l:"Timers"},{id:"progs",l:"Programs"}];
@@ -3931,6 +5149,14 @@ const Nav = ({ tab, setTab, hasProg }) => {
           </div>
         );
       })}
+      {/* Home button — always visible, takes user back to welcome screen */}
+      <div onClick={onHome}
+        style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:4,
+          cursor:"pointer", padding:"7px 12px", borderRadius:10 }}>
+        {NAV_ICONS.home(false, T.mu)}
+        <span style={{ fontFamily:T.fn, fontSize:9, fontWeight:700,
+          color:T.mu, letterSpacing:0.5 }}>HOME</span>
+      </div>
     </div>
   );
 };
@@ -4125,20 +5351,19 @@ export default function App() {
   const renderTab = () => {
     if (tab === "timers") return <Timers />;
     if (!ap || !cal) return (
-      <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column",
-        alignItems: "center", justifyContent: "center", padding: "0 32px", textAlign: "center" }}>
-        <div style={{ marginBottom: 16 }}>
-          <svg width="44" height="44" viewBox="0 0 24 24" fill="none">
-            <path d="M12 2L2 7l10 5 10-5-10-5z" fill={T.ac}/>
-            <path d="M2 17l10 5 10-5" stroke={T.ac} strokeWidth="2" strokeLinecap="round"/>
-            <path d="M2 12l10 5 10-5" stroke={T.ac} strokeWidth="2" strokeLinecap="round"/>
-          </svg>
+      <div style={{ minHeight:"100vh", padding:"52px 20px 90px" }}>
+        <div style={{ marginBottom:24 }}>
+          <h1 style={{ fontFamily:T.fn, fontWeight:800, fontSize:26, color:T.tx, margin:"0 0 4px" }}>Today</h1>
+          <p style={{ color:T.mu, fontSize:13, margin:0, fontFamily:T.fn }}>Based on your recent training.</p>
         </div>
-        <h2 style={{ fontFamily: T.fn, fontWeight: 800, fontSize: 22, color: T.tx, marginBottom: 10 }}>No Program Active</h2>
-        <Btn ch="Get Started" onClick={() => setSc("welcome")} color={T.ac} />
+        <SmartRecommendation logs={logs} cal={[]} existMx={mx} onStart={(day, c) => { setWday(day); setWcolor(c); }} />
+        <div style={{ marginTop:16 }}>
+          <Btn ch="Pick a Program" onClick={() => setSc("welcome")} color={T.ac}
+            style={{ width:"100%", padding:13, borderRadius:12, fontSize:14 }} />
+        </div>
       </div>
     );
-    if (tab === "today")  return <Today     cal={cal} pname={pname} pcolor={pcolor} logs={logs} onStart={d => setWday(d)} />;
+    if (tab === "today")  return <Today     cal={cal} pname={pname} pcolor={pcolor} logs={logs} onStart={d => setWday(d)} existMx={mx} />;
     if (tab === "cal")    return <CalView   cal={cal} pname={pname} pcolor={pcolor} logs={logs} onSelect={d => setWday(d)} />;
     if (tab === "prog")   return <Progress  logs={logs} cal={cal} pname={pname} pcolor={pcolor} maxes={mx} onUpdateMaxes={updateMaxes} />;
     if (tab === "progs")  return (
@@ -4176,7 +5401,7 @@ export default function App() {
       <Nav tab={tab} setTab={t => {
         if (!ap && t !== "progs" && t !== "timers") { setSc("welcome"); return; }
         setTab(t);
-      }} hasProg={!!ap} />
+      }} hasProg={!!ap} onHome={() => setSc("welcome")} />
     </div>
   );
 }
