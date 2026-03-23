@@ -992,64 +992,240 @@ const NumInput = ({ label, value, onChange, hint }) => {
   );
 };
 
+// ─── EXERCISE GIF HOOK ────────────────────────────────────────────────────────
+const useExerciseGif = (name) => {
+  const [gif, setGif] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!name) return;
+    let cancelled = false;
+    setGif(null);
+    setLoading(true);
+
+    fetch(`/api/exercise-gif?name=${encodeURIComponent(name)}`)
+      .then((r) => (r.ok ? r.json() : { gifUrl: null }))
+      .then((d) => {
+        if (!cancelled) {
+          setGif(d.gifUrl || null);
+          setLoading(false);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => { cancelled = true; };
+  }, [name]);
+
+  return { gif, loading };
+};
+
 // ─── EXERCISE DRAWER ──────────────────────────────────────────────────────────
 const ExDrawer = ({ ex, color, onClose }) => {
   const info = exInfo(ex.name);
+  const { gif, loading } = useExerciseGif(ex.name);
+
   return (
     <>
-      <div onClick={onClose}
-        style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.8)", zIndex: 200 }} />
-      <div style={{ position: "fixed", bottom: 0, left: "50%", transform: "translateX(-50%)",
-        width: "100%", maxWidth: 440, background: T.su, borderRadius: "22px 22px 0 0",
-        zIndex: 201, maxHeight: "85vh", overflowY: "auto" }}>
-        <div style={{ display: "flex", justifyContent: "center", padding: "12px 0 4px",
-          position: "sticky", top: 0, background: T.su }}>
+      <div
+        onClick={onClose}
+        style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.8)", zIndex: 200 }}
+      />
+      <div
+        style={{
+          position: "fixed", bottom: 0, left: "50%", transform: "translateX(-50%)",
+          width: "100%", maxWidth: 440, background: T.su, borderRadius: "22px 22px 0 0",
+          zIndex: 201, maxHeight: "85vh", overflowY: "auto",
+        }}
+      >
+        <div
+          style={{
+            display: "flex", justifyContent: "center", padding: "12px 0 4px",
+            position: "sticky", top: 0, background: T.su, zIndex: 1,
+          }}
+        >
           <div style={{ width: 40, height: 4, borderRadius: 2, background: T.bo }} />
         </div>
+
         <div style={{ padding: "8px 22px 52px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 }}>
-            <h3 style={{ fontFamily: T.fn, fontWeight: 800, fontSize: 21, color: T.tx,
-              margin: 0, flex: 1, paddingRight: 12, lineHeight: 1.2 }}>{ex.name}</h3>
-            <button onClick={onClose}
-              style={{ background: T.hi, border: "1px solid "+T.bo, borderRadius: 8,
-                width: 34, height: 34, display: "flex", alignItems: "center", justifyContent: "center",
-                color: T.mu, cursor: "pointer", fontFamily: T.fn, fontSize: 14 }}>X</button>
+          <div
+            style={{
+              display: "flex", justifyContent: "space-between",
+              alignItems: "flex-start", marginBottom: 6,
+            }}
+          >
+            <h3
+              style={{
+                fontFamily: T.fn, fontWeight: 800, fontSize: 21, color: T.tx,
+                margin: 0, flex: 1, paddingRight: 12, lineHeight: 1.2,
+              }}
+            >
+              {ex.name}
+            </h3>
+            <button
+              onClick={onClose}
+              style={{
+                background: T.hi, border: "1px solid " + T.bo, borderRadius: 8,
+                width: 34, height: 34, display: "flex", alignItems: "center",
+                justifyContent: "center", color: T.mu, cursor: "pointer",
+                fontFamily: T.fn, fontSize: 14,
+              }}
+            >
+              X
+            </button>
           </div>
-          <div style={{ color: T.mu, fontSize: 13, fontFamily: T.fn, marginBottom: 16 }}>{info.m}</div>
-          
-          <div style={{ display: "flex", gap: 8, marginBottom: 18 }}>
-            <div style={{ flex: 1, background: color+"12", border: "1px solid "+color+"28", borderRadius: 12, padding: "13px 14px" }}>
-              <div style={{ color: T.di, fontSize: 9, fontWeight: 700, letterSpacing: 1.5, fontFamily: T.fn, marginBottom: 5 }}>REST TIME</div>
-              <div style={{ color, fontFamily: T.mo, fontWeight: 700, fontSize: 24 }}>{fmt(info.r)}</div>
-              <div style={{ color: T.mu, fontSize: 10, fontFamily: T.fn, marginTop: 2 }}>recommended</div>
-            </div>
-            <div style={{ flex: 1, background: T.hi, border: "1px solid "+T.bo, borderRadius: 12, padding: "13px 14px" }}>
-              <div style={{ color: T.di, fontSize: 9, fontWeight: 700, letterSpacing: 1.5, fontFamily: T.fn, marginBottom: 5 }}>SETS</div>
-              <div style={{ color: T.tx, fontFamily: T.mo, fontWeight: 700, fontSize: 24 }}>{(ex.sets || []).length}</div>
-              <div style={{ color: T.mu, fontSize: 10, fontFamily: T.fn, marginTop: 2 }}>this session</div>
-            </div>
+          <div style={{ color: T.mu, fontSize: 13, fontFamily: T.fn, marginBottom: 16 }}>
+            {info.m}
           </div>
-          {ex.note && (
-            <div style={{ background: T.hi, border: "1px solid "+T.bo, borderRadius: 10, padding: "12px 14px", marginBottom: 16 }}>
-              <div style={{ color: T.di, fontSize: 9, fontWeight: 700, letterSpacing: 1.5, fontFamily: T.fn, marginBottom: 4 }}>COACH CUE</div>
-              <div style={{ color: "#A8A6BE", fontSize: 13, fontFamily: T.fn, lineHeight: 1.6 }}>{ex.note}</div>
+
+          {(loading || gif) && (
+            <div
+              style={{
+                marginBottom: 18, borderRadius: 14, overflow: "hidden",
+                background: T.hi, border: "1px solid " + T.bo,
+                position: "relative", aspectRatio: "1 / 1",
+              }}
+            >
+              {loading && !gif && (
+                <div
+                  style={{
+                    position: "absolute", inset: 0,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    flexDirection: "column", gap: 10,
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 44, height: 44, borderRadius: "50%",
+                      border: "3px solid " + T.bo,
+                      borderTopColor: color,
+                      animation: "spin 0.9s linear infinite",
+                    }}
+                  />
+                  <span style={{ color: T.mu, fontSize: 11, fontFamily: T.fn }}>
+                    Loading demo
+                  </span>
+                </div>
+              )}
+              {gif && (
+                <img
+                  src={gif}
+                  alt={ex.name + " demo"}
+                  style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                  onError={(e) => { e.currentTarget.parentElement.style.display = "none"; }}
+                />
+              )}
             </div>
           )}
-          <div style={{ color: T.mu, fontSize: 10, fontWeight: 700, letterSpacing: 1.5, fontFamily: T.fn, marginBottom: 10 }}>TECHNIQUE TIPS</div>
+
+          <div style={{ display: "flex", gap: 8, marginBottom: 18 }}>
+            <div
+              style={{
+                flex: 1, background: color + "12", border: "1px solid " + color + "28",
+                borderRadius: 12, padding: "13px 14px",
+              }}
+            >
+              <div
+                style={{
+                  color: T.di, fontSize: 9, fontWeight: 700, letterSpacing: 1.5,
+                  fontFamily: T.fn, marginBottom: 5,
+                }}
+              >
+                REST TIME
+              </div>
+              <div style={{ color, fontFamily: T.mo, fontWeight: 700, fontSize: 24 }}>
+                {fmt(info.r)}
+              </div>
+              <div style={{ color: T.mu, fontSize: 10, fontFamily: T.fn, marginTop: 2 }}>
+                recommended
+              </div>
+            </div>
+            <div
+              style={{
+                flex: 1, background: T.hi, border: "1px solid " + T.bo,
+                borderRadius: 12, padding: "13px 14px",
+              }}
+            >
+              <div
+                style={{
+                  color: T.di, fontSize: 9, fontWeight: 700, letterSpacing: 1.5,
+                  fontFamily: T.fn, marginBottom: 5,
+                }}
+              >
+                SETS
+              </div>
+              <div style={{ color: T.tx, fontFamily: T.mo, fontWeight: 700, fontSize: 24 }}>
+                {(ex.sets || []).length}
+              </div>
+              <div style={{ color: T.mu, fontSize: 10, fontFamily: T.fn, marginTop: 2 }}>
+                this session
+              </div>
+            </div>
+          </div>
+
+          {ex.note && (
+            <div
+              style={{
+                background: T.hi, border: "1px solid " + T.bo,
+                borderRadius: 10, padding: "12px 14px", marginBottom: 16,
+              }}
+            >
+              <div
+                style={{
+                  color: T.di, fontSize: 9, fontWeight: 700, letterSpacing: 1.5,
+                  fontFamily: T.fn, marginBottom: 4,
+                }}
+              >
+                COACH CUE
+              </div>
+              <div style={{ color: "#A8A6BE", fontSize: 13, fontFamily: T.fn, lineHeight: 1.6 }}>
+                {ex.note}
+              </div>
+            </div>
+          )}
+
+          <div
+            style={{
+              color: T.mu, fontSize: 10, fontWeight: 700, letterSpacing: 1.5,
+              fontFamily: T.fn, marginBottom: 10,
+            }}
+          >
+            TECHNIQUE TIPS
+          </div>
           {info.tips.map((tip, i) => (
-            <div key={i} style={{ display: "flex", gap: 12, marginBottom: 10, alignItems: "flex-start" }}>
-              <div style={{ width: 22, height: 22, borderRadius: "50%", background: color+"15",
-                border: "1px solid "+color+"30", display: "flex", alignItems: "center", justifyContent: "center",
-                flexShrink: 0, fontFamily: T.mo, fontSize: 11, fontWeight: 700, color, marginTop: 1 }}>{i+1}</div>
-              <span style={{ color: "#A8A6BE", fontSize: 13, fontFamily: T.fn, lineHeight: 1.6, paddingTop: 2 }}>{tip}</span>
+            <div
+              key={i}
+              style={{ display: "flex", gap: 12, marginBottom: 10, alignItems: "flex-start" }}
+            >
+              <div
+                style={{
+                  width: 22, height: 22, borderRadius: "50%",
+                  background: color + "15", border: "1px solid " + color + "30",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  flexShrink: 0, fontFamily: T.mo, fontSize: 11, fontWeight: 700,
+                  color, marginTop: 1,
+                }}
+              >
+                {i + 1}
+              </div>
+              <span
+                style={{
+                  color: "#A8A6BE", fontSize: 13, fontFamily: T.fn,
+                  lineHeight: 1.6, paddingTop: 2,
+                }}
+              >
+                {tip}
+              </span>
             </div>
           ))}
         </div>
       </div>
+
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </>
   );
 };
-
 // ─── REST TIMER ───────────────────────────────────────────────────────────────
 const RestTimer = ({ exName, initSec, nextLabel, onDone }) => {
   const [left, setLeft] = useState(initSec);
