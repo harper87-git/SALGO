@@ -134,9 +134,68 @@ const NAME_MAP = {
   "decline push-ups":             "decline push up",
   "ez push-up":                   "push up",
   "dips on bench":                "bench dip",
+  "dips":                         "chest dip",
   "jumping jacks":                "jumping jack",
   "speed mountain climber":       "mountain climber",
+  "mountain climbers":            "mountain climber",
   "jump squats":                  "jump squat",
+  "burpees":                      "burpee",
+
+  // ── Warm-Up / Mobility ──
+  "arm circles":                  "arm circles",
+  "high knees":                   "high knee against wall",
+  "butt kicks":                   "butt kicks",
+  "a-skip":                       "run",
+  "leg swings":                   "side hip abduction",
+  "scap pull-up":                 "scapular pull-up",
+  "band pull-apart":              "resistance band pull apart",
+  "hip hinge":                    "good morning",
+  "cat-cow stretch":              "cat stretch",
+  "glute bridge":                 "glute bridge",
+  "hip circles":                  "hip circles",
+  "walking":                      null,
+
+  // ── Bodyweight / Common ──
+  "squat":                        "barbell full squat",
+  "plank":                        "front plank",
+  "sit-ups":                      "sit up",
+  "lunges":                       "lunge",
+  "pull-ups":                     "pull up",
+  "pull-up":                      "pull up",
+  "push-ups":                     "push up",
+  "push-up":                      "push up",
+  "bulgarian split squat":        "bodyweight drop jump squat",
+  "hip thrust":                   "hip thrust",
+  "face pull":                    "face pull",
+  "barbell curl":                 "barbell curl",
+  "tricep pushdown":              "pushdown",
+  "leg curl":                     "leg curl",
+  "leg press":                    "leg press",
+  "romanian dl":                  "barbell romanian deadlift",
+  "deadlift":                     "barbell deadlift",
+  "bench press":                  "barbell bench press",
+  "overhead press":               "barbell overhead press",
+  "barbell row":                  "barbell bent over row",
+  "pendlay row":                  "barbell bent over row",
+  "ghr":                          "glute ham raise",
+
+  // ── Running Drills ──
+  "400m repeats":                 null,
+  "200m sprints":                 null,
+  "tempo run":                    null,
+  "long run":                     null,
+  "walking cooldown":             null,
+
+  // ── Recovery / Stretches ──
+  "hamstring stretch":            "hamstring stretch",
+  "hip flexor stretch":           "kneeling hip flexor stretch",
+  "chest doorway stretch":        null,
+  "lat stretch":                  null,
+  "pigeon pose":                  null,
+  "foam roll quads":              null,
+  "foam roll upper back":         null,
+  "world's greatest stretch":     null,
+  "thoracic rotation":            null,
 
   // ── Skip (program names / not real exercises) ──
   "beast abs":                    null,
@@ -210,7 +269,7 @@ export default async function handler(req, res) {
     .replace(/\s+/g, " ")
     .trim();
 
-  const skipPatterns = ["rest", "cardio", "foam roll", "stretch", "warm-up", "warm up", "limber", "release"];
+  const skipPatterns = ["rest", "cardio", "foam roll", "warm-up", "warm up", "limber", "release", "walking cooldown"];
   if (!cleaned || cleaned.length < 3 || skipPatterns.some(p => cleaned.includes(p))) {
     return res.json({ gifUrl: null });
   }
