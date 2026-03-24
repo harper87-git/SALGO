@@ -720,7 +720,7 @@ function buildWorkout(pid, mx, wk, dow, sc) {
     if (code === "CA") return { name:"Cardio & Abs", tag:"ABS", tagColor:T.tl,
       weekLabel:"Week "+wk+" — Cardio & Abs",
       exercises:[
-        exo("Jumping Jacks",true,"3 sets × 60s",s(3,"60s",0)),
+        exo("Jumping Jacks",false,"3 sets × 60s",s(3,"60s",0)),
         exo("Crunch",false,"3 sets × 15",s(3,15,0)),
         exo("Plank",false,"3 sets × 45s",s(3,"45s",0)),
         exo("Mountain Climbers",false,"3 sets × 30s",s(3,"30s",0)),
@@ -950,7 +950,6 @@ function buildCustomProgram(answers) {
     deadlift: isBW ? 0 : level === "beginner" ? 90  : level === "intermediate" ? 175 : 250,
     ohp:      isBW ? 0 : level === "beginner" ? 35  : level === "intermediate" ? 75  : 105,
   };
-  // Intensity multipliers
   const im = int === "easy" ? 0.8 : int === "hard" ? 1.1 : 1.0;
   const mainSets = int === "easy" ? 3 : int === "hard" ? 5 : 4;
   const accSets = int === "easy" ? 2 : int === "hard" ? 4 : 3;
@@ -963,168 +962,159 @@ function buildCustomProgram(answers) {
     if (focus === "upper" && !isBW) {
       const base = [
         { name:"Upper Push", tag:"PUSH", tagColor:T.ac, weekLabel:"Week N - Upper Push", exercises:[
-          exo("Jumping Jacks",false,"2x20 warm-up",bw(2,20)),
           exo("Bench Press",true,mainSets+"x5",h(W.bench,mainSets,5)),
           exo("Overhead Press",true,"3x6",h(W.ohp,3,6)),
-          exo("Lateral Raise",false,accSets+"x12",bw(accSets,12)),
-          exo("Tricep Pushdown",false,accSets+"x12",bw(accSets,12)),
-          ...(int === "hard" ? [exo("Dips",false,"3xMax finisher",bw(3,"Max"))] : []),
+          exo("Incline DB Press",false,accSets+"x10 — superset with Lateral Raise",h(r5(W.bench*0.30),accSets,10),"A"),
+          exo("Lateral Raise",false,accSets+"x12 — superset with Incline",bw(accSets,12),"A"),
+          exo("Tricep Pushdown",false,accSets+"x12 — superset with Face Pull",bw(accSets,12),"B"),
+          exo("Face Pull",false,accSets+"x15 — superset with Pushdown",bw(accSets,15),"B"),
         ]},
         { name:"Upper Pull", tag:"PULL", tagColor:T.pu, weekLabel:"Week N - Upper Pull", exercises:[
-          exo("Push-ups",false,"2x15 warm-up",bw(2,15)),
           exo("Barbell Row",true,mainSets+"x5",h(r5(W.bench*0.85),mainSets,5)),
           exo("Pull-ups",true,"4xMax",bw(4,"Max")),
+          exo("DB Row",false,accSets+"x10 — superset with Barbell Curl",bw(accSets,10),"A"),
+          exo("Barbell Curl",false,accSets+"x10 — superset with DB Row",bw(accSets,10),"A"),
           exo("Face Pull",false,accSets+"x15",bw(accSets,15)),
-          exo("Barbell Curl",false,accSets+"x10",bw(accSets,10)),
         ]},
         { name:"Heavy Press", tag:"HPRS", tagColor:T.or, weekLabel:"Week N - Heavy Press", exercises:[
-          exo("Push-ups",false,"2x15 warm-up",bw(2,15)),
           exo("Bench Press",true,mainSets+"x3 heavy",h(r5(W.bench*1.05),mainSets,3)),
           exo("Overhead Press",true,"3x5",h(W.ohp,3,5)),
-          exo("Incline DB Press",false,accSets+"x10",h(r5(W.bench*0.30),accSets,10)),
-          exo("Tricep Pushdown",false,accSets+"x12",bw(accSets,12)),
+          exo("Dips",false,accSets+"xMax — superset with Lateral Raise",bw(accSets,"Max"),"A"),
+          exo("Lateral Raise",false,accSets+"x15 — superset with Dips",bw(accSets,15),"A"),
+          exo("Tricep Extension",false,accSets+"x12",bw(accSets,12)),
         ]},
         { name:"Volume Pull", tag:"VPUL", tagColor:T.gr, weekLabel:"Week N - Volume Pull", exercises:[
-          exo("Jumping Jacks",false,"2x20 warm-up",bw(2,20)),
           exo("Pull-ups",true,"5xMax",bw(5,"Max")),
           exo("Barbell Row",true,mainSets+"x8",h(r5(W.bench*0.75),mainSets,8)),
-          exo("DB Row",false,accSets+"x10",bw(accSets,10)),
-          exo("Face Pull",false,accSets+"x15",bw(accSets,15)),
-          exo("Barbell Curl",false,accSets+"x12",bw(accSets,12)),
+          exo("DB Row",false,accSets+"x10 — superset with Face Pull",bw(accSets,10),"A"),
+          exo("Face Pull",false,accSets+"x15 — superset with DB Row",bw(accSets,15),"A"),
+          exo("Barbell Curl",false,accSets+"x12 — superset with Reverse Fly",bw(accSets,12),"B"),
+          exo("Reverse Fly",false,accSets+"x12 — superset with Curls",bw(accSets,12),"B"),
         ]},
       ];
       workouts = base.slice(0, nd);
     } else if (focus === "lower" && !isBW) {
       const base = [
         { name:"Squat Day", tag:"SQT", tagColor:T.ac, weekLabel:"Week N - Squat Day", exercises:[
-          exo("Jump Squats",false,"2x8 warm-up",bw(2,8)),
           exo("Squat",true,mainSets+"x5",h(W.squat,mainSets,5)),
           exo("Romanian DL",false,accSets+"x8",h(r5(W.deadlift*0.55),accSets,8)),
-          exo("Leg Press",false,accSets+"x12",bw(accSets,12)),
-          exo("Leg Curl",false,accSets+"x12",bw(accSets,12)),
+          exo("Leg Press",false,accSets+"x12 — superset with Leg Curl",bw(accSets,12),"A"),
+          exo("Leg Curl",false,accSets+"x12 — superset with Leg Press",bw(accSets,12),"A"),
+          exo("Calf Raise",false,accSets+"x15",bw(accSets,15)),
         ]},
         { name:"Deadlift Day", tag:"DL", tagColor:T.rd, weekLabel:"Week N - Deadlift Day", exercises:[
-          exo("Lunges",false,"2x10 warm-up",bw(2,10)),
           exo("Deadlift",true,mainSets+"x3",h(W.deadlift,mainSets,3)),
-          exo("Hip Thrust",false,accSets+"x10",bw(accSets,10)),
-          exo("Leg Curl",false,accSets+"x12",bw(accSets,12)),
-          ...(int === "hard" ? [exo("Jump Squats",false,"3x10 finisher",bw(3,10))] : []),
+          exo("Bulgarian Split Squat",false,accSets+"x8 each",bw(accSets,8)),
+          exo("Hip Thrust",false,accSets+"x10 — superset with Leg Curl",bw(accSets,10),"A"),
+          exo("Leg Curl",false,accSets+"x12 — superset with Hip Thrust",bw(accSets,12),"A"),
         ]},
         { name:"Heavy Squat", tag:"HSQT", tagColor:T.yw, weekLabel:"Week N - Heavy Squat", exercises:[
-          exo("Lunges",false,"2x10 warm-up",bw(2,10)),
           exo("Squat",true,mainSets+"x3 heavy",h(r5(W.squat*1.05),mainSets,3)),
-          exo("Bulgarian Split Squat",false,accSets+"x8 each",bw(accSets,8)),
           exo("Leg Press",false,accSets+"x10",bw(accSets,10)),
+          exo("Bulgarian Split Squat",false,accSets+"x8 — superset with Calf Raise",bw(accSets,8),"A"),
+          exo("Calf Raise",false,accSets+"x15 — superset with Bulgarian",bw(accSets,15),"A"),
         ]},
         { name:"Volume Lower", tag:"VLWR", tagColor:T.gr, weekLabel:"Week N - Volume Lower", exercises:[
-          exo("Jump Squats",false,"2x8 warm-up",bw(2,8)),
           exo("Squat",true,"3x10",h(r5(W.squat*0.75),3,10)),
           exo("Romanian DL",false,"3x10",h(r5(W.deadlift*0.50),3,10)),
-          exo("Lunges",false,accSets+"x12 each",bw(accSets,12)),
-          exo("Hip Thrust",false,accSets+"x15",bw(accSets,15)),
+          exo("Lunges",false,accSets+"x12 — superset with Hip Thrust",bw(accSets,12),"A"),
+          exo("Hip Thrust",false,accSets+"x15 — superset with Lunges",bw(accSets,15),"A"),
         ]},
       ];
       workouts = base.slice(0, nd);
     } else if (focus === "powerlifting" && !isBW) {
       const base = [
         { name:"Squat & Bench", tag:"S+B", tagColor:T.ac, weekLabel:"Week N - Squat & Bench", exercises:[
-          exo("Push-ups",false,"2x15 warm-up",bw(2,15)),
           exo("Squat",true,mainSets+"x5",h(W.squat,mainSets,5)),
           exo("Bench Press",true,mainSets+"x5",h(W.bench,mainSets,5)),
-          exo("Barbell Row",false,accSets+"x5",h(r5(W.bench*0.85),accSets,5)),
+          exo("Barbell Row",false,accSets+"x5 — superset with Dips",h(r5(W.bench*0.85),accSets,5),"A"),
+          exo("Dips",false,accSets+"xMax — superset with Row",bw(accSets,"Max"),"A"),
         ]},
         { name:"Deadlift & OHP", tag:"D+O", tagColor:T.yw, weekLabel:"Week N - Deadlift & OHP", exercises:[
-          exo("Lunges",false,"2x10 warm-up",bw(2,10)),
           exo("Deadlift",true,mainSets+"x3",h(W.deadlift,mainSets,3)),
           exo("Overhead Press",true,mainSets+"x5",h(W.ohp,mainSets,5)),
-          exo("Pull-ups",false,"3xMax",bw(3,"Max")),
+          exo("Pull-ups",false,"3xMax — superset with Face Pull",bw(3,"Max"),"A"),
+          exo("Face Pull",false,"3x15 — superset with Pull-ups",bw(3,15),"A"),
         ]},
         { name:"Heavy Singles", tag:"MAX", tagColor:T.rd, weekLabel:"Week N - Heavy Singles", exercises:[
-          exo("Jump Squats",false,"2x5 warm-up",bw(2,5)),
           exo("Squat",true,"5x3 heavy",h(r5(W.squat*1.10),5,3)),
           exo("Bench Press",true,"5x3",h(r5(W.bench*1.05),5,3)),
           exo("Deadlift",false,"3x2",h(r5(W.deadlift*1.05),3,2)),
         ]},
         { name:"Volume Day", tag:"VOL", tagColor:T.pu, weekLabel:"Week N - Volume Day", exercises:[
-          exo("Jumping Jacks",false,"2x20 warm-up",bw(2,20)),
           exo("Squat",true,"4x8",h(r5(W.squat*0.72),4,8)),
           exo("Bench Press",true,"4x8",h(r5(W.bench*0.72),4,8)),
-          exo("Romanian DL",false,"3x8",h(r5(W.deadlift*0.50),3,8)),
-          exo("Barbell Row",false,"3x8",h(r5(W.bench*0.75),3,8)),
+          exo("Romanian DL",false,"3x8 — superset with Barbell Row",h(r5(W.deadlift*0.50),3,8),"A"),
+          exo("Barbell Row",false,"3x8 — superset with RDL",h(r5(W.bench*0.75),3,8),"A"),
         ]},
       ];
       workouts = base.slice(0, nd);
     } else {
-      // Strength full body / bodyweight fallback
+      // Full body / bodyweight
       const base = isBW ? [
         { name:"Push Focus", tag:"PUSH", tagColor:T.ac, weekLabel:"Week N - Push Focus", exercises:[
-          exo("Jumping Jacks",false,"2x20 warm-up",bw(2,20)),
           exo("Push-ups",true,mainSets+"x20",bw(mainSets,20)),
           exo("Dips",true,accSets+"xMax",bw(accSets,"Max")),
-          exo("Bulgarian Split Squat",false,accSets+"x10 each",bw(accSets,10)),
-          exo("Plank",false,"3x60s",bw(3,"60s")),
+          exo("Bulgarian Split Squat",false,accSets+"x10 — superset with Plank",bw(accSets,10),"A"),
+          exo("Plank",false,"3x60s — superset with BSS",bw(3,"60s"),"A"),
         ]},
         { name:"Pull Focus", tag:"PULL", tagColor:T.pu, weekLabel:"Week N - Pull Focus", exercises:[
-          exo("Mountain Climbers",false,"2x20 warm-up",bw(2,20)),
           exo("Pull-ups",true,mainSets+"xMax",bw(mainSets,"Max")),
           exo("Squat",true,"4x20",bw(4,20)),
-          exo("Lunges",false,accSets+"x12 each",bw(accSets,12)),
-          exo("Sit-ups",false,accSets+"x20",bw(accSets,20)),
+          exo("Lunges",false,accSets+"x12 — superset with Sit-ups",bw(accSets,12),"A"),
+          exo("Sit-ups",false,accSets+"x20 — superset with Lunges",bw(accSets,20),"A"),
         ]},
         { name:"Full Body Power", tag:"PWR", tagColor:T.rd, weekLabel:"Week N - Full Body Power", exercises:[
-          exo("Jump Squats",false,"2x10 warm-up",bw(2,10)),
           exo("Burpees",true,"4x10",bw(4,10)),
           exo("Push-ups",true,"5x15",bw(5,15)),
-          exo("Pull-ups",false,"4xMax",bw(4,"Max")),
+          exo("Pull-ups",false,"4xMax — superset with Jump Squats",bw(4,"Max"),"A"),
+          exo("Jump Squats",false,"4x12 — superset with Pull-ups",bw(4,12),"A"),
           exo("Plank",false,"3x60s",bw(3,"60s")),
         ]},
         { name:"Endurance", tag:"END", tagColor:T.gr, weekLabel:"Week N - Endurance", exercises:[
-          exo("Jumping Jacks",false,"2x30 warm-up",bw(2,30)),
           exo("Squat",true,"3x30",bw(3,30)),
-          exo("Push-ups",true,"3x25",bw(3,25)),
-          exo("Lunges",false,"3x20 each",bw(3,20)),
-          exo("Mountain Climbers",false,"3x30",bw(3,30)),
+          exo("Push-ups",true,"3x25 — superset with Mountain Climbers",bw(3,25),"A"),
+          exo("Mountain Climbers",false,"3x30 — superset with Push-ups",bw(3,30),"A"),
+          exo("Lunges",false,"3x20 — superset with Sit-ups",bw(3,20),"B"),
+          exo("Sit-ups",false,"3x20 — superset with Lunges",bw(3,20),"B"),
         ]},
       ] : [
         { name:"Squat & Press", tag:"A", tagColor:T.ac, weekLabel:"Week N - Squat & Press", exercises:[
-          exo("Jumping Jacks",false,"2x20 warm-up",bw(2,20)),
           exo("Squat",true,mainSets+"x5",h(W.squat,mainSets,5)),
           exo("Bench Press",true,mainSets+"x5",h(W.bench,mainSets,5)),
-          exo("Barbell Row",false,accSets+"x5",h(r5(W.bench*0.85),accSets,5)),
-          ...(int === "hard" ? [exo("Dips",false,"3xMax finisher",bw(3,"Max"))] : []),
+          exo("Barbell Row",false,accSets+"x5 — superset with Dips",h(r5(W.bench*0.85),accSets,5),"A"),
+          exo("Dips",false,accSets+"xMax — superset with Row",bw(accSets,"Max"),"A"),
         ]},
         { name:"Hinge & Pull", tag:"B", tagColor:T.yw, weekLabel:"Week N - Hinge & Pull", exercises:[
-          exo("Lunges",false,"2x10 warm-up",bw(2,10)),
           exo("Deadlift",true,mainSets+"x5",h(W.deadlift,mainSets,5)),
           exo("Overhead Press",true,mainSets+"x5",h(W.ohp,mainSets,5)),
-          exo("Pull-ups",false,"3xMax",bw(3,"Max")),
+          exo("Pull-ups",false,"3xMax — superset with Face Pull",bw(3,"Max"),"A"),
+          exo("Face Pull",false,"3x15 — superset with Pull-ups",bw(3,15),"A"),
         ]},
         { name:"Heavy Day", tag:"C", tagColor:T.rd, weekLabel:"Week N - Heavy Day", exercises:[
-          exo("Jump Squats",false,"2x5 warm-up",bw(2,5)),
           exo("Squat",true,mainSets+"x3 heavy",h(r5(W.squat*1.05),mainSets,3)),
           exo("Bench Press",true,mainSets+"x3",h(r5(W.bench*1.05),mainSets,3)),
           exo("Barbell Row",false,accSets+"x5",h(W.bench,accSets,5)),
         ]},
         { name:"Volume Day", tag:"D", tagColor:T.pu, weekLabel:"Week N - Volume Day", exercises:[
-          exo("Push-ups",false,"2x15 warm-up",bw(2,15)),
           exo("Squat",true,"4x8",h(r5(W.squat*0.72),4,8)),
           exo("Bench Press",false,"4x8",h(r5(W.bench*0.72),4,8)),
-          exo("Romanian DL",false,"3x10",h(r5(W.deadlift*0.50),3,10)),
-          exo("Pull-ups",false,"4xMax",bw(4,"Max")),
+          exo("Romanian DL",false,"3x10 — superset with Pull-ups",h(r5(W.deadlift*0.50),3,10),"A"),
+          exo("Pull-ups",false,"4xMax — superset with RDL",bw(4,"Max"),"A"),
         ]},
         { name:"Upper Accessories", tag:"E", tagColor:T.or, weekLabel:"Week N - Upper Accessories", exercises:[
-          exo("Jumping Jacks",false,"2x20 warm-up",bw(2,20)),
           exo("Overhead Press",true,mainSets+"x6",h(W.ohp,mainSets,6)),
-          exo("Incline DB Press",false,accSets+"x10",h(r5(W.bench*0.30),accSets,10)),
-          exo("Lateral Raise",false,accSets+"x15",bw(accSets,15)),
-          exo("Face Pull",false,accSets+"x15",bw(accSets,15)),
+          exo("Incline DB Press",false,accSets+"x10 — superset with Face Pull",h(r5(W.bench*0.30),accSets,10),"A"),
+          exo("Face Pull",false,accSets+"x15 — superset with Incline",bw(accSets,15),"A"),
+          exo("Lateral Raise",false,accSets+"x15 — superset with Tricep Pushdown",bw(accSets,15),"B"),
+          exo("Tricep Pushdown",false,accSets+"x12 — superset with Laterals",bw(accSets,12),"B"),
         ]},
         { name:"Lower Volume", tag:"F", tagColor:T.gr, weekLabel:"Week N - Lower Volume", exercises:[
-          exo("Lunges",false,"2x10 warm-up",bw(2,10)),
           exo("Squat",true,"3x10",h(r5(W.squat*0.72),3,10)),
-          exo("Hip Thrust",false,accSets+"x12",bw(accSets,12)),
-          exo("Leg Curl",false,accSets+"x12",bw(accSets,12)),
-          exo("Bulgarian Split Squat",false,accSets+"x8 each",bw(accSets,8)),
+          exo("Hip Thrust",false,accSets+"x12 — superset with Leg Curl",bw(accSets,12),"A"),
+          exo("Leg Curl",false,accSets+"x12 — superset with Hip Thrust",bw(accSets,12),"A"),
+          exo("Bulgarian Split Squat",false,accSets+"x8 — superset with Calf Raise",bw(accSets,8),"B"),
+          exo("Calf Raise",false,accSets+"x15 — superset with Bulgarian",bw(accSets,15),"B"),
         ]},
       ];
       workouts = base.slice(0, nd);
@@ -1134,29 +1124,25 @@ function buildCustomProgram(answers) {
   // ── CONDITIONING TEMPLATES ──────────────────────────────────────────
   else if (type === "conditioning") {
     const base = [
-      { name:"Blitz",      tag:"BLTZ", tagColor:T.rd, weekLabel:"Week N - Blitz", exercises:[
-        exo("Jumping Jacks",false,"2x20 warm-up",bw(2,20)),
+      { name:"Blitz", tag:"BLTZ", tagColor:T.rd, weekLabel:"Week N - Blitz", exercises:[
         exo("Burpees",true,"5x10 — 30s rest between rounds",bw(5,10)),
-        exo("Mountain Climbers",false,"4x20",bw(4,20)),
-        ...(int !== "easy" ? [exo("Jump Squats",false,"3x15 finisher",bw(3,15))] : []),
+        exo("Mountain Climbers",false,"4x20 — superset with Squat",bw(4,20),"A"),
+        exo("Squat",false,"4x20 — superset with Mountain Climbers",bw(4,20),"A"),
       ]},
-      { name:"Grinder",    tag:"GRND", tagColor:T.or, weekLabel:"Week N - Grinder", exercises:[
-        exo("Mountain Climbers",false,"2x20 warm-up",bw(2,20)),
-        exo("Push-ups",true,"5x20 — superset with Squats",bw(5,20),"A"),
-        exo("Squat",false,"5x20 — superset with Push-ups",bw(5,20),null,"A"),
-        exo("Sit-ups",false,"4x20",bw(4,20)),
-        exo("Burpees",false,"3x10",bw(3,10)),
+      { name:"Grinder", tag:"GRND", tagColor:T.or, weekLabel:"Week N - Grinder", exercises:[
+        exo("Push-ups",true,"5x20 — superset with Squat",bw(5,20),"A"),
+        exo("Squat",false,"5x20 — superset with Push-ups",bw(5,20),"A"),
+        exo("Sit-ups",false,"4x20 — superset with Burpees",bw(4,20),"B"),
+        exo("Burpees",false,"3x10 — superset with Sit-ups",bw(3,10),"B"),
       ]},
       { name:"Engine Builder", tag:"ENG", tagColor:T.yw, weekLabel:"Week N - Engine Builder", exercises:[
-        exo("Jumping Jacks",false,"2x30 warm-up",bw(2,30)),
         exo("Burpees",true,"AMRAP 20 min: 10 Burpees + 15 Squats + 20 Sit-ups",bw(1,"Max")),
         exo("Squat",false,"Part of AMRAP above",bw(1,15)),
         exo("Sit-ups",false,"Part of AMRAP above",bw(1,20)),
       ]},
       { name:"Smoke Test", tag:"SMKE", tagColor:T.rd, weekLabel:"Week N - Smoke Test", exercises:[
-        exo("Push-ups",false,"2x10 warm-up",bw(2,10)),
-        exo("Jump Squats",true,"10-9-8-7-6-5-4-3-2-1 ladder",bw(10,1)),
-        exo("Push-ups",false,"1-2-3-4-5-6-7-8-9-10 ladder",bw(10,1)),
+        exo("Jump Squats",true,"10-9-8-7-6-5-4-3-2-1 ladder — superset with Push-ups",bw(10,1),"A"),
+        exo("Push-ups",false,"1-2-3-4-5-6-7-8-9-10 ladder — superset with Jump Squats",bw(10,1),"A"),
         exo("Plank",false,"3x60s finisher",bw(3,"60s")),
       ]},
     ];
@@ -1167,22 +1153,18 @@ function buildCustomProgram(answers) {
   else if (type === "running") {
     const base = [
       { name:"Interval Day", tag:"INT", tagColor:T.yw, weekLabel:"Week N - Intervals", exercises:[
-        exo("Lunges",false,"2x10 each warm-up",bw(2,10)),
         exo("400m Repeats",true, int === "hard" ? "8x400m @ fast, 90s rest" : "6x400m @ fast, 2 min rest",bw(int === "hard" ? 8 : 6,"400m")),
         exo("Walking Cooldown",false,"1x5 min easy",bw(1,"5 min")),
       ]},
       { name:"Tempo Run", tag:"TMPO", tagColor:T.ac, weekLabel:"Week N - Tempo", exercises:[
-        exo("Jumping Jacks",false,"2x20 warm-up",bw(2,20)),
         exo("Tempo Run",true, int === "easy" ? "1x20 min @ moderate pace" : "1x30 min @ tempo pace",bw(1,int === "easy" ? "20 min" : "30 min")),
         exo("Walking Cooldown",false,"1x5 min easy",bw(1,"5 min")),
       ]},
       { name:"Long Run", tag:"LONG", tagColor:T.gr, weekLabel:"Week N - Long Run", exercises:[
-        exo("Lunges",false,"2x10 each warm-up",bw(2,10)),
         exo("Long Run",true,"1x" + (int === "easy" ? "30 min" : int === "hard" ? "60 min" : "45 min") + " easy pace",bw(1,int === "easy" ? "30 min" : int === "hard" ? "60 min" : "45 min")),
         exo("Plank",false,"2x60s cooldown",bw(2,"60s")),
       ]},
       { name:"Speed Work", tag:"SPD", tagColor:T.rd, weekLabel:"Week N - Speed Work", exercises:[
-        exo("Mountain Climbers",false,"2x15 warm-up",bw(2,15)),
         exo("200m Sprints",true, int === "hard" ? "10x200m all-out, 60s rest" : "8x200m fast, 90s rest",bw(int === "hard" ? 10 : 8,"200m")),
         exo("Walking Cooldown",false,"1x5 min easy",bw(1,"5 min")),
       ]},
@@ -1220,74 +1202,66 @@ function buildCustomProgram(answers) {
   else if (type === "hybrid") {
     const base = isBW ? [
       { name:"Strength + Burn", tag:"S+B", tagColor:T.or, weekLabel:"Week N - Strength + Burn", exercises:[
-        exo("Jumping Jacks",false,"2x20 warm-up",bw(2,20)),
         exo("Push-ups",true,"5x15",bw(5,15)),
         exo("Pull-ups",true,"4xMax",bw(4,"Max")),
-        exo("Burpees",false,"3x10 conditioning",bw(3,10)),
-        exo("Mountain Climbers",false,"3x20 conditioning",bw(3,20)),
+        exo("Burpees",false,"3x10 — superset with Mountain Climbers",bw(3,10),"A"),
+        exo("Mountain Climbers",false,"3x20 — superset with Burpees",bw(3,20),"A"),
       ]},
       { name:"Power + Endurance", tag:"P+E", tagColor:T.rd, weekLabel:"Week N - Power + Endurance", exercises:[
-        exo("Jump Squats",false,"2x8 warm-up",bw(2,8)),
         exo("Squat",true,"4x20",bw(4,20)),
         exo("Bulgarian Split Squat",true,"3x10 each",bw(3,10)),
-        exo("Jump Squats",false,"4x15 conditioning",bw(4,15)),
-        exo("Sit-ups",false,"3x20",bw(3,20)),
+        exo("Jump Squats",false,"4x15 — superset with Sit-ups",bw(4,15),"A"),
+        exo("Sit-ups",false,"3x20 — superset with Jump Squats",bw(3,20),"A"),
       ]},
       { name:"Full Body Circuit", tag:"CRCT", tagColor:T.yw, weekLabel:"Week N - Circuit", exercises:[
-        exo("Mountain Climbers",false,"2x15 warm-up",bw(2,15)),
-        exo("Push-ups",true,"4x15 circuit: no rest between exercises",bw(4,15)),
-        exo("Squat",false,"4x20 circuit",bw(4,20)),
-        exo("Burpees",false,"4x8 circuit",bw(4,8)),
-        exo("Plank",false,"4x30s circuit",bw(4,"30s")),
+        exo("Push-ups",true,"4x15 — tri-set A",bw(4,15),"A"),
+        exo("Squat",false,"4x20 — tri-set A",bw(4,20),"A"),
+        exo("Burpees",false,"4x8 — tri-set A",bw(4,8),"A"),
+        exo("Plank",false,"4x30s",bw(4,"30s")),
       ]},
       { name:"Grind Day", tag:"GRND", tagColor:T.ac, weekLabel:"Week N - Grind", exercises:[
-        exo("Jumping Jacks",false,"2x30 warm-up",bw(2,30)),
-        exo("Pull-ups",true,"5xMax",bw(5,"Max")),
-        exo("Dips",true,"5xMax",bw(5,"Max")),
-        exo("Lunges",false,"4x15 each",bw(4,15)),
-        exo("Mountain Climbers",false,"4x30 finisher",bw(4,30)),
+        exo("Pull-ups",true,"5xMax — superset with Dips",bw(5,"Max"),"A"),
+        exo("Dips",true,"5xMax — superset with Pull-ups",bw(5,"Max"),"A"),
+        exo("Lunges",false,"4x15 — superset with Mountain Climbers",bw(4,15),"B"),
+        exo("Mountain Climbers",false,"4x30 — superset with Lunges",bw(4,30),"B"),
       ]},
     ] : [
       { name:"Lift + MetCon", tag:"L+M", tagColor:T.or, weekLabel:"Week N - Lift + MetCon", exercises:[
-        exo("Jumping Jacks",false,"2x20 warm-up",bw(2,20)),
         exo("Squat",true,mainSets+"x5",h(W.squat,mainSets,5)),
         exo("Bench Press",true,mainSets+"x5",h(W.bench,mainSets,5)),
-        exo("Burpees",false,"3x10 conditioning",bw(3,10)),
-        exo("Mountain Climbers",false,"3x20 conditioning",bw(3,20)),
+        exo("Burpees",false,"3x10 — superset with Mountain Climbers",bw(3,10),"A"),
+        exo("Mountain Climbers",false,"3x20 — superset with Burpees",bw(3,20),"A"),
       ]},
       { name:"Deadlift + Conditioning", tag:"DL+C", tagColor:T.rd, weekLabel:"Week N - DL + Conditioning", exercises:[
-        exo("Lunges",false,"2x10 warm-up",bw(2,10)),
         exo("Deadlift",true,mainSets+"x3",h(W.deadlift,mainSets,3)),
         exo("Overhead Press",true,"3x6",h(W.ohp,3,6)),
-        exo("Jump Squats",false,"4x12 conditioning",bw(4,12)),
-        exo("Push-ups",false,"3x20 conditioning",bw(3,20)),
+        exo("Jump Squats",false,"4x12 — superset with Push-ups",bw(4,12),"A"),
+        exo("Push-ups",false,"3x20 — superset with Jump Squats",bw(3,20),"A"),
       ]},
       { name:"Functional Fitness", tag:"FUNC", tagColor:T.yw, weekLabel:"Week N - Functional Fitness", exercises:[
-        exo("Mountain Climbers",false,"2x15 warm-up",bw(2,15)),
         exo("Barbell Row",true,mainSets+"x6",h(r5(W.bench*0.85),mainSets,6)),
         exo("Pull-ups",true,"4xMax",bw(4,"Max")),
-        exo("Burpees",false,"4x10 finisher",bw(4,10)),
-        exo("Plank",false,"3x60s",bw(3,"60s")),
+        exo("Burpees",false,"4x10 — superset with Plank",bw(4,10),"A"),
+        exo("Plank",false,"3x60s — superset with Burpees",bw(3,"60s"),"A"),
       ]},
       { name:"Power Day", tag:"PWR", tagColor:T.pu, weekLabel:"Week N - Power Day", exercises:[
-        exo("Jump Squats",false,"2x8 warm-up",bw(2,8)),
         exo("Squat",true,"5x3 explosive",h(r5(W.squat*0.85),5,3)),
-        exo("Push-ups",false,"4x20 fast",bw(4,20)),
-        exo("Jump Squats",false,"4x10 power",bw(4,10)),
-        exo("Sit-ups",false,"3x20",bw(3,20)),
+        exo("Bench Press",false,"4x3 explosive",h(r5(W.bench*0.85),4,3)),
+        exo("Jump Squats",false,"4x10 — superset with Push-ups",bw(4,10),"A"),
+        exo("Push-ups",false,"4x20 — superset with Jump Squats",bw(4,20),"A"),
       ]},
       { name:"Heavy + Grind", tag:"H+G", tagColor:T.gr, weekLabel:"Week N - Heavy + Grind", exercises:[
-        exo("Push-ups",false,"2x15 warm-up",bw(2,15)),
         exo("Bench Press",true,mainSets+"x3 heavy",h(r5(W.bench*1.05),mainSets,3)),
-        exo("Barbell Row",false,accSets+"x6",h(r5(W.bench*0.85),accSets,6)),
-        exo("Burpees",false,"EMOM 10 min: 5 Burpees per minute",bw(10,5)),
+        exo("Barbell Row",false,accSets+"x6 — superset with Dips",h(r5(W.bench*0.85),accSets,6),"A"),
+        exo("Dips",false,accSets+"xMax — superset with Row",bw(accSets,"Max"),"A"),
+        exo("Burpees",false,"EMOM 10 min: 5 per minute",bw(10,5)),
       ]},
       { name:"Conditioning Heavy", tag:"CHVY", tagColor:T.or, weekLabel:"Week N - Conditioning Heavy", exercises:[
-        exo("Jumping Jacks",false,"2x30 warm-up",bw(2,30)),
         exo("Deadlift",true,"3x5",h(W.deadlift,3,5)),
-        exo("Overhead Press",false,"3x8",h(W.ohp,3,8)),
-        exo("Mountain Climbers",false,"5x30 conditioning",bw(5,30)),
-        exo("Plank",false,"3x60s finisher",bw(3,"60s")),
+        exo("Overhead Press",false,"3x8 — superset with Pull-ups",h(W.ohp,3,8),"A"),
+        exo("Pull-ups",false,"3xMax — superset with OHP",bw(3,"Max"),"A"),
+        exo("Mountain Climbers",false,"5x30 — superset with Plank",bw(5,30),"B"),
+        exo("Plank",false,"3x60s — superset with Mountain Climbers",bw(3,"60s"),"B"),
       ]},
     ];
     workouts = base.slice(0, nd);
@@ -1297,7 +1271,8 @@ function buildCustomProgram(answers) {
   else {
     workouts = [{ name:"Full Body", tag:"FB", tagColor:T.ac, weekLabel:"Week N - Full Body",
       exercises:[exo("Squat",true,"4x8",h(W.squat,4,8)), exo("Bench Press",true,"4x8",h(W.bench,4,8)),
-        exo("Barbell Row",false,"3x8",h(r5(W.bench*0.85),3,8)), exo("Pull-ups",false,"3xMax",bw(3,"Max"))] }];
+        exo("Barbell Row",false,"3x8 — superset with Pull-ups",h(r5(W.bench*0.85),3,8),"A"),
+        exo("Pull-ups",false,"3xMax — superset with Row",bw(3,"Max"),"A")] }];
   }
 
   const nm = { strength:"Power Builder", conditioning:"Metabolic Engine", running:"Run Program", recovery:"Recovery Protocol", hybrid:"Hybrid Warfare" };
@@ -1732,7 +1707,7 @@ const RestTimer = ({ exName, initSec, nextLabel, onDone }) => {
 };
 
 // ─── WELCOME SCREEN ───────────────────────────────────────────────────────────
-const Welcome = ({ onCustom, onProven, onChallenge, onBrowse, onHistory, onEditLifts, myLifts, activeProgram, onContinue }) => (
+const Welcome = ({ onCustom, onProven, onChallenge, onBrowse, onHistory, onEditLifts, myLifts, activeProgram, onContinue, onEndProgram }) => (
   <div style={{ minHeight:"100vh", display:"flex", flexDirection:"column", padding:"0 24px" }}>
     <div style={{ flex:1, display:"flex", flexDirection:"column", justifyContent:"center", paddingTop:60 }}>
 
@@ -1765,6 +1740,14 @@ const Welcome = ({ onCustom, onProven, onChallenge, onBrowse, onHistory, onEditL
             </svg>
           </div>
         </div>
+        {onEndProgram && (
+          <div style={{ textAlign:"right", marginTop:8 }}>
+            <span onClick={(e) => { e.stopPropagation(); onEndProgram(); }}
+              style={{ color:T.di, fontSize:11, fontFamily:T.fn, cursor:"pointer" }}>
+              End Program
+            </span>
+          </div>
+        )}
       )}
 
       <h1 style={{ fontFamily:T.fn, fontWeight:800, fontSize:30, color:T.tx, lineHeight:1.2, marginBottom:12 }}>
@@ -3420,13 +3403,77 @@ const Workout = ({ day, pcolor, onComplete, onBack }) => {
   const [drawer, setDrawer] = useState(null);
   const [rest, setRest] = useState(null);
   const [swapIdx, setSwapIdx] = useState(null);
-  const [exercises, setExercises] = useState(day.workout.exercises);
+  const [exercises, setExercises] = useState(() => {
+    // Sanitize supersets: ensure ss-tagged exercises have adjacent partners
+    const exs = [...(day.workout.exercises || [])];
+    const ssCounts = {};
+    exs.forEach((e, i) => { if (e.ss) { if (!ssCounts[e.ss]) ssCounts[e.ss] = []; ssCounts[e.ss].push(i); }});
+    // For each ss group, check if all members are consecutive
+    Object.entries(ssCounts).forEach(([tag, indices]) => {
+      if (indices.length < 2) {
+        // Orphan — remove ss tag
+        indices.forEach(i => { exs[i] = { ...exs[i], ss: null }; });
+      } else {
+        // Check if consecutive
+        const sorted = indices.sort((a,b) => a - b);
+        let consecutive = true;
+        for (let j = 1; j < sorted.length; j++) {
+          if (sorted[j] !== sorted[j-1] + 1) { consecutive = false; break; }
+        }
+        if (!consecutive) {
+          // Non-adjacent: reorder to make them adjacent (put them after the first one)
+          const first = sorted[0];
+          const toMove = sorted.slice(1);
+          toMove.reverse().forEach(idx => {
+            const [moved] = exs.splice(idx, 1);
+            exs.splice(first + 1, 0, moved);
+          });
+        }
+      }
+    });
+    return exs;
+  });
   const [warmupOpen, setWarmupOpen] = useState(true);
   const [warmupDone, setWarmupDone] = useState({});
+  const [linkMode, setLinkMode] = useState(false);
+  const [linkFrom, setLinkFrom] = useState(null);
   useWakeLock(true);
 
   // Generate warm-up based on workout content
   const warmup = useState(() => buildWarmup(day.workout.exercises))[0];
+
+  // Manual superset linking
+  const linkExercise = (idx) => {
+    if (linkFrom === null) {
+      setLinkFrom(idx);
+    } else if (linkFrom === idx) {
+      setLinkFrom(null);
+    } else {
+      const usedTags = new Set(exercises.filter(e => e.ss).map(e => e.ss));
+      const tag = ["A","B","C","D","E"].find(t => !usedTags.has(t)) || "A";
+      setExercises(prev => {
+        const updated = [...prev];
+        updated[linkFrom] = { ...updated[linkFrom], ss: tag, note: (updated[linkFrom].note || "").replace(/ — superset.*/,"") + " — superset with " + updated[idx].name };
+        updated[idx] = { ...updated[idx], ss: tag, note: (updated[idx].note || "").replace(/ — superset.*/,"") + " — superset with " + updated[linkFrom].name };
+        if (Math.abs(linkFrom - idx) > 1) {
+          const movedEx = updated.splice(idx > linkFrom ? idx : linkFrom, 1)[0];
+          const insertAt = idx > linkFrom ? linkFrom + 1 : linkFrom;
+          updated.splice(insertAt, 0, movedEx);
+        }
+        return updated;
+      });
+      setLinkFrom(null);
+      setLinkMode(false);
+    }
+  };
+
+  const unlinkExercise = (idx) => {
+    setExercises(prev => {
+      const tag = prev[idx]?.ss;
+      if (!tag) return prev;
+      return prev.map(e => e.ss === tag ? { ...e, ss: null, note: (e.note || "").replace(/ — superset.*/,"") } : e);
+    });
+  };
 
   // Detect equipment from exercises present
   const detectEquipment = () => {
@@ -3565,10 +3612,30 @@ const Workout = ({ day, pcolor, onComplete, onBack }) => {
         )}
 
         {/* ── MAIN WORK ── */}
-        {warmup.length > 0 && (
-          <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:14 }}>
-            <div style={{ width:8, height:8, borderRadius:"50%", background:color }} />
-            <span style={{ color:T.mu, fontSize:10, fontWeight:700, letterSpacing:1.5, fontFamily:T.fn }}>MAIN WORK</span>
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:14 }}>
+          <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+            {warmup.length > 0 && <div style={{ width:8, height:8, borderRadius:"50%", background:color }} />}
+            <span style={{ color:T.mu, fontSize:10, fontWeight:700, letterSpacing:1.5, fontFamily:T.fn }}>
+              {warmup.length > 0 ? "MAIN WORK" : "EXERCISES"}
+            </span>
+          </div>
+          <button onClick={() => { setLinkMode(m => !m); setLinkFrom(null); }}
+            style={{ background: linkMode ? T.or+"18" : T.hi, border:"1px solid "+(linkMode ? T.or+"50" : T.bo),
+              borderRadius:8, padding:"5px 10px", fontFamily:T.fn, fontWeight:700, fontSize:10,
+              color: linkMode ? T.or : T.mu, cursor:"pointer", letterSpacing:0.5 }}>
+            {linkMode ? "Cancel Link" : "Link Superset"}
+          </button>
+        </div>
+
+        {linkMode && (
+          <div style={{ background:T.or+"0A", border:"1px solid "+T.or+"25", borderRadius:10,
+            padding:"10px 14px", marginBottom:14 }}>
+            <div style={{ color:T.or, fontSize:12, fontFamily:T.fn, fontWeight:600 }}>
+              {linkFrom === null
+                ? "Tap the first exercise you want to superset."
+                : "Now tap the second exercise to pair with " + exercises[linkFrom]?.name + "."
+              }
+            </div>
           </div>
         )}
 
@@ -3585,7 +3652,12 @@ const Workout = ({ day, pcolor, onComplete, onBack }) => {
                 groupIdxs.push(i);
                 i++;
               }
-              blocks.push({ type:"superset", exs:group, idxs:groupIdxs });
+              // Safety: if only 1 exercise has the ss tag, render as normal (orphaned superset)
+              if (group.length === 1) {
+                blocks.push({ type:"single", ex: group[0], idx: groupIdxs[0] });
+              } else {
+                blocks.push({ type:"superset", exs:group, idxs:groupIdxs });
+              }
             } else {
               blocks.push({ type:"single", ex, idx: i });
               i++;
@@ -3599,27 +3671,32 @@ const Workout = ({ day, pcolor, onComplete, onBack }) => {
             if (block.type === "single") {
               const { ex, idx: ei } = block;
               const swapOpts = swapIdx === ei ? getSwapOptions(ex.name, equip, allNames) : [];
+              const isLinkTarget = linkMode && linkFrom === ei;
               return (
-                <div key={bi} style={{ marginBottom: 22 }}>
+                <div key={bi} style={{ marginBottom: 22,
+                  ...(linkMode ? { border:"1.5px solid "+(isLinkTarget ? T.or+"60" : T.or+"20"), borderRadius:12, padding:"10px 12px", background: isLinkTarget ? T.or+"0A" : "transparent" } : {}) }}>
                   <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom: 8 }}>
                     <div style={{ display:"flex", alignItems:"flex-start", gap:10, flex:1 }}>
                       <div>
                         <div style={{ display:"flex", alignItems:"center", gap:7 }}>
-                          <span onClick={() => setDrawer(ex)} style={{ fontFamily:T.fn, fontWeight:700, fontSize:15, color:T.tx, cursor:"pointer" }}>{ex.name}</span>
-                          <span onClick={() => setDrawer(ex)} style={{ color:T.ac, fontSize:13, opacity:0.7, cursor:"pointer" }}>&#9432;</span>
-                          <span onClick={() => setSwapIdx(swapIdx === ei ? null : ei)}
-                            style={{ color:T.mu, fontSize:10, fontFamily:T.fn, cursor:"pointer", background:T.hi,
-                              border:"1px solid "+(swapIdx === ei ? T.yw+"60" : T.bo), borderRadius:5,
-                              padding:"2px 7px", whiteSpace:"nowrap" }}>
-                            {swapIdx === ei ? "cancel" : "swap"}
-                          </span>
+                          <span onClick={() => linkMode ? linkExercise(ei) : setDrawer(ex)}
+                            style={{ fontFamily:T.fn, fontWeight:700, fontSize:15, color: linkMode ? (isLinkTarget ? T.or : T.tx) : T.tx, cursor:"pointer" }}>{ex.name}</span>
+                          {!linkMode && <span onClick={() => setDrawer(ex)} style={{ color:T.ac, fontSize:13, opacity:0.7, cursor:"pointer" }}>&#9432;</span>}
+                          {!linkMode && (
+                            <span onClick={() => setSwapIdx(swapIdx === ei ? null : ei)}
+                              style={{ color:T.mu, fontSize:10, fontFamily:T.fn, cursor:"pointer", background:T.hi,
+                                border:"1px solid "+(swapIdx === ei ? T.yw+"60" : T.bo), borderRadius:5,
+                                padding:"2px 7px", whiteSpace:"nowrap" }}>
+                              {swapIdx === ei ? "cancel" : "swap"}
+                            </span>
+                          )}
                         </div>
                         {ex.note && <div style={{ color:T.mu, fontSize:12, fontFamily:T.fn, marginTop:2 }}>{ex.note}</div>}
                       </div>
                     </div>
                     <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-end", gap:5 }}>
                       {ex.isMain && <Badge ch="MAIN" color={color} />}
-                      <span onClick={() => setDrawer(ex)} style={{ color:T.di, fontSize:10, fontFamily:T.fn, cursor:"pointer", background:T.hi, border:"1px solid "+T.bo, borderRadius:5, padding:"2px 8px", whiteSpace:"nowrap" }}>Rest {fmt(exInfo(ex.name).r)}</span>
+                      {!linkMode && <span onClick={() => setDrawer(ex)} style={{ color:T.di, fontSize:10, fontFamily:T.fn, cursor:"pointer", background:T.hi, border:"1px solid "+T.bo, borderRadius:5, padding:"2px 8px", whiteSpace:"nowrap" }}>Rest {fmt(exInfo(ex.name).r)}</span>}
                     </div>
                   </div>
 
@@ -6464,7 +6541,13 @@ export default function App() {
           color: pcolor || T.ac,
           progress: cal.filter(d => logs[d.id]).length + "/" + cal.filter(d => d.workout).length + " sessions completed",
         } : null}
-        onContinue={() => { navigate(null); navTab("today"); }} />
+        onContinue={() => { navigate(null); navTab("today"); }}
+        onEndProgram={() => {
+          if (confirm("End this program? Your workout history is saved, but program progress will be cleared.")) {
+            setAp(null); setPname(null); setPcolor(null); setCal(null); setLogs({}); setCdata(null);
+            try { localStorage.removeItem("salgo_v1"); } catch {}
+          }
+        }} />
     </div>
   );
   if (sc === "q") return (
@@ -6661,13 +6744,31 @@ export default function App() {
           {/* Active program */}
           {ap && (
             <Card style={{ padding: "18px 20px", marginBottom: 16 }}>
-              <div style={{ color: T.mu, fontSize: 10, fontWeight: 700, letterSpacing: 1.2, fontFamily: T.fn, marginBottom: 8 }}>ACTIVE</div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div>
-                  <div style={{ fontFamily: T.fn, fontWeight: 800, fontSize: 18, color: T.tx }}>{pname}</div>
-                  <div style={{ color: T.mu, fontSize: 12, fontFamily: T.fn, marginTop: 2 }}>{cal.filter(d => logs[d.id]).length}/{cal.filter(d => d.workout).length} sessions</div>
-                </div>
+              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom: 8 }}>
+                <div style={{ color: T.mu, fontSize: 10, fontWeight: 700, letterSpacing: 1.2, fontFamily: T.fn }}>ACTIVE</div>
                 <Badge ch="ACTIVE" color={pcolor || T.ac} />
+              </div>
+              <div style={{ fontFamily: T.fn, fontWeight: 800, fontSize: 18, color: T.tx }}>{pname}</div>
+              <div style={{ color: T.mu, fontSize: 12, fontFamily: T.fn, marginTop: 2, marginBottom: 12 }}>{cal.filter(d => logs[d.id]).length}/{cal.filter(d => d.workout).length} sessions</div>
+              <div style={{ display:"flex", gap:8 }}>
+                <button onClick={() => { navigate(null); navTab("today"); }}
+                  style={{ flex:1, background:T.ac+"18", border:"1px solid "+T.ac+"40", borderRadius:8,
+                    padding:"8px 0", fontFamily:T.fn, fontWeight:700, fontSize:12,
+                    color:T.ac, cursor:"pointer" }}>
+                  Continue
+                </button>
+                <button onClick={() => {
+                    if (confirm("End this program? Your workout history is saved, but program progress will be cleared.")) {
+                      setAp(null); setPname(null); setPcolor(null); setCal(null); setLogs({}); setCdata(null);
+                      navTab("progs");
+                      try { localStorage.removeItem("salgo_v1"); } catch {}
+                    }
+                  }}
+                  style={{ background:T.rd+"12", border:"1px solid "+T.rd+"30", borderRadius:8,
+                    padding:"8px 14px", fontFamily:T.fn, fontWeight:700, fontSize:12,
+                    color:T.rd, cursor:"pointer" }}>
+                  End Program
+                </button>
               </div>
             </Card>
           )}
