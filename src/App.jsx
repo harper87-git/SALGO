@@ -38,25 +38,25 @@ const pyrSets = b => [
 // ─── EXERCISE DATABASE ────────────────────────────────────────────────────────
 // [muscles, restSec, tips, ytQuery]
 const EDB = {
-  "Squat":                 ["Quads/Glutes/Hams",  180, ["Brace before unrack","Break hip and knee together","Knees out over toes","Drive through whole foot"], "back squat form tutorial depth cues"],
-  "Deadlift":              ["Hams/Glutes/Back",   180, ["Bar over mid-foot","Lat spread","Drive floor away","Hips and shoulders rise together"], "conventional deadlift form setup cues"],
-  "Bench Press":           ["Chest/Triceps/Delts",150, ["Retract and depress scapula","Slight arch, feet planted","Touch lower chest","Drive up and slightly back"], "bench press form setup arch technique"],
-  "Overhead Press":        ["Shoulders/Triceps",  150, ["Squeeze glutes, brace hard","Bar just below chin","Press strict vertical","Get head through at lockout"], "overhead press strict form technique"],
-  "Barbell Row":           ["Lats/Rhomboids/Biceps",120,["Hinge to 45 degrees","Pull to lower abdomen","Drive elbows back","Control the descent"], "barbell row form back angle technique"],
-  "Pull-ups":              ["Lats/Biceps/Core",   120, ["Start from dead hang","Depress shoulder blades first","Drive elbows to hips","Chin clears bar fully"], "pull up dead hang full rom technique"],
-  "Push-ups":              ["Chest/Triceps/Shoulders",60,["Chest touches floor","Elbows 45 degrees","Body rigid","Squeeze chest at top"], "push up perfect form chest to floor"],
-  "Dips":                  ["Chest/Triceps",       90, ["Lean forward for chest","Elbows slightly flared","Upper arm parallel at bottom","Drive to lockout"], "dip form chest vs triceps lean technique"],
-  "Romanian DL":           ["Hams/Glutes",         90, ["Slight knee bend","Push hips straight back","Bar stays close to legs","Stop at hamstring stretch"], "romanian deadlift RDL form hip hinge"],
-  "Incline DB Press":      ["Upper Chest/Delts",   90, ["30-45 degree bench","Pinch shoulder blades","Control the descent","Full lockout"], "incline dumbbell press form upper chest"],
-  "Leg Press":             ["Quads/Glutes",         90, ["Feet shoulder-width mid-platform","90 degrees at bottom","Press through heels","Never fully lock out"], "leg press foot placement form depth"],
-  "Leg Curl":              ["Hamstrings",           60, ["Pad above ankle bone","Curl all the way up","3-second descent","Full range every rep"], "leg curl hamstring machine form technique"],
-  "Lateral Raise":         ["Lateral Delts",        60, ["Lead with elbow","Raise to shoulder height","Control descent slowly","No momentum"], "lateral raise side delt form no momentum"],
-  "Face Pull":             ["Rear Delts/Rotators",  60, ["Cable at forehead height","Elbows high throughout","Externally rotate at end","Squeeze rear delts"], "face pull rear delt technique cable"],
-  "Barbell Curl":          ["Biceps",               60, ["Elbows pinned to sides","Curl to shoulder height","Squeeze at top","3-second descent"], "barbell curl form elbow position strict"],
-  "Tricep Pushdown":       ["Triceps",              60, ["Elbows locked at sides","Full complete lockout","Slow controlled up","Flex hard at bottom"], "tricep pushdown form cable lockout"],
-  "Plank":                 ["Core/Glutes",          45, ["Forearms flat","Squeeze glutes and core","Neutral spine","Breathe steadily"], "plank form hollow body position"],
-  "Hip Thrust":            ["Glutes/Hams",          75, ["Upper back on bench","Drive through heels","Full extension at top","Control the descent"], "hip thrust glute form bench setup"],
-  "DB Row":                ["Lats/Rhomboids",       75, ["Full stretch at bottom","Drive elbow up","Squeeze lat at top","Do not rotate torso"], "dumbbell row form lat engagement"],
+  "Squat":                 ["Quads/Glutes/Hams",  120, ["Brace before unrack","Break hip and knee together","Knees out over toes","Drive through whole foot"], "back squat form tutorial depth cues"],
+  "Deadlift":              ["Hams/Glutes/Back",   120, ["Bar over mid-foot","Lat spread","Drive floor away","Hips and shoulders rise together"], "conventional deadlift form setup cues"],
+  "Bench Press":           ["Chest/Triceps/Delts",90, ["Retract and depress scapula","Slight arch, feet planted","Touch lower chest","Drive up and slightly back"], "bench press form setup arch technique"],
+  "Overhead Press":        ["Shoulders/Triceps",  90, ["Squeeze glutes, brace hard","Bar just below chin","Press strict vertical","Get head through at lockout"], "overhead press strict form technique"],
+  "Barbell Row":           ["Lats/Rhomboids/Biceps",75,["Hinge to 45 degrees","Pull to lower abdomen","Drive elbows back","Control the descent"], "barbell row form back angle technique"],
+  "Pull-ups":              ["Lats/Biceps/Core",   90, ["Start from dead hang","Depress shoulder blades first","Drive elbows to hips","Chin clears bar fully"], "pull up dead hang full rom technique"],
+  "Push-ups":              ["Chest/Triceps/Shoulders",45,["Chest touches floor","Elbows 45 degrees","Body rigid","Squeeze chest at top"], "push up perfect form chest to floor"],
+  "Dips":                  ["Chest/Triceps",       75, ["Lean forward for chest","Elbows slightly flared","Upper arm parallel at bottom","Drive to lockout"], "dip form chest vs triceps lean technique"],
+  "Romanian DL":           ["Hams/Glutes",         75, ["Slight knee bend","Push hips straight back","Bar stays close to legs","Stop at hamstring stretch"], "romanian deadlift RDL form hip hinge"],
+  "Incline DB Press":      ["Upper Chest/Delts",   75, ["30-45 degree bench","Pinch shoulder blades","Control the descent","Full lockout"], "incline dumbbell press form upper chest"],
+  "Leg Press":             ["Quads/Glutes",         75, ["Feet shoulder-width mid-platform","90 degrees at bottom","Press through heels","Never fully lock out"], "leg press foot placement form depth"],
+  "Leg Curl":              ["Hamstrings",           45, ["Pad above ankle bone","Curl all the way up","3-second descent","Full range every rep"], "leg curl hamstring machine form technique"],
+  "Lateral Raise":         ["Lateral Delts",        45, ["Lead with elbow","Raise to shoulder height","Control descent slowly","No momentum"], "lateral raise side delt form no momentum"],
+  "Face Pull":             ["Rear Delts/Rotators",  45, ["Cable at forehead height","Elbows high throughout","Externally rotate at end","Squeeze rear delts"], "face pull rear delt technique cable"],
+  "Barbell Curl":          ["Biceps",               45, ["Elbows pinned to sides","Curl to shoulder height","Squeeze at top","3-second descent"], "barbell curl form elbow position strict"],
+  "Tricep Pushdown":       ["Triceps",              45, ["Elbows locked at sides","Full complete lockout","Slow controlled up","Flex hard at bottom"], "tricep pushdown form cable lockout"],
+  "Plank":                 ["Core/Glutes",          30, ["Forearms flat","Squeeze glutes and core","Neutral spine","Breathe steadily"], "plank form hollow body position"],
+  "Hip Thrust":            ["Glutes/Hams",          60, ["Upper back on bench","Drive through heels","Full extension at top","Control the descent"], "hip thrust glute form bench setup"],
+  "DB Row":                ["Lats/Rhomboids",       60, ["Full stretch at bottom","Drive elbow up","Squeeze lat at top","Do not rotate torso"], "dumbbell row form lat engagement"],
   "Jump Squats":           ["Quads/Glutes",         60, ["Load quarter squat first","Explode through full extension","Swing arms for power","Land softly"], "jump squat explosive power soft landing"],
   "Burpees":               ["Full Body",            60, ["Chest contacts ground","Jump feet back explosive","Full extension on jump","Arms overhead at top"], "burpee form chest to ground full extension"],
   "Mountain Climbers":     ["Core/Hip Flexors",     45, ["Hips level","Drive knees to chest","Straight arms over wrists","Breathe rhythmically"], "mountain climbers core hips level form"],
@@ -950,11 +950,44 @@ function buildCustomProgram(answers) {
     deadlift: isBW ? 0 : level === "beginner" ? 90  : level === "intermediate" ? 175 : 250,
     ohp:      isBW ? 0 : level === "beginner" ? 35  : level === "intermediate" ? 75  : 105,
   };
+  // Accessory weights by level
+  const A = {
+    lateralRaise:  isBW ? 0 : level === "beginner" ? 10 : level === "intermediate" ? 15 : 25,
+    dbCurl:        isBW ? 0 : level === "beginner" ? 15 : level === "intermediate" ? 25 : 35,
+    bbCurl:        isBW ? 0 : level === "beginner" ? 30 : level === "intermediate" ? 50 : 70,
+    tricepPush:    isBW ? 0 : level === "beginner" ? 30 : level === "intermediate" ? 50 : 70,
+    facePull:      isBW ? 0 : level === "beginner" ? 20 : level === "intermediate" ? 35 : 50,
+    dbRow:         isBW ? 0 : level === "beginner" ? 25 : level === "intermediate" ? 45 : 65,
+    hipThrust:     isBW ? 0 : level === "beginner" ? 65 : level === "intermediate" ? 135 : 185,
+    legPress:      isBW ? 0 : level === "beginner" ? 90 : level === "intermediate" ? 180 : 270,
+    legCurl:       isBW ? 0 : level === "beginner" ? 40 : level === "intermediate" ? 60 : 80,
+    arnoldPress:   isBW ? 0 : level === "beginner" ? 20 : level === "intermediate" ? 30 : 45,
+    reverseFly:    isBW ? 0 : level === "beginner" ? 10 : level === "intermediate" ? 15 : 20,
+    skullCrusher:  isBW ? 0 : level === "beginner" ? 30 : level === "intermediate" ? 50 : 70,
+    russianTwist:  isBW ? 0 : level === "beginner" ? 10 : level === "intermediate" ? 25 : 35,
+  };
   const im = int === "easy" ? 0.8 : int === "hard" ? 1.1 : 1.0;
   const mainSets = int === "easy" ? 3 : int === "hard" ? 5 : 4;
   const accSets = int === "easy" ? 2 : int === "hard" ? 4 : 3;
   const h  = (w, s, r) => Array.from({length: s}, () => ({ reps: String(r), weight: r5(w * im), isAmrap: false }));
   const bw = (s, r)    => Array.from({length: s}, () => ({ reps: String(r), weight: 0, isAmrap: false }));
+  // Accessory sets with proper weights (not bodyweight)
+  const aw = (name, s, r) => {
+    const wMap = {
+      "lateral raise": A.lateralRaise, "alt front raise": A.lateralRaise, "rear delt raise": A.lateralRaise,
+      "arnold press": A.arnoldPress, "shoulder press": A.arnoldPress,
+      "barbell curl": A.bbCurl, "bicep curl": A.dbCurl, "hammer curl": A.dbCurl, "preacher curl": A.dbCurl,
+      "tricep pushdown": A.tricepPush, "tricep extension": A.tricepPush, "skull crusher": A.skullCrusher,
+      "face pull": A.facePull, "reverse fly": A.reverseFly,
+      "db row": A.dbRow,
+      "hip thrust": A.hipThrust,
+      "leg press": A.legPress,
+      "leg curl": A.legCurl,
+      "russian twist": A.russianTwist, "weighted crunch": A.russianTwist,
+    };
+    const w = wMap[name.toLowerCase()] || 0;
+    return Array.from({length: s}, () => ({ reps: String(r), weight: r5(w * im), isAmrap: false }));
+  };
   let workouts = [];
 
   // ── STRENGTH TEMPLATES ──────────────────────────────────────────────
@@ -965,31 +998,31 @@ function buildCustomProgram(answers) {
           exo("Bench Press",true,mainSets+"x5",h(W.bench,mainSets,5)),
           exo("Overhead Press",true,"3x6",h(W.ohp,3,6)),
           exo("Incline DB Press",false,accSets+"x10 — superset with Lateral Raise",h(r5(W.bench*0.30),accSets,10),"A"),
-          exo("Lateral Raise",false,accSets+"x12 — superset with Incline",bw(accSets,12),"A"),
-          exo("Tricep Pushdown",false,accSets+"x12 — superset with Face Pull",bw(accSets,12),"B"),
-          exo("Face Pull",false,accSets+"x15 — superset with Pushdown",bw(accSets,15),"B"),
+          exo("Lateral Raise",false,accSets+"x12 — superset with Incline",aw("Lateral Raise",accSets,12),"A"),
+          exo("Tricep Pushdown",false,accSets+"x12 — superset with Face Pull",aw("Tricep Pushdown",accSets,12),"B"),
+          exo("Face Pull",false,accSets+"x15 — superset with Pushdown",aw("Face Pull",accSets,15),"B"),
         ]},
         { name:"Upper Pull", tag:"PULL", tagColor:T.pu, weekLabel:"Week N - Upper Pull", exercises:[
           exo("Barbell Row",true,mainSets+"x5",h(r5(W.bench*0.85),mainSets,5)),
           exo("Pull-ups",true,"4xMax",bw(4,"Max")),
-          exo("DB Row",false,accSets+"x10 — superset with Barbell Curl",bw(accSets,10),"A"),
-          exo("Barbell Curl",false,accSets+"x10 — superset with DB Row",bw(accSets,10),"A"),
-          exo("Face Pull",false,accSets+"x15",bw(accSets,15)),
+          exo("DB Row",false,accSets+"x10 — superset with Barbell Curl",aw("DB Row",accSets,10),"A"),
+          exo("Barbell Curl",false,accSets+"x10 — superset with DB Row",aw("Barbell Curl",accSets,10),"A"),
+          exo("Face Pull",false,accSets+"x15",aw("Face Pull",accSets,15)),
         ]},
         { name:"Heavy Press", tag:"HPRS", tagColor:T.or, weekLabel:"Week N - Heavy Press", exercises:[
           exo("Bench Press",true,mainSets+"x3 heavy",h(r5(W.bench*1.05),mainSets,3)),
           exo("Overhead Press",true,"3x5",h(W.ohp,3,5)),
           exo("Dips",false,accSets+"xMax — superset with Lateral Raise",bw(accSets,"Max"),"A"),
-          exo("Lateral Raise",false,accSets+"x15 — superset with Dips",bw(accSets,15),"A"),
-          exo("Tricep Extension",false,accSets+"x12",bw(accSets,12)),
+          exo("Lateral Raise",false,accSets+"x15 — superset with Dips",aw("Lateral Raise",accSets,15),"A"),
+          exo("Tricep Extension",false,accSets+"x12",aw("Tricep Extension",accSets,12)),
         ]},
         { name:"Volume Pull", tag:"VPUL", tagColor:T.gr, weekLabel:"Week N - Volume Pull", exercises:[
           exo("Pull-ups",true,"5xMax",bw(5,"Max")),
           exo("Barbell Row",true,mainSets+"x8",h(r5(W.bench*0.75),mainSets,8)),
-          exo("DB Row",false,accSets+"x10 — superset with Face Pull",bw(accSets,10),"A"),
-          exo("Face Pull",false,accSets+"x15 — superset with DB Row",bw(accSets,15),"A"),
-          exo("Barbell Curl",false,accSets+"x12 — superset with Reverse Fly",bw(accSets,12),"B"),
-          exo("Reverse Fly",false,accSets+"x12 — superset with Curls",bw(accSets,12),"B"),
+          exo("DB Row",false,accSets+"x10 — superset with Face Pull",aw("DB Row",accSets,10),"A"),
+          exo("Face Pull",false,accSets+"x15 — superset with DB Row",aw("Face Pull",accSets,15),"A"),
+          exo("Barbell Curl",false,accSets+"x12 — superset with Reverse Fly",aw("Barbell Curl",accSets,12),"B"),
+          exo("Reverse Fly",false,accSets+"x12 — superset with Curls",aw("Reverse Fly",accSets,12),"B"),
         ]},
       ];
       workouts = base.slice(0, nd);
@@ -998,19 +1031,19 @@ function buildCustomProgram(answers) {
         { name:"Squat Day", tag:"SQT", tagColor:T.ac, weekLabel:"Week N - Squat Day", exercises:[
           exo("Squat",true,mainSets+"x5",h(W.squat,mainSets,5)),
           exo("Romanian DL",false,accSets+"x8",h(r5(W.deadlift*0.55),accSets,8)),
-          exo("Leg Press",false,accSets+"x12 — superset with Leg Curl",bw(accSets,12),"A"),
-          exo("Leg Curl",false,accSets+"x12 — superset with Leg Press",bw(accSets,12),"A"),
+          exo("Leg Press",false,accSets+"x12 — superset with Leg Curl",aw("Leg Press",accSets,12),"A"),
+          exo("Leg Curl",false,accSets+"x12 — superset with Leg Press",aw("Leg Curl",accSets,12),"A"),
           exo("Calf Raise",false,accSets+"x15",bw(accSets,15)),
         ]},
         { name:"Deadlift Day", tag:"DL", tagColor:T.rd, weekLabel:"Week N - Deadlift Day", exercises:[
           exo("Deadlift",true,mainSets+"x3",h(W.deadlift,mainSets,3)),
           exo("Bulgarian Split Squat",false,accSets+"x8 each",bw(accSets,8)),
-          exo("Hip Thrust",false,accSets+"x10 — superset with Leg Curl",bw(accSets,10),"A"),
-          exo("Leg Curl",false,accSets+"x12 — superset with Hip Thrust",bw(accSets,12),"A"),
+          exo("Hip Thrust",false,accSets+"x10 — superset with Leg Curl",aw("Hip Thrust",accSets,10),"A"),
+          exo("Leg Curl",false,accSets+"x12 — superset with Hip Thrust",aw("Leg Curl",accSets,12),"A"),
         ]},
         { name:"Heavy Squat", tag:"HSQT", tagColor:T.yw, weekLabel:"Week N - Heavy Squat", exercises:[
           exo("Squat",true,mainSets+"x3 heavy",h(r5(W.squat*1.05),mainSets,3)),
-          exo("Leg Press",false,accSets+"x10",bw(accSets,10)),
+          exo("Leg Press",false,accSets+"x10",aw("Leg Press",accSets,10)),
           exo("Bulgarian Split Squat",false,accSets+"x8 — superset with Calf Raise",bw(accSets,8),"A"),
           exo("Calf Raise",false,accSets+"x15 — superset with Bulgarian",bw(accSets,15),"A"),
         ]},
@@ -1018,7 +1051,7 @@ function buildCustomProgram(answers) {
           exo("Squat",true,"3x10",h(r5(W.squat*0.75),3,10)),
           exo("Romanian DL",false,"3x10",h(r5(W.deadlift*0.50),3,10)),
           exo("Lunges",false,accSets+"x12 — superset with Hip Thrust",bw(accSets,12),"A"),
-          exo("Hip Thrust",false,accSets+"x15 — superset with Lunges",bw(accSets,15),"A"),
+          exo("Hip Thrust",false,accSets+"x15 — superset with Lunges",aw("Hip Thrust",accSets,15),"A"),
         ]},
       ];
       workouts = base.slice(0, nd);
@@ -1034,7 +1067,7 @@ function buildCustomProgram(answers) {
           exo("Deadlift",true,mainSets+"x3",h(W.deadlift,mainSets,3)),
           exo("Overhead Press",true,mainSets+"x5",h(W.ohp,mainSets,5)),
           exo("Pull-ups",false,"3xMax — superset with Face Pull",bw(3,"Max"),"A"),
-          exo("Face Pull",false,"3x15 — superset with Pull-ups",bw(3,15),"A"),
+          exo("Face Pull",false,"3x15 — superset with Pull-ups",aw("Face Pull",3,15),"A"),
         ]},
         { name:"Heavy Singles", tag:"MAX", tagColor:T.rd, weekLabel:"Week N - Heavy Singles", exercises:[
           exo("Squat",true,"5x3 heavy",h(r5(W.squat*1.10),5,3)),
@@ -1089,7 +1122,7 @@ function buildCustomProgram(answers) {
           exo("Deadlift",true,mainSets+"x5",h(W.deadlift,mainSets,5)),
           exo("Overhead Press",true,mainSets+"x5",h(W.ohp,mainSets,5)),
           exo("Pull-ups",false,"3xMax — superset with Face Pull",bw(3,"Max"),"A"),
-          exo("Face Pull",false,"3x15 — superset with Pull-ups",bw(3,15),"A"),
+          exo("Face Pull",false,"3x15 — superset with Pull-ups",aw("Face Pull",3,15),"A"),
         ]},
         { name:"Heavy Day", tag:"C", tagColor:T.rd, weekLabel:"Week N - Heavy Day", exercises:[
           exo("Squat",true,mainSets+"x3 heavy",h(r5(W.squat*1.05),mainSets,3)),
@@ -1105,14 +1138,14 @@ function buildCustomProgram(answers) {
         { name:"Upper Accessories", tag:"E", tagColor:T.or, weekLabel:"Week N - Upper Accessories", exercises:[
           exo("Overhead Press",true,mainSets+"x6",h(W.ohp,mainSets,6)),
           exo("Incline DB Press",false,accSets+"x10 — superset with Face Pull",h(r5(W.bench*0.30),accSets,10),"A"),
-          exo("Face Pull",false,accSets+"x15 — superset with Incline",bw(accSets,15),"A"),
-          exo("Lateral Raise",false,accSets+"x15 — superset with Tricep Pushdown",bw(accSets,15),"B"),
-          exo("Tricep Pushdown",false,accSets+"x12 — superset with Laterals",bw(accSets,12),"B"),
+          exo("Face Pull",false,accSets+"x15 — superset with Incline",aw("Face Pull",accSets,15),"A"),
+          exo("Lateral Raise",false,accSets+"x15 — superset with Tricep Pushdown",aw("Lateral Raise",accSets,15),"B"),
+          exo("Tricep Pushdown",false,accSets+"x12 — superset with Laterals",aw("Tricep Pushdown",accSets,12),"B"),
         ]},
         { name:"Lower Volume", tag:"F", tagColor:T.gr, weekLabel:"Week N - Lower Volume", exercises:[
           exo("Squat",true,"3x10",h(r5(W.squat*0.72),3,10)),
-          exo("Hip Thrust",false,accSets+"x12 — superset with Leg Curl",bw(accSets,12),"A"),
-          exo("Leg Curl",false,accSets+"x12 — superset with Hip Thrust",bw(accSets,12),"A"),
+          exo("Hip Thrust",false,accSets+"x12 — superset with Leg Curl",aw("Hip Thrust",accSets,12),"A"),
+          exo("Leg Curl",false,accSets+"x12 — superset with Hip Thrust",aw("Leg Curl",accSets,12),"A"),
           exo("Bulgarian Split Squat",false,accSets+"x8 — superset with Calf Raise",bw(accSets,8),"B"),
           exo("Calf Raise",false,accSets+"x15 — superset with Bulgarian",bw(accSets,15),"B"),
         ]},
@@ -1834,32 +1867,15 @@ const Welcome = ({ onCustom, onProven, onChallenge, onBrowse, onHistory, onEditL
         </div>
       </div>
 
-      {/* History */}
-      {onHistory && (
-        <div onClick={onHistory}
-          style={{ background:T.su, border:"1.5px solid "+T.bo, borderRadius:14, padding:"14px 18px", cursor:"pointer", marginBottom:10 }}>
-          <div style={{ display:"flex", alignItems:"center", gap:14 }}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="9" stroke={T.mu} strokeWidth="2"/>
-              <path d="M12 7v5l3 3" stroke={T.mu} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            <div style={{ flex:1 }}>
-              <span style={{ fontFamily:T.fn, fontWeight:700, fontSize:14, color:T.tx }}>Workout History</span>
-            </div>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T.mu} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 18l6-6-6-6"/>
-            </svg>
-          </div>
-        </div>
-      )}
-
-      {/* My Lifts */}
+      {/* My Lifts — prominent when not configured */}
       {onEditLifts && (
         <div onClick={onEditLifts}
-          style={{ background:T.su, border:"1.5px solid "+T.bo, borderRadius:14, padding:"14px 18px", cursor:"pointer" }}>
+          style={{ background: myLifts && Object.values(myLifts).some(v => v > 0) ? T.su : T.ac+"08",
+            border: "1.5px solid " + (myLifts && Object.values(myLifts).some(v => v > 0) ? T.bo : T.ac+"40"),
+            borderRadius:14, padding:"14px 18px", cursor:"pointer", marginBottom:10 }}>
           <div style={{ display:"flex", alignItems:"center", gap:14 }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <path d="M2 12h20M4 8v8M20 8v8M8 10v4M16 10v4" stroke={T.mu} strokeWidth="2" strokeLinecap="round"/>
+              <path d="M2 12h20M4 8v8M20 8v8M8 10v4M16 10v4" stroke={myLifts && Object.values(myLifts).some(v => v > 0) ? T.mu : T.ac} strokeWidth="2" strokeLinecap="round"/>
             </svg>
             <div style={{ flex:1 }}>
               <span style={{ fontFamily:T.fn, fontWeight:700, fontSize:14, color:T.tx }}>My Lifts</span>
@@ -1870,8 +1886,27 @@ const Welcome = ({ onCustom, onProven, onChallenge, onBrowse, onHistory, onEditL
                   ).join(" · ")}
                 </div>
               ) : (
-                <div style={{ color:T.di, fontSize:11, fontFamily:T.fn, marginTop:2 }}>Set your 1RMs to auto-load all programs</div>
+                <div style={{ color:T.ac, fontSize:11, fontFamily:T.fn, marginTop:2, fontWeight:600 }}>Tap to set your 1RMs — weights auto-load everywhere</div>
               )}
+            </div>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={myLifts && Object.values(myLifts).some(v => v > 0) ? T.mu : T.ac} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </div>
+        </div>
+      )}
+
+      {/* History */}
+      {onHistory && (
+        <div onClick={onHistory}
+          style={{ background:T.su, border:"1.5px solid "+T.bo, borderRadius:14, padding:"14px 18px", cursor:"pointer" }}>
+          <div style={{ display:"flex", alignItems:"center", gap:14 }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="9" stroke={T.mu} strokeWidth="2"/>
+              <path d="M12 7v5l3 3" stroke={T.mu} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <div style={{ flex:1 }}>
+              <span style={{ fontFamily:T.fn, fontWeight:700, fontSize:14, color:T.tx }}>Workout History</span>
             </div>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T.mu} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M9 18l6-6-6-6"/>
@@ -1960,16 +1995,49 @@ const autoDays = (mode, time) => {
   return "4";
 };
 
-const Questions = ({ onDone, onBack }) => {
-  const [step, setStep] = useState(0);  // 0=mode, 1=focus, 2=time
+const Questions = ({ onDone, onBack, history }) => {
+  const [buildType, setBuildType] = useState(null); // "single" or "program"
+  const [step, setStep] = useState(0);  // 0=mode, 1=focus, 2=time (single) or 2=days, 3=time (program)
   const [mode, setMode] = useState(null);
   const [focus, setFocus] = useState(null);
   const [time, setTime] = useState(null);
-  const [selected, setSelected] = useState(30); // time picker selection
+  const [days, setDays] = useState(null);
+  const [selected, setSelected] = useState(30);
 
   const modeObj = WORKOUT_MODES.find(m => m.v === mode);
   const activeColor = modeObj ? modeObj.color : T.ac;
-  const totalSteps = 3;
+  const isSingle = buildType === "single";
+  const totalSteps = isSingle ? 3 : 4;
+
+  // Compute "last trained" for each mode category from history
+  const getLastTrained = () => {
+    const now = Date.now();
+    const catMap = {
+      barbell: ["upper","lower","full"],
+      dumbbell: ["upper","lower","full"],
+      bodyweight: ["upper","lower","full"],
+      crossfit: ["crossfit"],
+      run: ["run"],
+      recover: ["recover"],
+    };
+    const result = {};
+    WORKOUT_MODES.forEach(m => {
+      const cats = catMap[m.v] || [];
+      let latest = null;
+      (history || []).forEach(h => {
+        if (h.category && cats.includes(h.category)) {
+          const d = new Date(h.date).getTime();
+          if (!latest || d > latest) latest = d;
+        }
+      });
+      if (latest) {
+        const daysAgo = Math.floor((now - latest) / (1000 * 60 * 60 * 24));
+        result[m.v] = daysAgo === 0 ? "Today" : daysAgo === 1 ? "Yesterday" : daysAgo + "d ago";
+      }
+    });
+    return result;
+  };
+  const lastTrained = getLastTrained();
 
   const finish = (t) => {
     const m = modeObj;
@@ -1978,22 +2046,79 @@ const Questions = ({ onDone, onBack }) => {
     const goalMap = { strength:"strength", conditioning:"fat_loss", running:"athletic", recovery:"fat_loss" };
     const finalType = typeMap[mode] || "strength";
     onDone({
+      buildType,
       type: finalType,
       focus: focus,
       equipment: m.equipment,
       time: String(t),
       intensity: int,
       level: "intermediate",
-      days: autoDays(mode, t),
+      days: isSingle ? "1" : (days || autoDays(mode, t)),
       goal: goalMap[finalType] || "strength",
     });
   };
 
   const goBack = () => {
-    if (step === 0) { onBack(); return; }
+    if (step === 0 && !buildType) { onBack(); return; }
+    if (step === 0 && buildType) { setBuildType(null); return; }
     if (step === 1) { setMode(null); setStep(0); return; }
-    if (step === 2) { setFocus(null); setStep(1); return; }
+    if (step === 2 && isSingle) { setFocus(null); setStep(1); return; }
+    if (step === 2 && !isSingle) { setFocus(null); setStep(1); return; }
+    if (step === 3) { setDays(null); setStep(2); return; }
   };
+
+  // ── BUILD TYPE: Single workout or full program? ──
+  if (!buildType) return (
+    <div style={{ minHeight: "100vh", padding: "52px 20px 40px" }}>
+      <BackBtn onClick={onBack} label="Back" />
+      <h2 style={{ fontFamily:T.fn, fontWeight:800, fontSize:26, color:T.tx, margin:"16px 0 6px", lineHeight:1.2 }}>What are you building?</h2>
+      <p style={{ color:T.mu, fontSize:13, fontFamily:T.fn, margin:"0 0 24px" }}>One workout for today, or a full training plan.</p>
+      <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
+        <div onClick={() => { setBuildType("single"); setStep(0); }}
+          style={{ background:T.ac+"0A", border:"1.5px solid "+T.ac+"35", borderRadius:16,
+            padding:"20px 20px", cursor:"pointer" }}>
+          <div style={{ display:"flex", alignItems:"center", gap:16 }}>
+            <div style={{ width:48, height:48, borderRadius:12, background:T.ac+"18",
+              border:"1px solid "+T.ac+"30",
+              display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={T.ac} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+              </svg>
+            </div>
+            <div style={{ flex:1 }}>
+              <div style={{ fontFamily:T.fn, fontWeight:800, fontSize:17, color:T.tx, marginBottom:4 }}>Single Workout</div>
+              <div style={{ color:T.mu, fontSize:12, fontFamily:T.fn, lineHeight:1.4 }}>One session for right now. Pick your style, set your time, and go.</div>
+            </div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.ac+"80"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </div>
+        </div>
+        <div onClick={() => { setBuildType("program"); setStep(0); }}
+          style={{ background:T.pu+"0A", border:"1.5px solid "+T.pu+"35", borderRadius:16,
+            padding:"20px 20px", cursor:"pointer" }}>
+          <div style={{ display:"flex", alignItems:"center", gap:16 }}>
+            <div style={{ width:48, height:48, borderRadius:12, background:T.pu+"18",
+              border:"1px solid "+T.pu+"30",
+              display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={T.pu} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="3"/>
+                <line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+            </div>
+            <div style={{ flex:1 }}>
+              <div style={{ fontFamily:T.fn, fontWeight:800, fontSize:17, color:T.tx, marginBottom:4 }}>Full Program</div>
+              <div style={{ color:T.mu, fontSize:12, fontFamily:T.fn, lineHeight:1.4 }}>Multi-week plan with a calendar, progression, and tracking.</div>
+            </div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.pu+"80"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   // ── STEP 0: What do you want to do? ──
   if (step === 0) return (
@@ -2002,8 +2127,9 @@ const Questions = ({ onDone, onBack }) => {
       <div style={{ marginBottom: 8 }}>
         <div style={{ display:"flex", justifyContent:"space-between", marginBottom:8 }}>
           <span style={{ color:T.mu, fontSize:11, fontWeight:700, letterSpacing:1, fontFamily:T.fn }}>STEP 1 OF {totalSteps}</span>
+          <Badge ch={isSingle ? "SINGLE" : "PROGRAM"} color={isSingle ? T.ac : T.pu} sm />
         </div>
-        <PBar val={1} max={totalSteps} color={T.ac} h={3} />
+        <PBar val={1} max={totalSteps} color={isSingle ? T.ac : T.pu} h={3} />
       </div>
       <h2 style={{ fontFamily:T.fn, fontWeight:800, fontSize:26, color:T.tx, margin:"16px 0 6px", lineHeight:1.2 }}>What do you want to do?</h2>
       <p style={{ color:T.mu, fontSize:13, fontFamily:T.fn, margin:"0 0 20px" }}>Pick one. We handle the rest.</p>
@@ -2022,7 +2148,14 @@ const Questions = ({ onDone, onBack }) => {
             </div>
             <div style={{ flex:1 }}>
               <div style={{ fontFamily:T.fn, fontWeight:700, fontSize:15, color:T.tx, marginBottom:2 }}>{m.l}</div>
-              <div style={{ color:T.mu, fontSize:12, fontFamily:T.fn }}>{m.d}</div>
+              <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                <span style={{ color:T.mu, fontSize:12, fontFamily:T.fn }}>{m.d}</span>
+                {lastTrained[m.v] && (
+                  <span style={{ color:lastTrained[m.v] === "Today" ? T.rd : T.di, fontSize:10, fontFamily:T.fn, fontWeight:700 }}>
+                    {lastTrained[m.v]}
+                  </span>
+                )}
+              </div>
             </div>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={m.color+"80"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M9 18l6-6-6-6"/>
@@ -2036,6 +2169,7 @@ const Questions = ({ onDone, onBack }) => {
   // ── STEP 1: Focus ──
   if (step === 1) {
     const opts = FOCUS_OPTIONS[mode] || [];
+    const nextStep = isSingle ? 2 : 2; // both go to step 2, but step 2 differs
     return (
       <div style={{ minHeight: "100vh", padding: "52px 20px 40px" }}>
         <BackBtn onClick={goBack} label="Previous" />
@@ -2048,14 +2182,20 @@ const Questions = ({ onDone, onBack }) => {
         <h2 style={{ fontFamily:T.fn, fontWeight:800, fontSize:26, color:T.tx, margin:"16px 0 6px", lineHeight:1.2 }}>
           {mode === "run" ? "What kind of run?" : mode === "crossfit" ? "How long and hard?" : mode === "recover" ? "What kind of recovery?" : "What's the focus?"}
         </h2>
-        <p style={{ color:T.mu, fontSize:13, fontFamily:T.fn, margin:"0 0 20px" }}>This shapes your entire workout.</p>
+        <p style={{ color:T.mu, fontSize:13, fontFamily:T.fn, margin:"0 0 20px" }}>This shapes your {isSingle ? "workout" : "entire program"}.</p>
         <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
           {opts.map(o => (
             <div key={o.v} onClick={() => {
                 setFocus(o.v);
-                const dt = mode === "recover" ? 20 : mode === "crossfit" && o.v === "short" ? 15 : mode === "run" && o.v === "long_run" ? 45 : 30;
-                setSelected(dt);
-                setStep(2);
+                if (isSingle) {
+                  // Single: go to time picker
+                  const dt = mode === "recover" ? 20 : mode === "crossfit" && o.v === "short" ? 15 : mode === "run" && o.v === "long_run" ? 45 : 30;
+                  setSelected(dt);
+                  setStep(2);
+                } else {
+                  // Program: go to days picker
+                  setStep(2);
+                }
               }}
               style={{ background:activeColor+"0A", border:"1.5px solid "+activeColor+"25", borderRadius:14,
                 padding:"16px 18px", cursor:"pointer", display:"flex", alignItems:"center", gap:14 }}>
@@ -2075,8 +2215,14 @@ const Questions = ({ onDone, onBack }) => {
     );
   }
 
-  // ── STEP 2: Time picker ──
-  if (step === 2) {
+  // ── STEP 2 (PROGRAM ONLY): Days per week ──
+  if (step === 2 && !isSingle) {
+    const dayOpts = [
+      { v:"3", l:"3 Days", d:"Mon / Wed / Fri" },
+      { v:"4", l:"4 Days", d:"Upper / Lower split" },
+      { v:"5", l:"5 Days", d:"High frequency" },
+      { v:"6", l:"6 Days", d:"Maximum volume" },
+    ];
     return (
       <div style={{ minHeight: "100vh", padding: "52px 20px 40px" }}>
         <BackBtn onClick={goBack} label="Previous" />
@@ -2086,7 +2232,49 @@ const Questions = ({ onDone, onBack }) => {
           </div>
           <PBar val={3} max={totalSteps} color={activeColor} h={3} />
         </div>
-        <h2 style={{ fontFamily:T.fn, fontWeight:800, fontSize:26, color:T.tx, margin:"16px 0 6px", lineHeight:1.2 }}>How much time?</h2>
+        <h2 style={{ fontFamily:T.fn, fontWeight:800, fontSize:26, color:T.tx, margin:"16px 0 6px", lineHeight:1.2 }}>How many days per week?</h2>
+        <p style={{ color:T.mu, fontSize:13, fontFamily:T.fn, margin:"0 0 20px" }}>We'll build a workout for each day.</p>
+        <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+          {dayOpts.map(o => (
+            <div key={o.v} onClick={() => {
+                setDays(o.v);
+                const dt = mode === "recover" ? 20 : 45;
+                setSelected(dt);
+                setStep(3);
+              }}
+              style={{ background:activeColor+"0A", border:"1.5px solid "+activeColor+"25", borderRadius:14,
+                padding:"16px 18px", cursor:"pointer", display:"flex", alignItems:"center", gap:14 }}>
+              <div style={{ width:10, height:10, borderRadius:"50%", flexShrink:0,
+                background:activeColor+"30", border:"2px solid "+activeColor+"50" }} />
+              <div style={{ flex:1 }}>
+                <div style={{ fontFamily:T.fn, fontWeight:700, fontSize:15, color:T.tx, marginBottom:2 }}>{o.l}</div>
+                <div style={{ color:T.mu, fontSize:12, fontFamily:T.fn }}>{o.d}</div>
+              </div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={activeColor+"80"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 18l6-6-6-6"/>
+              </svg>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // ── TIME PICKER (step 2 for single, step 3 for program) ──
+  if ((step === 2 && isSingle) || (step === 3 && !isSingle)) {
+    const stepNum = isSingle ? 3 : 4;
+    return (
+      <div style={{ minHeight: "100vh", padding: "52px 20px 40px" }}>
+        <BackBtn onClick={goBack} label="Previous" />
+        <div style={{ marginBottom: 8 }}>
+          <div style={{ display:"flex", justifyContent:"space-between", marginBottom:8 }}>
+            <span style={{ color:T.mu, fontSize:11, fontWeight:700, letterSpacing:1, fontFamily:T.fn }}>STEP {stepNum} OF {totalSteps}</span>
+          </div>
+          <PBar val={stepNum} max={totalSteps} color={activeColor} h={3} />
+        </div>
+        <h2 style={{ fontFamily:T.fn, fontWeight:800, fontSize:26, color:T.tx, margin:"16px 0 6px", lineHeight:1.2 }}>
+          {isSingle ? "How much time?" : "How long per session?"}
+        </h2>
         <p style={{ color:T.mu, fontSize:13, fontFamily:T.fn, margin:"0 0 28px" }}>Tap your time, then hit go.</p>
 
         {/* Big time display */}
@@ -2121,13 +2309,14 @@ const Questions = ({ onDone, onBack }) => {
             background:activeColor, color:"#fff", fontFamily:T.fn, fontWeight:800,
             fontSize:16, cursor:"pointer", letterSpacing:0.5,
           }}>
-          Build My Workout
+          {isSingle ? "Build My Workout" : "Build My Program"}
         </button>
 
         {/* Intensity hint */}
         <div style={{ textAlign:"center", marginTop:12 }}>
           <span style={{ color:T.mu, fontSize:11, fontFamily:T.fn }}>
-            Intensity: {autoIntensity(mode, selected) === "hard" ? "High" : autoIntensity(mode, selected) === "easy" ? "Easy" : "Moderate"} (auto-set based on time)
+            Intensity: {autoIntensity(mode, selected) === "hard" ? "High" : autoIntensity(mode, selected) === "easy" ? "Easy" : "Moderate"} (auto-set)
+            {!isSingle && days && (" · " + days + " days/week")}
           </span>
         </div>
       </div>
@@ -6259,8 +6448,9 @@ const saveHistory = (h) => {
 };
 
 // ─── WORKOUT COMPLETE SCREEN ─────────────────────────────────────────────────
-const WorkoutComplete = ({ day, stats, onDone }) => {
+const WorkoutComplete = ({ day, stats, onDone, isSingle, onSave }) => {
   const [show, setShow] = useState(false);
+  const [saved, setSaved] = useState(false);
   useEffect(() => { setTimeout(() => setShow(true), 50); }, []);
   const totalSets = stats.total;
   const doneSets = stats.done;
@@ -6276,10 +6466,10 @@ const WorkoutComplete = ({ day, stats, onDone }) => {
         </svg>
       </div>
       <h2 style={{ fontFamily:T.fn, fontWeight:800, fontSize:28, color:T.tx, marginBottom:8 }}>Workout Complete</h2>
-      <p style={{ color:T.mu, fontSize:15, fontFamily:T.fn, marginBottom:32, lineHeight:1.5 }}>
+      <p style={{ color:T.mu, fontSize:15, fontFamily:T.fn, marginBottom:24, lineHeight:1.5 }}>
         {day.workout?.name || "Session"} — {doneSets}/{totalSets} sets logged
       </p>
-      <div style={{ display:"flex", gap:12, marginBottom:16 }}>
+      <div style={{ display:"flex", gap:12, marginBottom:24 }}>
         <div style={{ background:T.su, border:"1px solid "+T.bo, borderRadius:12, padding:"16px 24px", textAlign:"center" }}>
           <div style={{ fontFamily:T.mo, fontWeight:700, fontSize:28, color:T.ac }}>{doneSets}</div>
           <div style={{ color:T.mu, fontSize:10, fontFamily:T.fn, fontWeight:700 }}>SETS</div>
@@ -6289,6 +6479,22 @@ const WorkoutComplete = ({ day, stats, onDone }) => {
           <div style={{ color:T.mu, fontSize:10, fontFamily:T.fn, fontWeight:700 }}>COMPLETE</div>
         </div>
       </div>
+
+      {/* Save workout button for single/library workouts */}
+      {isSingle && onSave && !saved && (
+        <button onClick={() => { onSave(day.workout); setSaved(true); haptic(10); }}
+          style={{ width:"100%", maxWidth:260, padding:12, borderRadius:12, marginBottom:10,
+            background:T.yw+"15", border:"1.5px solid "+T.yw+"40", cursor:"pointer",
+            fontFamily:T.fn, fontWeight:700, fontSize:14, color:T.yw }}>
+          Save This Workout
+        </button>
+      )}
+      {saved && (
+        <div style={{ color:T.gr, fontSize:13, fontFamily:T.fn, fontWeight:700, marginBottom:10 }}>
+          Saved! Find it in your Programs tab.
+        </div>
+      )}
+
       <Btn ch="Done" onClick={onDone} color={T.gr}
         style={{ width:"100%", maxWidth:260, padding:14, borderRadius:12, fontSize:15 }} />
     </div>
@@ -6471,9 +6677,21 @@ export default function App() {
     const total = wday.workout?.exercises?.reduce((s, e) => s + e.sets.length, 0) || 0;
     const done = Object.values(d.sets || {}).filter(Boolean).length;
     // Log to calendar
-    if (!wday.id.startsWith("lib_") && !wday.id.startsWith("rec_")) {
+    if (!wday.id.startsWith("lib_") && !wday.id.startsWith("rec_") && !wday.id.startsWith("single_")) {
       setLogs(l => ({ ...l, [wday.id]: d }));
     }
+    // Detect workout category from exercises for "last trained" tracking
+    const exNames = (wday.workout?.exercises || []).map(e => (e.name || "").toLowerCase()).join(" ");
+    const category =
+      (exNames.includes("run") || exNames.includes("sprint") || exNames.includes("tempo")) ? "run" :
+      (exNames.includes("burpee") || exNames.includes("amrap") || exNames.includes("emom")) ? "crossfit" :
+      (exNames.includes("stretch") || exNames.includes("mobility") || exNames.includes("foam")) ? "recover" :
+      (exNames.includes("bench") || exNames.includes("press") || exNames.includes("push") || exNames.includes("dip") || exNames.includes("fly") || exNames.includes("tricep")) &&
+      !(exNames.includes("squat") || exNames.includes("deadlift") || exNames.includes("lunge")) ? "upper" :
+      (exNames.includes("squat") || exNames.includes("deadlift") || exNames.includes("lunge") || exNames.includes("leg") || exNames.includes("hip thrust")) &&
+      !(exNames.includes("bench") || exNames.includes("overhead")) ? "lower" :
+      "full";
+
     // Add to history
     const entry = {
       name: wday.workout?.name || "Workout",
@@ -6482,12 +6700,43 @@ export default function App() {
       total,
       date: new Date().toISOString(),
       notes: d.notes || "",
+      category,
     };
     const newHist = [entry, ...historyList].slice(0, 50);
     setHistoryList(newHist);
     saveHistory(newHist);
-    // Show completion screen
-    setCompleting({ day: wday, stats: { total, done } });
+    // Show completion screen — pass isSingle so we can offer save
+    const isSingle = wday.id.startsWith("single_") || wday.id.startsWith("lib_");
+    setCompleting({ day: wday, stats: { total, done }, isSingle });
+  };
+
+  // Saved single workouts
+  const SAVED_WO_KEY = "salgo_saved_workouts";
+  const [savedWorkouts, setSavedWorkouts] = useState(() => {
+    try { const r = localStorage.getItem(SAVED_WO_KEY); return r ? JSON.parse(r) : []; } catch { return []; }
+  });
+  const saveSingleWorkout = (wo) => {
+    const entry = { ...wo, savedAt: Date.now() };
+    const updated = [entry, ...savedWorkouts.filter(w => w.name !== wo.name)].slice(0, 20);
+    setSavedWorkouts(updated);
+    try { localStorage.setItem(SAVED_WO_KEY, JSON.stringify(updated)); } catch {}
+  };
+  const removeSavedWorkout = (idx) => {
+    const updated = savedWorkouts.filter((_, i) => i !== idx);
+    setSavedWorkouts(updated);
+    try { localStorage.setItem(SAVED_WO_KEY, JSON.stringify(updated)); } catch {}
+  };
+  const launchSavedWorkout = (wo) => {
+    const day = {
+      id: "saved_" + Date.now(),
+      date: new Date(),
+      dow: new Date().getDay(),
+      dayLabel: ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][new Date().getDay()],
+      dayFull: ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][new Date().getDay()],
+      weekNum: 1, isRest: false, workout: wo,
+    };
+    setWday(day);
+    setWcolor(T.ac);
   };
 
   // ── Completion celebration screen ──
@@ -6495,6 +6744,8 @@ export default function App() {
     <div style={{ maxWidth: 440, margin: "0 auto", fontFamily: T.fn, minHeight: "100vh", background: T.bg }}>
       <style>{css}</style>
       <WorkoutComplete day={completing.day} stats={completing.stats}
+        isSingle={completing.isSingle}
+        onSave={saveSingleWorkout}
         onDone={() => { haptic(20); setCompleting(null); setWday(null); setWcolor(null); }} />
     </div>
   );
@@ -6555,13 +6806,36 @@ export default function App() {
   if (sc === "q") return (
     <div style={{ maxWidth: 440, margin: "0 auto", fontFamily: T.fn, minHeight: "100vh", background: T.bg }}>
       <style>{css}</style>
-      <Questions onDone={a => { setAns(a); navigate("gen"); }} onBack={() => navigate("welcome")} />
+      <Questions onDone={a => { setAns(a); navigate("gen"); }} onBack={() => navigate("welcome")} history={historyList} />
     </div>
   );
   if (sc === "gen") return (
     <div style={{ maxWidth: 440, margin: "0 auto", fontFamily: T.fn, minHeight: "100vh", background: T.bg }}>
       <style>{css}</style>
-      <Generating answers={ans} onDone={d => { setCdata(d); setDid("custom"); navigate("detail"); }} />
+      <Generating answers={ans} onDone={d => {
+        if (ans?.buildType === "single") {
+          // Single workout: take first workout and launch directly
+          const wo = d.workouts?.[0];
+          if (wo) {
+            const day = {
+              id: "single_" + Date.now(),
+              date: new Date(),
+              dow: new Date().getDay(),
+              dayLabel: ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][new Date().getDay()],
+              dayFull: ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][new Date().getDay()],
+              weekNum: 1,
+              isRest: false,
+              workout: wo,
+            };
+            setWday(day);
+            setWcolor(d.color || T.ac);
+            navigate(null);
+          }
+        } else {
+          // Full program: go to ProgramDetail
+          setCdata(d); setDid("custom"); navigate("detail");
+        }
+      }} />
     </div>
   );
   if (sc === "list") return (
@@ -6713,6 +6987,29 @@ export default function App() {
           </div>
         </div>
 
+        {/* Saved workouts — quick re-do */}
+        {savedWorkouts.length > 0 && (
+          <div style={{ marginBottom:16 }}>
+            <div style={{ color:T.mu, fontSize:10, fontWeight:700, letterSpacing:1.2, fontFamily:T.fn, marginBottom:10 }}>SAVED WORKOUTS</div>
+            {savedWorkouts.slice(0, 3).map((sw, i) => (
+              <div key={i} onClick={() => launchSavedWorkout(sw)}
+                style={{ background:T.su, border:"1px solid "+T.bo, borderRadius:12, padding:"12px 16px",
+                  marginBottom:6, cursor:"pointer", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+                <div>
+                  <div style={{ fontFamily:T.fn, fontWeight:700, fontSize:13, color:T.tx }}>{sw.name}</div>
+                  <div style={{ color:T.mu, fontSize:10, fontFamily:T.fn }}>
+                    {(sw.exercises || []).filter(e => e.isMain).map(e => e.name).join(" · ") || "Custom"}
+                  </div>
+                </div>
+                <div style={{ width:30, height:30, borderRadius:8, background:T.ac+"15", border:"1px solid "+T.ac+"30",
+                  display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill={T.ac}><polygon points="8 5 20 12 8 19"/></svg>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* Recent history */}
         {historyList.length > 0 && (
           <div>
@@ -6796,6 +7093,39 @@ export default function App() {
                         Activate
                       </button>
                       <button onClick={() => removeSavedProgram(i)}
+                        style={{ background:T.rd+"12", border:"1px solid "+T.rd+"30", borderRadius:8,
+                          padding:"6px 8px", fontFamily:T.fn, fontWeight:700, fontSize:11,
+                          color:T.rd, cursor:"pointer" }}>
+                        X
+                      </button>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          )}
+
+          {/* Saved workouts (from single workout completions) */}
+          {savedWorkouts.length > 0 && (
+            <div style={{ marginBottom:16 }}>
+              <div style={{ color:T.mu, fontSize:10, fontWeight:700, letterSpacing:1.2, fontFamily:T.fn, marginBottom:10 }}>SAVED WORKOUTS</div>
+              {savedWorkouts.map((sw, i) => (
+                <Card key={i} style={{ padding:"14px 18px", marginBottom:8 }}>
+                  <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+                    <div style={{ flex:1 }}>
+                      <div style={{ fontFamily:T.fn, fontWeight:700, fontSize:15, color:T.tx }}>{sw.name}</div>
+                      <div style={{ color:T.mu, fontSize:11, fontFamily:T.fn, marginTop:2 }}>
+                        {(sw.exercises || []).filter(e => e.isMain).map(e => e.name).join(" · ") || "Custom workout"}
+                      </div>
+                    </div>
+                    <div style={{ display:"flex", gap:6 }}>
+                      <button onClick={() => launchSavedWorkout(sw)}
+                        style={{ background:T.ac+"18", border:"1px solid "+T.ac+"40", borderRadius:8,
+                          padding:"6px 12px", fontFamily:T.fn, fontWeight:700, fontSize:11,
+                          color:T.ac, cursor:"pointer" }}>
+                        Do It
+                      </button>
+                      <button onClick={() => removeSavedWorkout(i)}
                         style={{ background:T.rd+"12", border:"1px solid "+T.rd+"30", borderRadius:8,
                           padding:"6px 8px", fontFamily:T.fn, fontWeight:700, fontSize:11,
                           color:T.rd, cursor:"pointer" }}>
