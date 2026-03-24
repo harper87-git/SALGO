@@ -1719,9 +1719,10 @@ const Welcome = ({ onCustom, onProven, onChallenge, onBrowse, onHistory, onEditL
 
       {/* Active program — quick return */}
       {activeProgram && (
+        <>
         <div onClick={onContinue}
           style={{ background:activeProgram.color+"12", border:"1.5px solid "+activeProgram.color+"50",
-            borderRadius:16, padding:"16px 18px", marginBottom:16, cursor:"pointer" }}>
+            borderRadius:16, padding:"16px 18px", marginBottom:4, cursor:"pointer" }}>
           <div style={{ display:"flex", alignItems:"center", gap:14 }}>
             <div style={{ width:44, height:44, borderRadius:12, background:activeProgram.color+"25",
               border:"1px solid "+activeProgram.color+"40",
@@ -1741,13 +1742,14 @@ const Welcome = ({ onCustom, onProven, onChallenge, onBrowse, onHistory, onEditL
           </div>
         </div>
         {onEndProgram && (
-          <div style={{ textAlign:"right", marginTop:8 }}>
-            <span onClick={(e) => { e.stopPropagation(); onEndProgram(); }}
+          <div style={{ textAlign:"right", marginBottom:12 }}>
+            <span onClick={onEndProgram}
               style={{ color:T.di, fontSize:11, fontFamily:T.fn, cursor:"pointer" }}>
               End Program
             </span>
           </div>
         )}
+        </>
       )}
 
       <h1 style={{ fontFamily:T.fn, fontWeight:800, fontSize:30, color:T.tx, lineHeight:1.2, marginBottom:12 }}>
